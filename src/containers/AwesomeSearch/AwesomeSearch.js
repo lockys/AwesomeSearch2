@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import AwesomeListMenu from '../../components/AwesomeLists/AwesomeListMenu';
 import AwesomeRwdMenu from '../../components/AwesomeRwdMenu/AwesomeRwdMenu';
 import AwesomeLists from '../../components/AwesomeLists/AwesomeLists';
@@ -14,116 +14,104 @@ import {faBars} from '@fortawesome/free-solid-svg-icons';
 import classes from './AwesomeSearch.module.css';
 import {MdDarkMode, MdLightMode} from 'react-icons/md';
 
-class AwesomeSearch extends Component {
-    state = {
-        errorMessage: null,
-        subjects: null,
-        selectedSubject: '',
-        subjectsArray: [],
-        search: '',
-        searchResult: [],
-        showResult: false,
-        showMenu: false,
-    };
+const AwesomeSearch = (props) => {
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [subjects, setSubjects] = useState(null);
+    const [selectedSubject, setSelectedSubject] = useState('');
+    const [subjectsArray, setSubjectsArray] = useState([]);
+    const [search, setSearch] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+    const [showResult, setShowResult] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+    const [md, setMd] = useState();
 
-    getSubjectEntries = () => {
+    const getSubjectEntries = () => {
         axios
             .get(
                 'https://raw.githubusercontent.com/lockys/awesome.json/master/awesome/awesome.json'
             )
-            .then((subjects) => {
-                this.setState({
-                    subjects: subjects.data,
-                    errorMessage: '',
-                });
+            .then((subjectsRes) => {
+                setSubjects(subjectsRes.data);
+                setErrorMessage('');
 
-                let subjectsArray = Object.keys(subjects.data)
+                let subjectsArrayLocal = Object.keys(subjectsRes.data)
                     .map((subject) => {
-                        return subjects.data[subject];
+                        return subjectsRes.data[subject];
                     })
                     .reduce((arr, el) => {
                         return arr.concat(el);
                     }, []);
 
-                this.setState({subjectsArray: subjectsArray});
+                setSubjectsArray(subjectsArrayLocal);
 
-                if (!this.state.subjects) {
-                    this.setState({
-                        errorMessage:
-                            'There was an error. Unable to load the Awesome subjects.',
-                    });
+                if (!subjectsRes.data) {
+                    setErrorMessage(
+                        'There was an error. Unable to load the Awesome subjects.'
+                    );
                 }
             })
             .catch((error) => {
-                this.setState({
-                    errorMessage: `There was an error. Unable to load the Awesome subjects: ${error}.`,
-                });
+                setErrorMessage(
+                    `There was an error. Unable to load the Awesome subjects: ${error}.`
+                );
             });
     };
 
-    componentDidMount() {
-        this.getSubjectEntries();
-    }
+    useEffect(() => {
+        getSubjectEntries();
+    }, []);
 
-    topicOnClickHandler = (topic) => {
-        this.setState({selectedSubject: topic, showMenu: false});
+    const topicOnClickHandler = (topic) => {
+        setSelectedSubject(topic);
+        setShowMenu(false);
     };
 
-    searchInputOnChangeHandler = (event) => {
-        this.setState({
-            search: event.target.value,
-        });
+    const searchInputOnChangeHandler = (event) => {
+        setSearch(event.target.value);
 
         const options = {
             keys: ['name'],
         };
 
-        const fuse = new Fuse(this.state.subjectsArray, options);
+        const fuse = new Fuse(subjectsArray, options);
         const result = fuse.search(event.target.value);
 
-        this.setState({searchResult: result.slice(0, 20)});
+        setSearchResult(result.slice(0, 20));
     };
 
-    searchInputOnFocusHandler = () => {
-        this.setState({showResult: true});
+    const searchInputOnFocusHandler = () => {
+        setShowResult(true);
     };
 
-    searchInputOnCloseHandler = () => {
-        this.setState({showResult: false});
+    const searchInputOnCloseHandler = () => {
+        setShowResult(false);
     };
 
-    setMdHandler = (md) => {
-        this.setState({
-            md: md,
-        });
+    const setMdHandler = (markdown) => {
+        setMd(markdown);
     };
 
-    burgerButtonClickHandler = () => {
-        this.setState((prevState) => {
-            return {
-                showMenu: !prevState.showMenu,
-                showResult: false,
-            };
-        });
+    const burgerButtonClickHandler = () => {
+        setShowMenu((prev) => !prev);
+        setShowResult(false);
     };
 
-    render() {
-        return (
-            <div className={`${classes.AwesomeSearch} ${classes[this.props.theme]}`}>
+    return (
+            <div className={`${classes.AwesomeSearch} ${classes[props.theme]}`}>
                 <div className="grid">
                     <div className="cell -12of12">
                         <AwesomeInput
-                            searchOnchange={this.searchInputOnChangeHandler}
-                            value={this.state.search}
-                            searchResult={this.state.searchResult}
-                            searchInputOnFocus={this.searchInputOnFocusHandler}
-                            showResult={this.state.showResult}
-                            homeOnClick={this.topicOnClickHandler}
+                            searchOnchange={searchInputOnChangeHandler}
+                            value={search}
+                            searchResult={searchResult}
+                            searchInputOnFocus={searchInputOnFocusHandler}
+                            showResult={showResult}
+                            homeOnClick={topicOnClickHandler}
                         />
 
                         <div
                             className={classes.BurgerButton}
-                            onClick={this.burgerButtonClickHandler}
+                            onClick={burgerButtonClickHandler}
                         >
                             <FontAwesomeIcon icon={faBars}/>
                         </div>
@@ -132,22 +120,22 @@ class AwesomeSearch extends Component {
                             className="btn-group"
                             style={{float: 'right', fontSize: '2rem', cursor: 'pointer', verticalAlign: 'middle'}}
                         >
-                            {!this.props.isDark ? <MdDarkMode
+                            {!props.isDark ? <MdDarkMode
                                 onClick={() => {
                                     localStorage.setItem('__isDark', 'true');
-                                    this.props.onThemeChange(true);
+                                    props.onThemeChange(true);
                                 }}
                             /> : <MdLightMode
                                 onClick={() => {
                                     localStorage.setItem('__isDark', 'false');
-                                    this.props.onThemeChange(false);
+                                    props.onThemeChange(false);
                                 }}
                             />}
                         </div>
                     </div>
                 </div>
 
-                {this.state.subjects ? (
+                {subjects ? (
                     <div className="grid">
                         <div
                             className="cell -2of12"
@@ -155,15 +143,15 @@ class AwesomeSearch extends Component {
                                 width: '100%',
                             }}
                         >
-                            {this.state.showMenu ? (
+                            {showMenu ? (
                                 <AwesomeRwdMenu
-                                    topics={Object.keys(this.state.subjects)}
-                                    topicOnClickHandler={this.topicOnClickHandler}
+                                    topics={Object.keys(subjects)}
+                                    topicOnClickHandler={topicOnClickHandler}
                                 />
                             ) : null}
                             <AwesomeListMenu
-                                topics={Object.keys(this.state.subjects)}
-                                topicOnClickHandler={this.topicOnClickHandler}
+                                topics={Object.keys(subjects)}
+                                topicOnClickHandler={topicOnClickHandler}
                             />
                         </div>
                         <div
@@ -178,8 +166,8 @@ class AwesomeSearch extends Component {
                                 render={() => {
                                     return (
                                         <AwesomeLists
-                                            topic={this.state.selectedSubject}
-                                            subjects={this.state.subjects[this.state.selectedSubject]}
+                                            topic={selectedSubject}
+                                            subjects={subjects[selectedSubject]}
                                         />
                                     );
                                 }}
@@ -190,7 +178,7 @@ class AwesomeSearch extends Component {
                                     return (
                                         <AwesomeReadme
                                             key={props.match.params.repo}
-                                            setMdHandler={this.setMdHandler}
+                                            setMdHandler={setMdHandler}
                                             {...props}
                                         />
                                     );
@@ -199,8 +187,8 @@ class AwesomeSearch extends Component {
                         </div>
 
                         <Backdrop
-                            show={this.state.showResult}
-                            closeSearchModal={this.searchInputOnCloseHandler}
+                            show={showResult}
+                            closeSearchModal={searchInputOnCloseHandler}
                         />
                     </div>
                 ) : (
@@ -208,7 +196,6 @@ class AwesomeSearch extends Component {
                 )}
             </div>
         );
-    }
-}
+};
 
 export default withRouter(AwesomeSearch);
