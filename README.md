@@ -34,8 +34,18 @@ Authors
 
 Contributions
 ==
-PRs are always welcome. :)  
+PRs are always welcome. :)
 Also, Filing a issue to make suggestions or complain anything is always welcome.
+
+Testing
+==
+Run unit tests locally using:
+
+```bash
+npm run test:coverage
+```
+
+Continuous integration executes the same command and uploads a coverage report as a workflow artifact.
 
 Related Projects
 ==
