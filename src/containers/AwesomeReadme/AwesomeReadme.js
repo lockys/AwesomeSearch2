@@ -9,6 +9,7 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { buildBullet, getFontSize } from '../../utils/helpers';
 class AwesomeReadme extends Component {
   state = {
     _html: `<br/><b># Waiting for content loading...</b>`,
@@ -215,49 +216,6 @@ class AwesomeReadme extends Component {
     });
   };
 
-  buildBullet = (pattern, level) => {
-    return Array(level).fill(pattern).join('');
-  };
-
-  getFontSize = (level) => {
-    let size = '1.2rem';
-    let color = 'black';
-    switch (level) {
-      case 1:
-        size = '1.2rem';
-        color = 'black';
-        break;
-      case 2:
-        size = '1rem';
-        color = 'grey';
-        break;
-      case 3:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      case 4:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      case 5:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      case 6:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      default:
-        size = '0.8rem';
-        color = 'red';
-        break;
-    }
-
-    return {
-      size,
-      color,
-    };
-  };
 
   render() {
     return (
@@ -302,11 +260,11 @@ class AwesomeReadme extends Component {
                         this.headersOnClick(header.id);
                       }}
                       style={{
-                        fontSize: this.getFontSize(header.level).size,
-                        color: this.getFontSize(header.level).color,
+                        fontSize: getFontSize(header.level).size,
+                        color: getFontSize(header.level).color,
                       }}
                     >
-                      {this.buildBullet('-', header.level)} {header.title}
+                      {buildBullet('-', header.level)} {header.title}
                     </div>
                   );
                 })}
