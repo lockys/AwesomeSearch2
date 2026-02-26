@@ -1,3 +1,133 @@
 .AwesomeLists {
-  padding: 20px;
+  padding: 20px 0;
+}
+
+.ListHeader {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.ListTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 8px 0;
+}
+
+.ListSubtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.ListGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.ListItem {
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.ListItem:hover {
+  background: #fff;
+  border-color: #6366f1;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
+}
+
+.ListItem a {
+  text-decoration: none !important;
+  color: #1e293b;
+  font-weight: 500;
+  font-size: 14px;
+  display: block;
+  border-bottom: none !important;
+}
+
+.ListItem a:hover {
+  color: #6366f1;
+}
+
+.EmptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.EmptyStateTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.EmptyStateText {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* Dark mode support */
+:global(.dark) .ListTitle {
+  color: #f1f5f9;
+}
+
+:global(.dark) .ListSubtitle {
+  color: #94a3b8;
+}
+
+:global(.dark) .ListHeader {
+  border-bottom-color: #334155;
+}
+
+:global(.dark) .ListItem {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+:global(.dark) .ListItem:hover {
+  background: #273449;
+  border-color: #818cf8;
+  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.2);
+}
+
+:global(.dark) .ListItem a {
+  color: #e2e8f0;
+}
+
+:global(.dark) .ListItem a:hover {
+  color: #a5b4fc;
+}
+
+:global(.dark) .EmptyStateTitle {
+  color: #f1f5f9;
+}
+
+@media (max-width: 768px) {
+  .AwesomeLists {
+    padding: 12px;
+  }
+
+  .ListTitle {
+    font-size: 20px;
+  }
+
+  .ListGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .ListItem {
+    padding: 12px;
+  }
+
+  .ListItem a {
+    font-size: 13px;
+  }
 }

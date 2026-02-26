@@ -1,3 +1,277 @@
 .HomePage {
-  padding: 20px;
+  padding: 16px 0;
+  max-width: 720px;
+}
+
+.HeroSection {
+  text-align: center;
+  padding: 32px 16px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%);
+  border-radius: 16px;
+}
+
+.HeroTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+}
+
+.HeroTitle .highlight {
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.HeroSubtitle {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+}
+
+.BadgeGroup {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.BadgeGroup a {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.BadgeGroup a:hover {
+  transform: translateY(-2px);
+}
+
+.Section {
+  margin-bottom: 32px;
+}
+
+.SectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #6366f1;
+  display: inline-block;
+}
+
+.SectionContent {
+  color: #475569;
+  line-height: 1.7;
+}
+
+.SectionContent a {
+  color: #6366f1;
+}
+
+.FeatureList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.FeatureItem {
+  padding: 12px 0 12px 28px;
+  position: relative;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.FeatureItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: 8px;
+  height: 8px;
+  background: #6366f1;
+  border-radius: 50%;
+}
+
+.FeatureItem:last-child {
+  border-bottom: none;
+}
+
+.FeatureItem a {
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.FeatureItem a:hover {
+  text-decoration: underline;
+}
+
+.AuthorCard {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.AuthorAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.AuthorInfo {
+  flex: 1;
+}
+
+.AuthorName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.AuthorName a {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.AuthorName a:hover {
+  text-decoration: underline;
+}
+
+.AuthorBio {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.Divider {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 32px 0;
+}
+
+.Footer {
+  text-align: right;
+  font-size: 14px;
+  color: #94a3b8;
+  padding-top: 16px;
+}
+
+.Footer .highlight {
+  color: #6366f1;
+  font-weight: 500;
+}
+
+/* Dark mode support */
+:global(.dark) .HeroSection {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+}
+
+:global(.dark) .HeroTitle {
+  color: #f1f5f9;
+}
+
+:global(.dark) .HeroSubtitle {
+  color: #94a3b8;
+}
+
+:global(.dark) .SectionTitle {
+  color: #f1f5f9;
+  border-bottom-color: #818cf8;
+}
+
+:global(.dark) .SectionContent {
+  color: #cbd5e1;
+}
+
+:global(.dark) .SectionContent a {
+  color: #818cf8;
+}
+
+:global(.dark) .FeatureItem {
+  border-bottom-color: #334155;
+  color: #cbd5e1;
+}
+
+:global(.dark) .FeatureItem::before {
+  background: #818cf8;
+}
+
+:global(.dark) .FeatureItem a {
+  color: #818cf8;
+}
+
+:global(.dark) .AuthorCard {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+:global(.dark) .AuthorName {
+  color: #f1f5f9;
+}
+
+:global(.dark) .AuthorName a {
+  color: #818cf8;
+}
+
+:global(.dark) .AuthorBio {
+  color: #94a3b8;
+}
+
+:global(.dark) .Divider {
+  border-top-color: #334155;
+}
+
+:global(.dark) .Footer .highlight {
+  color: #818cf8;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .HomePage {
+    padding: 12px;
+  }
+
+  .HeroSection {
+    padding: 24px 12px;
+    margin-bottom: 20px;
+  }
+
+  .HeroTitle {
+    font-size: 22px;
+  }
+
+  .HeroSubtitle {
+    font-size: 14px;
+  }
+
+  .SectionTitle {
+    font-size: 18px;
+  }
+
+  .FeatureItem {
+    padding: 10px 0 10px 24px;
+    font-size: 14px;
+  }
+
+  .AuthorCard {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .AuthorAvatar {
+    width: 80px;
+    height: 80px;
+  }
 }

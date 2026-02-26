@@ -1,27 +1,109 @@
 .AwesomeSearch {
-  width: 960px;
-  margin: 0px auto;
-  padding: 10px;
-  background-color: white;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 16px 16px 16px;
   position: relative;
   height: 100vh;
   overflow-y: auto;
 }
 
+.dark-theme {
+  background-color: #0f172a;
+}
+
+.normal-theme {
+  border: none;
+}
+
+/* Header container for search, burger, and theme toggle */
+.Header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+}
+
+.dark-theme .Header {
+  background: #0f172a;
+}
+
+.HeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .BurgerButton {
-  font-size: 20px;
-  display: block;
-  position: fixed;
-  right: 10px;
-  top: 10px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  margin: 5px;
-  z-index: 999;
+  z-index: 1001;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #64748b;
+}
+
+.BurgerButton:hover {
+  color: #6366f1;
+}
+
+.BurgerButton:active {
+  transform: scale(0.95);
+}
+
+.ThemeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #64748b;
+}
+
+.ThemeToggle:hover {
+  color: #6366f1;
+}
+
+.ThemeToggle:active {
+  transform: scale(0.95);
+}
+
+.dark-theme .BurgerButton,
+.dark-theme .ThemeToggle {
+  background: transparent;
+  color: #94a3b8;
+}
+
+.dark-theme .BurgerButton:hover,
+.dark-theme .ThemeToggle:hover {
+  color: #818cf8;
 }
 
 @media (max-width: 768px) {
   .AwesomeSearch {
     width: 100%;
+    padding: 0;
+  }
+
+  .Header {
+    padding: 16px 12px 12px 12px;
+    gap: 8px;
+    margin: 0;
   }
 
   .TocButton {
@@ -31,9 +113,13 @@
   .StarButton {
     display: none;
   }
+
+  .HeaderActions {
+    flex-shrink: 0;
+  }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .BurgerButton {
     display: none;
   }

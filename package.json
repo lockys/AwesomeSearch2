@@ -2,7 +2,7 @@
   "name": "awesome-search-react",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://dev.awesomelists.top",
+  "homepage": "https://awesomelists.top",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
@@ -16,24 +16,18 @@
     "npm": "^7.6.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-icons": "^4.4.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "shebang-regex": "^4.0.0",
     "timeago-react": "^3.0.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "rspack serve",
+    "build": "rspack build",
+    "preview": "rspack serve --mode production",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "deploy": "gh-pages -d dist"
   },
   "browserslist": {
     "production": [
@@ -48,6 +42,10 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^3.1.0"
+    "@rspack/cli": "^1.0.0",
+    "@rspack/core": "^1.0.0",
+    "css-loader": "^7.1.4",
+    "gh-pages": "^6.2.0",
+    "style-loader": "^4.0.0"
   }
 }

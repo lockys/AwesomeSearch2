@@ -1,9 +1,112 @@
+/* Mobile slide-out menu container */
+.MenuOverlay {
+  display: none;
+}
+
 .AwesomeRwdMenu {
   display: none;
 }
 
 @media (max-width: 768px) {
-  .AwesomeRwdMenu {
+  .MenuOverlay {
     display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .MenuOverlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .AwesomeRwdMenu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 999;
+    padding: 20px 0;
+    overflow-y: auto;
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .AwesomeRwdMenu.open {
+    transform: translateX(-280px);
+  }
+
+  .MenuHeader {
+    padding: 16px 20px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 8px;
+  }
+
+  .MenuTitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  .AwesomeRwdMenu :global(.menu-item) {
+    padding: 12px 20px;
+    font-size: 15px;
+    color: #1e293b;
+    text-decoration: none !important;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    display: block;
+    border-bottom: none !important;
+  }
+
+  .AwesomeRwdMenu :global(.menu-item):hover,
+  .AwesomeRwdMenu :global(.menu-item):focus {
+    background: #f1f5f9;
+    border-left-color: #6366f1;
+    color: #6366f1;
+  }
+
+  .AwesomeRwdMenu :global(.menu-item):active {
+    background: #e2e8f0;
+  }
+
+  /* Dark mode support */
+  :global(.dark) .AwesomeRwdMenu {
+    background: #1e293b;
+  }
+
+  :global(.dark) .AwesomeRwdMenu :global(.menu-item) {
+    color: #e2e8f0;
+  }
+
+  :global(.dark) .AwesomeRwdMenu :global(.menu-item):hover,
+  :global(.dark) .AwesomeRwdMenu :global(.menu-item):focus {
+    background: #334155;
+    color: #818cf8;
+    border-left-color: #818cf8;
+  }
+
+  :global(.dark) .MenuHeader {
+    border-bottom-color: #334155;
+  }
+
+  :global(.dark) .MenuTitle {
+    color: #94a3b8;
   }
 }

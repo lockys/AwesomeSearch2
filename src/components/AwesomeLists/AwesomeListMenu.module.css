@@ -1,6 +1,89 @@
 .AwesomeListMenu {
   position: sticky;
-  top: 0px;
+  top: 80px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-right: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #ddd transparent;
+}
+
+.AwesomeListMenu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.AwesomeListMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.AwesomeListMenu::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.AwesomeListMenu::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+.MenuHeader {
+  padding: 12px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.MenuTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.AwesomeListMenu :global(.menu-item) {
+  display: block;
+  padding: 10px 12px;
+  color: #444;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.15s ease;
+  margin-bottom: 2px;
+}
+
+.AwesomeListMenu :global(.menu-item):hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #6366f1;
+}
+
+.AwesomeListMenu :global(.menu-item):active {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+/* Dark mode support */
+:global(.dark) .AwesomeListMenu {
+  scrollbar-color: #444 transparent;
+}
+
+:global(.dark) .AwesomeListMenu::-webkit-scrollbar-thumb {
+  background: #444;
+}
+
+:global(.dark) .MenuHeader {
+  border-bottom-color: #333;
+}
+
+:global(.dark) .MenuTitle {
+  color: #666;
+}
+
+:global(.dark) .AwesomeListMenu :global(.menu-item) {
+  color: #ccc;
+}
+
+:global(.dark) .AwesomeListMenu :global(.menu-item):hover {
+  background: rgba(129, 140, 248, 0.15);
+  color: #818cf8;
 }
 
 @media (max-width: 768px) {
