@@ -2,7 +2,7 @@
   "name": "awesome-search-react",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://awesomelists.top",
+  "homepage": "https://awesomelists.calvinjeng.io",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
@@ -21,10 +21,13 @@
     "preview": "rsbuild preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@rsbuild/core": "^1.2.0",
     "@rsbuild/plugin-react": "^1.2.0",
     "@testing-library/jest-dom": "^6.6.3",
