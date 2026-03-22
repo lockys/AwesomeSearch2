@@ -1,5 +1,5 @@
 .AwesomeLists {
-  padding: 20px 0;
+  padding: 20px 0 20px 20px;
 }
 
 .ListHeader {
@@ -35,14 +35,13 @@
 
 .ListItem {
   padding: 14px 16px;
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   border-radius: 0;
   transition: all 0.2s ease;
 }
 
 .ListItem:hover {
-  background: var(--bg-primary);
-  border-color: var(--primary);
+  background: var(--primary-subtle);
 }
 
 .ListItem a {

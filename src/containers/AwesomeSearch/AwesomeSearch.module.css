@@ -1,7 +1,7 @@
 .AwesomeSearch {
-  max-width: 1024px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 16px 16px 16px;
+  padding: 0 24px 24px 24px;
   position: relative;
   min-height: 100vh;
 }
@@ -26,10 +26,12 @@
   top: 0;
   z-index: 100;
   background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .dark-theme .Header {
-  background: var(--dark-bg-primary);
+  background: var(--dark-bg-secondary);
+  border-bottom-color: var(--dark-border-color);
 }
 
 .HeaderActions {

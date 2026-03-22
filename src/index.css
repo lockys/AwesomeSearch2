@@ -44,7 +44,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
   color: var(--text-primary);
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
+}
+
+body.dark {
+  background: var(--dark-bg-primary);
 }
 
 /* Override Hack CSS link styles */
