@@ -8,5 +8,6 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/setupTests.js',
     css: { modules: { classNameStrategy: 'non-scoped' } },
+    exclude: ['**/node_modules/**', '**/e2e/**'],
   },
 });
