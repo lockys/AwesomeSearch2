@@ -1,34 +1,112 @@
 .AwesomeSearch {
   max-width: 1024px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 0 16px 16px 16px;
   position: relative;
-  height: 100vh;
-  overflow-y: auto;
+  min-height: 100vh;
 }
 
 .dark-theme {
-  background-color: #151513;
+  background-color: var(--dark-bg-primary);
 }
 
 .normal-theme {
-  border: 1px solid #eee;
+  border: none;
+}
+
+/* Header container for search, burger, and theme toggle */
+.Header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0 12px 0;
+  margin-top: 12px !important;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-primary);
+}
+
+.dark-theme .Header {
+  background: var(--dark-bg-primary);
+}
+
+.HeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .BurgerButton {
-  font-size: 20px;
-  display: block;
-  position: fixed;
-  right: 10px;
-  top: 10px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  margin: 5px;
-  z-index: 999;
+  z-index: 1001;
+  border-radius: 0;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.BurgerButton:hover {
+  color: var(--primary);
+}
+
+.BurgerButton:active {
+  transform: scale(0.95);
+}
+
+.ThemeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.ThemeToggle:hover {
+  color: var(--primary);
+}
+
+.ThemeToggle:active {
+  transform: scale(0.95);
+}
+
+.dark-theme .BurgerButton,
+.dark-theme .ThemeToggle {
+  background: transparent;
+  color: var(--dark-text-secondary);
+}
+
+.dark-theme .BurgerButton:hover,
+.dark-theme .ThemeToggle:hover {
+  color: var(--dark-primary);
 }
 
 @media (max-width: 768px) {
   .AwesomeSearch {
     width: 100%;
+    padding: 0;
+  }
+
+  .Header {
+    padding: 12px 12px 10px 12px;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .dark-theme .Header {
   }
 
   .TocButton {
@@ -38,9 +116,29 @@
   .StarButton {
     display: none;
   }
+
+  .HeaderActions {
+    flex-shrink: 0;
+  }
+
+  .BurgerButton {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    border-radius: 0;
+    color: var(--primary);
+  }
+
+  .dark-theme .BurgerButton {
+    color: var(--dark-primary);
+  }
+
+  .ThemeToggle {
+    display: none;
+  }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .BurgerButton {
     display: none;
   }

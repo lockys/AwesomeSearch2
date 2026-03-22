@@ -1,20 +1,23 @@
 import React, {Component} from 'react';
-import AwesomeListMenu from '../../components/AwesomeLists/AwesomeListMenu';
-import AwesomeRwdMenu from '../../components/AwesomeRwdMenu/AwesomeRwdMenu';
-import AwesomeLists from '../../components/AwesomeLists/AwesomeLists';
-import AwesomeInput from '../../components/AwesomeInput/AwesomeInput';
-import AwesomeReadme from '../AwesomeReadme/AwesomeReadme';
-import Spinner from '../../components/UI/Spinner/Spinner';
+import AwesomeListMenu from '../../components/AwesomeLists/AwesomeListMenu.jsx';
+import AwesomeRwdMenu from '../../components/AwesomeRwdMenu/AwesomeRwdMenu.jsx';
+import AwesomeLists from '../../components/AwesomeLists/AwesomeLists.jsx';
+import AwesomeInput from '../../components/AwesomeInput/AwesomeInput.jsx';
+import AwesomeReadme from '../AwesomeReadme/AwesomeReadme.jsx';
+import KeyboardShortcuts from '../../components/KeyboardShortcuts/KeyboardShortcuts.jsx';
+import Spinner from '../../components/UI/Spinner/Spinner.jsx';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 import {Route, withRouter} from 'react-router-dom';
-import Backdrop from '../../components/UI/Backdrop/Backdrop';
+import Backdrop from '../../components/UI/Backdrop/Backdrop.jsx';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars} from '@fortawesome/free-solid-svg-icons';
 import classes from './AwesomeSearch.module.css';
 import {MdDarkMode, MdLightMode} from 'react-icons/md';
 
 class AwesomeSearch extends Component {
+    headerRef = React.createRef();
+
     state = {
         errorMessage: null,
         subjects: null,
@@ -63,17 +66,26 @@ class AwesomeSearch extends Component {
 
     componentDidMount() {
         this.getSubjectEntries();
+        this.updateHeaderHeight();
+        window.addEventListener('resize', this.updateHeaderHeight);
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateHeaderHeight);
+    }
+
+    updateHeaderHeight = () => {
+        if (this.headerRef.current) {
+            const h = this.headerRef.current.getBoundingClientRect().height;
+            document.documentElement.style.setProperty('--header-height', `${h}px`);
+        }
+    };
 
     topicOnClickHandler = (topic) => {
         this.setState({selectedSubject: topic, showMenu: false});
     };
 
     searchInputOnChangeHandler = (event) => {
-        this.setState({
-            search: event.target.value,
-        });
-
         const options = {
             keys: ['name'],
         };
@@ -81,15 +93,25 @@ class AwesomeSearch extends Component {
         const fuse = new Fuse(this.state.subjectsArray, options);
         const result = fuse.search(event.target.value);
 
-        this.setState({searchResult: result.slice(0, 20)});
+        this.setState({
+            search: event.target.value,
+            searchResult: result.slice(0, 20),
+            showResult: true,
+        });
     };
 
     searchInputOnFocusHandler = () => {
-        this.setState({showResult: true});
+        const { search, subjectsArray } = this.state;
+        const updates = { showResult: true };
+        if (search && subjectsArray.length > 0) {
+            const fuse = new Fuse(subjectsArray, { keys: ['name'] });
+            updates.searchResult = fuse.search(search).slice(0, 20);
+        }
+        this.setState(updates);
     };
 
-    searchInputOnCloseHandler = () => {
-        this.setState({showResult: false});
+    searchInputOnCloseHandler = (name) => {
+        this.setState({ showResult: false, ...(typeof name === 'string' ? { search: name } : {}) });
     };
 
     setMdHandler = (md) => {
@@ -109,28 +131,23 @@ class AwesomeSearch extends Component {
 
     render() {
         return (
-            <div className={`${classes.AwesomeSearch} ${classes[this.props.theme]}`}>
-                <div className="grid">
-                    <div className="cell -12of12">
-                        <AwesomeInput
-                            searchOnchange={this.searchInputOnChangeHandler}
-                            value={this.state.search}
-                            searchResult={this.state.searchResult}
-                            searchInputOnFocus={this.searchInputOnFocusHandler}
-                            showResult={this.state.showResult}
-                            homeOnClick={this.topicOnClickHandler}
-                        />
+            <div className={`${classes.AwesomeSearch} ${classes[this.props.theme]}`} data-testid="awesome-search">
+                <header className={classes.Header} ref={this.headerRef}>
+                    <AwesomeInput
+                        searchOnchange={this.searchInputOnChangeHandler}
+                        value={this.state.search}
+                        searchResult={this.state.searchResult}
+                        searchInputOnFocus={this.searchInputOnFocusHandler}
+                        searchInputOnClose={this.searchInputOnCloseHandler}
+                        showResult={this.state.showResult}
+                        homeOnClick={this.topicOnClickHandler}
+                    />
 
+                    <div className={classes.HeaderActions} data-testid="header-actions">
                         <div
-                            className={classes.BurgerButton}
-                            onClick={this.burgerButtonClickHandler}
-                        >
-                            <FontAwesomeIcon icon={faBars}/>
-                        </div>
-
-                        <div
-                            className="btn-group"
-                            style={{float: 'right', fontSize: '2rem', cursor: 'pointer', verticalAlign: 'middle'}}
+                            className={classes.ThemeToggle}
+                            role="button"
+                            aria-label={this.props.isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                         >
                             {!this.props.isDark ? <MdDarkMode
                                 onClick={() => {
@@ -144,8 +161,19 @@ class AwesomeSearch extends Component {
                                 }}
                             />}
                         </div>
+
+                        <div
+                            className={classes.BurgerButton}
+                            onClick={this.burgerButtonClickHandler}
+                            role="button"
+                            aria-label="Toggle menu"
+                            aria-expanded={this.state.showMenu}
+                            data-testid="burger-button"
+                        >
+                            <FontAwesomeIcon icon={faBars}/>
+                        </div>
                     </div>
-                </div>
+                </header>
 
                 {this.state.subjects ? (
                     <div className="grid">
@@ -155,12 +183,14 @@ class AwesomeSearch extends Component {
                                 width: '100%',
                             }}
                         >
-                            {this.state.showMenu ? (
-                                <AwesomeRwdMenu
-                                    topics={Object.keys(this.state.subjects)}
-                                    topicOnClickHandler={this.topicOnClickHandler}
-                                />
-                            ) : null}
+                            <AwesomeRwdMenu
+                                topics={Object.keys(this.state.subjects)}
+                                topicOnClickHandler={this.topicOnClickHandler}
+                                isOpen={this.state.showMenu}
+                                onClose={() => this.setState({showMenu: false})}
+                                isDark={this.props.isDark}
+                                onThemeChange={this.props.onThemeChange}
+                            />
                             <AwesomeListMenu
                                 topics={Object.keys(this.state.subjects)}
                                 topicOnClickHandler={this.topicOnClickHandler}
@@ -183,6 +213,11 @@ class AwesomeSearch extends Component {
                                         />
                                     );
                                 }}
+                            />
+                            <Route
+                                path="/shortcuts"
+                                exact
+                                render={() => <KeyboardShortcuts />}
                             />
                             <Route
                                 path="/:user/:repo"
