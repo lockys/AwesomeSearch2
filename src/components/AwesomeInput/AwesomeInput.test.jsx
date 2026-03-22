@@ -18,26 +18,26 @@ describe('AwesomeInput', () => {
 
   it('renders search input', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    expect(screen.getByPlaceholderText('Search awesome lists...')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search AwesomeList!')).toBeInTheDocument();
   });
 
   it('calls searchOnchange when typing', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Search awesome lists...');
+    const input = screen.getByPlaceholderText('Search AwesomeList!');
     fireEvent.change(input, { target: { value: 'react' } });
     expect(defaultProps.searchOnchange).toHaveBeenCalled();
   });
 
   it('calls searchInputOnFocus on focus', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Search awesome lists...');
+    const input = screen.getByPlaceholderText('Search AwesomeList!');
     fireEvent.focus(input);
     expect(defaultProps.searchInputOnFocus).toHaveBeenCalled();
   });
 
   it('shows placeholder when showResult is true but no results', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} showResult={true} />);
-    expect(screen.getByText('Start typing to search...')).toBeInTheDocument();
+    expect(screen.getByText('Type something to search')).toBeInTheDocument();
   });
 
   it('renders search results when provided', () => {
