@@ -1,3 +1,169 @@
 .AwesomeLists {
-  padding: 20px;
+  padding: 20px 0;
+}
+
+.ListHeader {
+  margin-bottom: 24px;
+  padding: 20px 0 16px;
+  border-bottom: 1px dotted var(--border-color);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ListTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.ListSubtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.ListGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.ListItem {
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border-radius: 0;
+  transition: all 0.2s ease;
+}
+
+.ListItem:hover {
+  background: var(--bg-primary);
+  border-color: var(--primary);
+}
+
+.ListItem a {
+  text-decoration: none !important;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 14px;
+  display: block;
+  border-bottom: none !important;
+}
+
+.ListItem a:hover {
+  color: var(--primary);
+  background: transparent !important;
+}
+
+.EmptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.EmptyStateTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.EmptyStateText {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Dark mode support */
+:global(.dark) .ListTitle {
+  color: var(--dark-text-primary);
+}
+
+:global(.dark) .ListSubtitle {
+  color: var(--dark-text-secondary);
+}
+
+:global(.dark) .ListHeader {
+  border-bottom-color: var(--dark-border-color);
+}
+
+:global(.dark) .ListItem {
+  background: var(--dark-bg-secondary);
+  border-color: var(--dark-border-color);
+}
+
+:global(.dark) .ListItem:hover {
+  background: #273449;
+  border-color: var(--dark-primary);
+  box-shadow: 0 4px 12px rgba(165, 180, 252, 0.15);
+}
+
+:global(.dark) .ListItem a {
+  color: var(--dark-text-primary);
+}
+
+:global(.dark) .ListItem a:hover {
+  color: var(--dark-primary);
+  background: transparent !important;
+}
+
+:global(.dark) .EmptyStateTitle {
+  color: var(--dark-text-primary);
+}
+
+@media (max-width: 768px) {
+  .AwesomeLists {
+    padding: 12px;
+  }
+
+  .ListHeader {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .ListTitle {
+    font-size: 20px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ListGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .ListItem {
+    padding: 12px;
+    border-radius: 0;
+  }
+
+  .ListItem a {
+    font-size: 13px;
+  }
+
+  .ListItem:hover {
+    transform: none;
+  }
+
+  .ListItem:active {
+    background: var(--primary-subtle);
+    border-color: var(--primary);
+  }
+}
+
+@media (max-width: 768px) {
+  :global(.dark) .ListTitle {
+    background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }

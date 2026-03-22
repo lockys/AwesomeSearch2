@@ -1,9 +1,159 @@
+/* Mobile slide-out menu container */
+.MenuOverlay {
+  display: none;
+}
+
 .AwesomeRwdMenu {
   display: none;
 }
 
 @media (max-width: 768px) {
-  .AwesomeRwdMenu {
+  .MenuOverlay {
     display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .MenuOverlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .AwesomeRwdMenu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 280px;
+    height: 100vh;
+    background: var(--bg-primary);
+    z-index: 999;
+    padding: 20px 0;
+    overflow-y: auto;
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .AwesomeRwdMenu.open {
+    transform: translateX(-280px);
+  }
+
+  .MenuTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 12px;
+    margin-bottom: 4px;
+  }
+
+  .HomeLink {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .HomeIcon {
+    font-size: 15px;
+  }
+
+  .ThemeToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--accent-dark);
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+  }
+
+  .ThemeToggle:hover {
+    color: var(--primary);
+  }
+
+  :global(.dark) .ThemeToggle {
+    color: var(--dark-accent);
+  }
+
+  :global(.dark) .ThemeToggle:hover {
+    color: var(--dark-primary);
+  }
+
+  .MenuHeader {
+    padding: 16px 20px 20px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 8px;
+  }
+
+  .MenuTitle {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0;
+  }
+
+  .AwesomeRwdMenu :global(.menu-item) {
+    padding: 12px 20px;
+    font-size: 15px;
+    color: var(--text-primary);
+    text-decoration: none !important;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    display: block;
+    border-bottom: none !important;
+  }
+
+  .AwesomeRwdMenu :global(.menu-item):hover,
+  .AwesomeRwdMenu :global(.menu-item):focus {
+    background: var(--primary-subtle);
+    border-left-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .AwesomeRwdMenu :global(.menu-item):active {
+    background: var(--primary-subtle-hover);
+  }
+
+  /* Dark mode support */
+  :global(.dark) .AwesomeRwdMenu {
+    background: var(--dark-bg-secondary);
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.3);
+  }
+
+  :global(.dark) .AwesomeRwdMenu :global(.menu-item) {
+    color: var(--dark-text-primary);
+  }
+
+  :global(.dark) .AwesomeRwdMenu :global(.menu-item):hover,
+  :global(.dark) .AwesomeRwdMenu :global(.menu-item):focus {
+    background: rgba(165, 180, 252, 0.1);
+    color: var(--dark-primary);
+    border-left-color: var(--dark-primary);
+  }
+
+  :global(.dark) .MenuHeader {
+    border-bottom-color: var(--dark-border-color);
+  }
+
+  :global(.dark) .MenuTitle {
+    color: var(--dark-accent);
   }
 }

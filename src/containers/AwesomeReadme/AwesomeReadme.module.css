@@ -3,79 +3,492 @@
   max-width: 768px;
 }
 
-a.ViewOnGithubBtn {
-  border-bottom: 0px;
+/* ── Sticky Info Bar ── */
+.ReadmeInfo {
+  position: sticky;
+  top: var(--header-height, 45px);
+  z-index: 10;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px dotted var(--border-color);
+  margin: 16px 0 24px 0;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.ReadmeInfo {
+.ReadmeInfoScrolled {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+:global(.dark) .ReadmeInfoScrolled {
+  background: rgba(15, 23, 42, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ReadmeInfoTop {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: -11px;
-  z-index: 10;
-  padding: 10px;
-  opacity: 0.9;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.RepoName {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.ReadmeInfoActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+a.ViewOnGithubBtn {
+  border-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  background: var(--text-primary);
+  color: #fff !important;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+a.ViewOnGithubBtn:hover {
+  opacity: 0.85;
 }
 
 .TOCButton {
   cursor: pointer;
-  color: #ff2e88;
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: var(--primary-subtle);
+  white-space: nowrap;
 }
 
+.TOCButton:hover {
+  background: var(--primary-subtle-hover);
+}
+
+.RepoStats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.StatItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── TOC Panel (outside sticky bar) ── */
 .ReadmeCategory {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  max-height: 400px;
-  max-width: 300px;
-  overflow: scroll;
-  background-color: white;
-  border: 1px solid lightgray;
-  z-index: 50;
-  padding: 15px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 85vw;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-color);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.ReadmeCategoryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.ReadmeCategoryTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .ReadmeCategoryCloseButton {
   cursor: pointer;
-  font-size: 1.5rem;
-  position: sticky;
-  top: 0;
-  color: grey;
+  font-size: 1rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+  transition: all 0.15s ease;
 }
 
-.ReadmeCategoryCloseButton :hover {
-  color: #ff2e88;
+.ReadmeCategoryCloseButton:hover {
+  color: var(--primary);
+  background: var(--primary-subtle);
 }
 
-.ReadmeCategory > div {
+.ReadmeCategoryList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+/* TOC level styles — replaces inline colors */
+.TocLevel1 {
   cursor: pointer;
-  color: #ff2e88;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
 }
 
-.ReadmeCategory > div:hover {
-  text-decoration: underline;
+.TocLevel2 {
+  cursor: pointer;
+  padding: 8px 16px 8px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
 }
 
+.TocLevel3 {
+  cursor: pointer;
+  padding: 6px 16px 6px 40px;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.TocLevel1:hover,
+.TocLevel2:hover,
+.TocLevel3:hover {
+  background: var(--bg-tertiary);
+  color: var(--primary);
+  border-left-color: var(--primary);
+}
+
+/* ── Scroll to Top ── */
 .scrollToTop {
   position: fixed;
-  right: 10px;
-  bottom: 10px;
+  right: 16px;
+  bottom: 24px;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 14px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #e2e8f0;
+  color: #64748b;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  transition: all 0.2s ease;
+  z-index: 100;
+  font-weight: 500;
 }
 
 .scrollToTop:hover {
-  color: red;
+  background: #cbd5e1;
+  color: #475569;
 }
 
-@media (min-width: 768px) {
+/* ── README content ── */
+.ReadmeContent {
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.ReadmeContent h1,
+.ReadmeContent h2,
+.ReadmeContent h3 {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+}
+
+.ReadmeContent h1::before,
+.ReadmeContent h2::before,
+.ReadmeContent h3::before,
+.ReadmeContent h4::before,
+.ReadmeContent h5::before,
+.ReadmeContent h6::before {
+  content: none !important;
+}
+
+.ReadmeContent :global(.heading-element) {
+  display: none;
+}
+
+.ReadmeContent :global(.markdown-heading) :global(.anchor) {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+}
+
+.ReadmeContent a {
+  color: var(--primary);
+  -webkit-tap-highlight-color: rgba(99, 102, 241, 0.15);
+}
+
+.ReadmeContent a:active {
+  background: transparent !important;
+  color: var(--primary) !important;
+  opacity: 0.7;
+}
+
+.ReadmeContent * {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.ReadmeContent h1,
+.ReadmeContent h2,
+.ReadmeContent h3 {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.ReadmeContent hr {
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.ReadmeContent hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 24px 0;
+}
+
+.ReadmeContent ul {
+  padding-left: 24px;
+}
+
+.ReadmeContent li {
+  margin-bottom: 8px;
+}
+
+/* ── Desktop ── */
+@media (min-width: 769px) {
   .AwesomeReadme {
     padding-left: 20px;
   }
+
+  .ReadmeInfo {
+    border-radius: 0;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+  }
 }
 
+/* ── Mobile ── */
 @media (max-width: 768px) {
+  .AwesomeReadme {
+    padding: 0 0 12px 0;
+  }
+
+  .ReadmeContent {
+    padding: 0 16px;
+  }
+
   .ReadmeInfo {
-    flex-direction: column;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+
+  .ReadmeInfoTop {
+    margin-bottom: 4px;
+  }
+
+  .RepoName {
+    font-size: 15px;
+  }
+
+  a.ViewOnGithubBtn {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .TOCButton {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .RepoStats {
+    font-size: 12px;
+    gap: 10px;
+  }
+
+  .ReadmeCategory {
+    width: 100%;
+    max-width: 100vw;
+    border-left: none;
+    box-shadow: -4px 0 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .scrollToTop {
+    right: 12px;
+    bottom: 16px;
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+}
+
+/* ── Dark mode ── */
+:global(.dark) .ReadmeInfo {
+  background: rgba(15, 23, 42, 0.97);
+  border-bottom-color: var(--dark-border-color);
+}
+
+:global(.dark) .RepoName {
+  color: var(--dark-text-primary);
+}
+
+:global(.dark) a.ViewOnGithubBtn {
+  background: var(--dark-text-primary);
+  color: var(--dark-bg-primary) !important;
+}
+
+:global(.dark) .TOCButton {
+  color: var(--dark-primary);
+  background: rgba(165, 180, 252, 0.1);
+}
+
+:global(.dark) .TOCButton:hover {
+  background: rgba(165, 180, 252, 0.18);
+}
+
+:global(.dark) .RepoStats {
+  color: var(--dark-text-muted);
+}
+
+:global(.dark) .ReadmeCategory {
+  background: var(--dark-bg-primary);
+  border-left-color: var(--dark-border-color);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+:global(.dark) .ReadmeCategoryHeader {
+  border-bottom-color: var(--dark-border-color);
+}
+
+:global(.dark) .ReadmeCategoryTitle {
+  color: var(--dark-text-muted);
+}
+
+:global(.dark) .ReadmeCategoryCloseButton {
+  color: var(--dark-text-secondary);
+}
+
+:global(.dark) .ReadmeCategoryCloseButton:hover {
+  color: var(--dark-primary);
+  background: rgba(165, 180, 252, 0.1);
+}
+
+:global(.dark) .TocLevel1 {
+  color: var(--dark-text-primary);
+}
+
+:global(.dark) .TocLevel2 {
+  color: var(--dark-text-secondary);
+}
+
+:global(.dark) .TocLevel3 {
+  color: var(--dark-text-muted);
+}
+
+:global(.dark) .TocLevel1:hover,
+:global(.dark) .TocLevel2:hover,
+:global(.dark) .TocLevel3:hover {
+  background: var(--dark-bg-secondary);
+  color: var(--dark-primary);
+  border-left-color: var(--dark-primary);
+}
+
+:global(.dark) .ReadmeContent h1,
+:global(.dark) .ReadmeContent h2,
+:global(.dark) .ReadmeContent h3 {
+  border-bottom-color: var(--dark-border-color);
+}
+
+:global(.dark) .ReadmeContent hr {
+  border-top-color: var(--dark-border-color);
+}
+
+:global(.dark) .ReadmeContent a {
+  color: var(--dark-primary);
+  -webkit-tap-highlight-color: rgba(165, 180, 252, 0.15);
+}
+
+:global(.dark) .ReadmeContent a:active {
+  background: transparent !important;
+  color: var(--dark-primary) !important;
+  opacity: 0.7;
+}
+
+:global(.dark) .ReadmeContent :global(.octicon-link) {
+  color: var(--dark-text-secondary);
+  fill: var(--dark-text-secondary);
+}
+
+:global(.dark) .scrollToTop {
+  background: #334155;
+  color: #94a3b8;
+  box-shadow: none;
+}
+
+:global(.dark) .scrollToTop:hover {
+  background: #475569;
+  color: #cbd5e1;
+}
+
+@media (min-width: 769px) {
+  :global(.dark) .ReadmeInfo {
+    border-color: var(--dark-border-color);
   }
 }

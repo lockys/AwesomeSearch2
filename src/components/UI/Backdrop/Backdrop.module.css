@@ -2,8 +2,18 @@
   width: 100%;
   height: 100%;
   z-index: 50;
-  background-color: transparent;
+  background-color: rgba(15, 23, 42, 0.4);
   position: fixed;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.Backdrop.active {
+  opacity: 1;
+  visibility: visible;
 }

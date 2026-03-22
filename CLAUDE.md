@@ -4,7 +4,7 @@
 
 **AwesomeSearch** is a React single-page application that provides a searchable interface for browsing [sindresorhus/awesome](https://github.com/sindresorhus/awesome) GitHub lists. Users can search across thousands of curated awesome lists, view README files with interactive table of contents, and toggle dark mode.
 
-**Live site:** [awesomelists.top](https://awesomelists.top)
+**Live site:** [awesomelists.calvinjeng.io](https://awesomelists.calvinjeng.io)
 
 ## Tech Stack
 
@@ -41,7 +41,7 @@ src/
 └── setupTests.js            # Vitest test setup
 public/
 ├── index.html               # HTML template
-├── CNAME                    # Custom domain: awesomelists.top
+├── CNAME                    # Custom domain: awesomelists.calvinjeng.io
 └── manifest.json            # PWA manifest
 .github/
 └── workflows/
@@ -87,7 +87,7 @@ npm run deploy     # Build + deploy to GitHub Pages via gh-pages
 
 ### API Endpoints
 - **Awesome list data:** `https://raw.githubusercontent.com/lockys/awesome.json/master/awesome/awesome.json`
-- **README content:** `https://api.awesomelists.top/readme/{user}/{repo}`
+- **README content:** `https://api-awesomelists.calvinjeng.io/readme/{user}/{repo}`
 - **Repo metadata:** `https://api.github.com/repos/{user}/{repo}`
 
 ### Theme System
@@ -128,19 +128,19 @@ Tests use **Vitest** with **React Testing Library** and **jsdom** environment.
 - Triggers on push to `main` branch
 - Steps: install → test → build → deploy to gh-pages branch
 - Uses `peaceiris/actions-gh-pages@v4` with CNAME preservation
-- Custom domain: `awesomelists.top`
+- Custom domain: `awesomelists.calvinjeng.io`
 
 ## Deployment
 
 - Production build outputs to `dist/` directory
-- Hosted on **GitHub Pages** with custom domain `awesomelists.top`
+- Hosted on **GitHub Pages** with custom domain `awesomelists.calvinjeng.io`
 - Manual deploy via `npm run deploy` (runs `gh-pages -d dist`)
 - Automated deploy via GitHub Actions on push to main
-- Backend API at `api.awesomelists.top` proxies GitHub README requests to avoid rate limits
+- Backend API at `api-awesomelists.calvinjeng.io` proxies GitHub README requests to avoid rate limits
 
 ## Common Pitfalls
 
-- GitHub API has rate limits — the custom backend at `api.awesomelists.top` helps mitigate this for README fetching
+- GitHub API has rate limits — the custom backend at `api-awesomelists.calvinjeng.io` helps mitigate this for README fetching
 - Image URLs in READMEs need path fixing for relative references (handled in `AwesomeReadme`)
 - HashRouter URLs use `/#/` prefix (e.g., `/#/sindresorhus/awesome-nodejs`)
 - jsdom doesn't fully support `innerText` — avoid relying on it in tests (the `walk` method in AwesomeReadme uses it for TOC generation)

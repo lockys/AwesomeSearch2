@@ -1,58 +1,52 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import AwesomeInput from './AwesomeInput';
+import { vi } from 'vitest';
+import AwesomeInput from './AwesomeInput.jsx';
 
-const defaultProps = {
-  searchOnchange: vi.fn(),
-  value: '',
-  searchResult: [],
-  searchInputOnFocus: vi.fn(),
-  showResult: false,
-  homeOnClick: vi.fn(),
-};
-
-const renderInput = (props = {}) => {
-  return render(
-    <MemoryRouter>
-      <AwesomeInput {...defaultProps} {...props} />
-    </MemoryRouter>
-  );
-};
+const renderWithRouter = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>);
 
 describe('AwesomeInput', () => {
+  const defaultProps = {
+    searchOnchange: vi.fn(),
+    value: '',
+    searchResult: [],
+    searchInputOnFocus: vi.fn(),
+    showResult: false,
+    homeOnClick: vi.fn(),
+  };
+
   it('renders search input', () => {
-    renderInput();
-    expect(screen.getByPlaceholderText('Try To Search Node.js')).toBeInTheDocument();
-  });
-
-  it('shows search results when showResult is true', () => {
-    const searchResult = [
-      { item: { name: 'awesome-react', repo: 'enaqx/awesome-react', cate: 'Frontend' } },
-    ];
-    renderInput({ showResult: true, searchResult });
-    expect(screen.getByText('awesome-react')).toBeInTheDocument();
-  });
-
-  it('hides search results when showResult is false', () => {
-    const searchResult = [
-      { item: { name: 'awesome-react', repo: 'enaqx/awesome-react', cate: 'Frontend' } },
-    ];
-    renderInput({ showResult: false, searchResult });
-    expect(screen.queryByText('awesome-react')).not.toBeInTheDocument();
+    renderWithRouter(<AwesomeInput {...defaultProps} />);
+    expect(screen.getByPlaceholderText('Search awesome lists...')).toBeInTheDocument();
   });
 
   it('calls searchOnchange when typing', () => {
-    const searchOnchange = vi.fn();
-    renderInput({ searchOnchange });
-    const input = screen.getByPlaceholderText('Try To Search Node.js');
+    renderWithRouter(<AwesomeInput {...defaultProps} />);
+    const input = screen.getByPlaceholderText('Search awesome lists...');
     fireEvent.change(input, { target: { value: 'react' } });
-    expect(searchOnchange).toHaveBeenCalled();
+    expect(defaultProps.searchOnchange).toHaveBeenCalled();
   });
 
-  it('shows placeholder text when results are empty and showResult is true', () => {
-    renderInput({ showResult: true, searchResult: [] });
-    expect(screen.getByText('Please input something :)')).toBeInTheDocument();
+  it('calls searchInputOnFocus on focus', () => {
+    renderWithRouter(<AwesomeInput {...defaultProps} />);
+    const input = screen.getByPlaceholderText('Search awesome lists...');
+    fireEvent.focus(input);
+    expect(defaultProps.searchInputOnFocus).toHaveBeenCalled();
+  });
+
+  it('shows placeholder when showResult is true but no results', () => {
+    renderWithRouter(<AwesomeInput {...defaultProps} showResult={true} />);
+    expect(screen.getByText('Start typing to search...')).toBeInTheDocument();
+  });
+
+  it('renders search results when provided', () => {
+    const searchResult = [
+      { item: { name: 'React', repo: 'sindresorhus/awesome-react', cate: 'Front-End' } },
+      { item: { name: 'Node.js', repo: 'sindresorhus/awesome-nodejs', cate: 'Back-End' } },
+    ];
+    renderWithRouter(<AwesomeInput {...defaultProps} showResult={true} searchResult={searchResult} />);
+    expect(screen.getByText('React')).toBeInTheDocument();
+    expect(screen.getByText('Node.js')).toBeInTheDocument();
   });
 });

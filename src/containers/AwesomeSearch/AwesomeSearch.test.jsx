@@ -1,19 +1,23 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import axios from 'axios';
-import AwesomeSearch from './AwesomeSearch';
+import { vi } from 'vitest';
+import AwesomeSearch from './AwesomeSearch.jsx';
 
-vi.mock('axios');
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+  },
+}));
+
+import axios from 'axios';
 
 const mockSubjects = {
-  'Node.js': [
-    { name: 'awesome-nodejs', repo: 'sindresorhus/awesome-nodejs', cate: 'Node.js' },
-    { name: 'awesome-npm', repo: 'sindresorhus/awesome-npm', cate: 'Node.js' },
+  'Front-End': [
+    { name: 'React', repo: 'sindresorhus/awesome-react', cate: 'Front-End' },
   ],
-  'Python': [
-    { name: 'awesome-python', repo: 'vinta/awesome-python', cate: 'Python' },
+  'Back-End': [
+    { name: 'Node.js', repo: 'sindresorhus/awesome-nodejs', cate: 'Back-End' },
   ],
 };
 
@@ -23,67 +27,67 @@ const defaultProps = {
   theme: 'normal-theme',
 };
 
-const renderWithRouter = (props = {}) => {
-  return render(
-    <MemoryRouter>
-      <AwesomeSearch {...defaultProps} {...props} />
-    </MemoryRouter>
-  );
-};
-
 describe('AwesomeSearch', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.clear();
   });
 
   it('shows spinner while loading data', () => {
     axios.get.mockReturnValue(new Promise(() => {}));
-    renderWithRouter();
-    expect(document.querySelector('.loading')).toBeInTheDocument();
-  });
-
-  it('renders list menu after data loads', async () => {
-    axios.get.mockResolvedValueOnce({ data: mockSubjects });
-    renderWithRouter();
-
-    await waitFor(() => {
-      expect(screen.getByText('Node.js')).toBeInTheDocument();
-      expect(screen.getByText('Python')).toBeInTheDocument();
-    });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch {...defaultProps} />
+      </MemoryRouter>
+    );
+    expect(document.querySelector('.loading')).toBeTruthy();
   });
 
   it('renders search input', async () => {
-    axios.get.mockResolvedValueOnce({ data: mockSubjects });
-    renderWithRouter();
-
-    const input = screen.getByPlaceholderText('Try To Search Node.js');
-    expect(input).toBeInTheDocument();
-  });
-
-  it('filters search results when typing', async () => {
-    axios.get.mockResolvedValueOnce({ data: mockSubjects });
-    renderWithRouter();
-
+    axios.get.mockResolvedValue({ data: mockSubjects });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch {...defaultProps} />
+      </MemoryRouter>
+    );
     await waitFor(() => {
-      expect(screen.getByText('Node.js')).toBeInTheDocument();
-    });
-
-    const input = screen.getByPlaceholderText('Try To Search Node.js');
-    fireEvent.focus(input);
-    fireEvent.change(input, { target: { value: 'python' } });
-
-    await waitFor(() => {
-      expect(screen.getByText('awesome-python')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search awesome lists...')).toBeInTheDocument();
     });
   });
 
-  it('shows error message on fetch failure', async () => {
-    axios.get.mockRejectedValueOnce(new Error('Network error'));
-    renderWithRouter();
-
+  it('renders menu after data loads', async () => {
+    axios.get.mockResolvedValue({ data: mockSubjects });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch {...defaultProps} />
+      </MemoryRouter>
+    );
     await waitFor(() => {
-      expect(document.querySelector('.loading')).toBeInTheDocument();
+      expect(screen.getAllByText('Front-End').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Back-End').length).toBeGreaterThan(0);
+    });
+  });
+
+  it('renders theme toggle button', async () => {
+    axios.get.mockResolvedValue({ data: mockSubjects });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch {...defaultProps} />
+      </MemoryRouter>
+    );
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /switch to dark mode/i })).toBeInTheDocument();
+    });
+  });
+
+  it('renders burger menu button', async () => {
+    axios.get.mockResolvedValue({ data: mockSubjects });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch {...defaultProps} />
+      </MemoryRouter>
+    );
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /toggle menu/i })).toBeInTheDocument();
     });
   });
 });

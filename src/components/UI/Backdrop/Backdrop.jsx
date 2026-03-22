@@ -1,10 +1,15 @@
 import React from 'react';
 import classes from './Backdrop.module.css';
-const backdrop = (props) => {
-  const backdrop = props.show ? (
-    <div onClick={props.closeSearchModal} className={classes.Backdrop}></div>
-  ) : null;
-  return backdrop;
+
+const Backdrop = (props) => {
+  return (
+    <div
+      onClick={props.closeSearchModal}
+      className={`${classes.Backdrop} ${props.show ? classes.active : ''}`}
+      aria-hidden="true"
+      data-testid="backdrop"
+    />
+  );
 };
 
-export default backdrop;
+export default Backdrop;
