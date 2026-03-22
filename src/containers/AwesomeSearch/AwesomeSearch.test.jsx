@@ -39,7 +39,7 @@ describe('AwesomeSearch', () => {
         <AwesomeSearch {...defaultProps} />
       </MemoryRouter>
     );
-    expect(document.querySelector('.loading')).toBeTruthy();
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
   it('renders search input', async () => {
@@ -75,7 +75,7 @@ describe('AwesomeSearch', () => {
       </MemoryRouter>
     );
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /switch to dark mode/i })).toBeInTheDocument();
+      expect(screen.getAllByRole('button', { name: /switch to dark mode/i }).length).toBeGreaterThan(0);
     });
   });
 

@@ -34,7 +34,7 @@ describe('AwesomeReadme', () => {
   it('shows loading state initially', () => {
     axios.get.mockReturnValue(new Promise(() => {}));
     renderReadme();
-    expect(screen.getByText(/waiting for content loading/i)).toBeInTheDocument();
+    expect(screen.getByTestId('readme-skeleton')).toBeInTheDocument();
   });
 
   it('renders View On Github link', () => {
