@@ -9,9 +9,29 @@ import {
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+
+const SKELETON_ROWS = [
+  ['SkeletonTitle'],
+  ['SkeletonLine', 'SkeletonLineFull'],
+  ['SkeletonLine', 'SkeletonLineLong'],
+  ['SkeletonLine', 'SkeletonLineMed'],
+  ['SkeletonSpacer'],
+  ['SkeletonSubtitle'],
+  ['SkeletonLine', 'SkeletonLineFull'],
+  ['SkeletonLine', 'SkeletonLineLong'],
+  ['SkeletonLine', 'SkeletonLineShort'],
+  ['SkeletonSpacer'],
+  ['SkeletonSubtitle'],
+  ['SkeletonLine', 'SkeletonLineMed'],
+  ['SkeletonLine', 'SkeletonLineFull'],
+  ['SkeletonLine', 'SkeletonLineLong'],
+  ['SkeletonLine', 'SkeletonLineMed'],
+];
+
 class AwesomeReadme extends Component {
   state = {
-    _html: `<br/><b># Waiting for content loading...</b>`,
+    _html: '',
+    isLoading: true,
     headers: [],
     stars: 0,
     updateAt: null,
@@ -27,6 +47,7 @@ class AwesomeReadme extends Component {
       (this.state.user !== this.props.match.params.user &&
         this.state.repo !== this.props.match.params.repo) ||
       this.state._html !== nextState._html ||
+      this.state.isLoading !== nextState.isLoading ||
       this.state.headers.length !== nextState.headers.length ||
       this.state.showTOC !== nextState.showTOC ||
       this.state.isScrolled !== nextState.isScrolled
@@ -88,9 +109,27 @@ class AwesomeReadme extends Component {
       });
   }
 
-  componentDidUpdate() {
-    this.makeAnchor();
+  componentDidUpdate(_, prevState) {
+    if (prevState._html !== this.state._html) {
+      this.makeAnchor();
+      this.attachImageFallbacks();
+    }
   }
+
+  attachImageFallbacks = () => {
+    const content = document.querySelector('[data-testid="readme-content"]');
+    if (!content) return;
+    content.querySelectorAll('img').forEach((img) => {
+      if (img.dataset.fallbackAttached) return;
+      img.dataset.fallbackAttached = 'true';
+      img.addEventListener('error', () => {
+        const fallback = document.createElement('div');
+        fallback.className = 'img-fallback';
+        fallback.textContent = 'Image unavailable';
+        if (img.parentNode) img.parentNode.replaceChild(fallback, img);
+      });
+    });
+  };
 
   fetchReadme = (user, repo) => {
     axios
@@ -120,6 +159,7 @@ class AwesomeReadme extends Component {
                       <li>The GitHub API rate limit is 60 requests/hr per IP for unauthenticated requests.</li>
                       <li>Please try again later.</li>
                     </ol>`,
+            isLoading: false,
             showReadmeInfo: false,
           });
         } else {
@@ -129,6 +169,7 @@ class AwesomeReadme extends Component {
                       <li>The repo may not exist. Click the home icon to go back.</li>
                       <li>Please re-search this repo and try again.</li>
                     </ol>`,
+            isLoading: false,
             showReadmeInfo: false,
           });
         }
@@ -179,6 +220,7 @@ class AwesomeReadme extends Component {
     const { headers, html: _html } = this.parseReadme(rawHtml);
     this.setState({
       _html,
+      isLoading: false,
       user,
       repo,
       showReadmeInfo: true,
@@ -397,7 +439,15 @@ class AwesomeReadme extends Component {
           </div>
         )}
 
-        <div className={classes.ReadmeContent} dangerouslySetInnerHTML={{ __html: this.state._html }} data-testid="readme-content"></div>
+        {this.state.isLoading ? (
+          <div className={classes.Skeleton} data-testid="readme-skeleton">
+            {SKELETON_ROWS.map((variants, idx) => (
+              <div key={idx} className={[classes.SkeletonBar, ...variants.map(v => classes[v])].join(' ')} />
+            ))}
+          </div>
+        ) : (
+          <div className={classes.ReadmeContent} dangerouslySetInnerHTML={{ __html: this.state._html }} data-testid="readme-content"></div>
+        )}
         <div className={classes.scrollToTop} onClick={this.scrollToTop} data-testid="scroll-to-top">
           <FontAwesomeIcon icon={faLongArrowAltUp} /> Top
         </div>

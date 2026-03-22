@@ -1,6 +1,7 @@
 .AwesomeReadme {
   position: relative;
   max-width: 768px;
+  overflow-x: hidden;
 }
 
 /* ── Sticky Info Bar ── */
@@ -9,7 +10,7 @@
   top: calc(var(--header-height, 45px) + 16px);
   z-index: 10;
   padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px dotted var(--border-color);
@@ -249,6 +250,8 @@ a.ViewOnGithubBtn:hover {
 .ReadmeContent {
   line-height: 1.7;
   font-size: 15px;
+  overflow-x: hidden;
+  word-break: break-word;
 }
 
 .ReadmeContent h1,
@@ -321,6 +324,12 @@ a.ViewOnGithubBtn:hover {
   margin-bottom: 8px;
 }
 
+.ReadmeContent table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
 /* ── Desktop ── */
 @media (min-width: 769px) {
   .AwesomeReadme {
@@ -355,6 +364,7 @@ a.ViewOnGithubBtn:hover {
     z-index: 200;
     border-top: 1px solid var(--border-color);
     border-bottom: none;
+    background: rgba(255, 255, 255, 1);
   }
 
   .ReadmeInfoTop {
@@ -389,7 +399,7 @@ a.ViewOnGithubBtn:hover {
 
   .scrollToTop {
     right: 12px;
-    bottom: calc(90px + 16px);
+    bottom: 80px;
     padding: 7px 12px;
     font-size: 13px;
   }
@@ -512,6 +522,65 @@ a.ViewOnGithubBtn:hover {
 @media (max-width: 768px) {
   :global(.dark) .ReadmeInfo {
     border-top-color: var(--dark-border-color);
-    background: rgba(15, 23, 42, 0.97);
+    background: rgba(15, 23, 42, 1);
   }
+}
+
+/* ── Skeleton Loading ── */
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.Skeleton {
+  padding: 32px 24px;
+}
+
+.SkeletonBar {
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--border-color) 50%, var(--bg-tertiary) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+  margin-bottom: 12px;
+}
+
+:global(.dark) .SkeletonBar {
+  background: linear-gradient(90deg, var(--dark-bg-secondary) 25%, var(--dark-bg-tertiary) 50%, var(--dark-bg-secondary) 75%);
+  background-size: 600px 100%;
+}
+
+.SkeletonTitle {
+  height: 28px;
+  width: 55%;
+  margin-bottom: 24px;
+}
+
+.SkeletonSubtitle {
+  height: 20px;
+  width: 35%;
+  margin-bottom: 20px;
+}
+
+.SkeletonLine {
+  height: 14px;
+}
+
+.SkeletonLineShort {
+  width: 40%;
+}
+
+.SkeletonLineMed {
+  width: 72%;
+}
+
+.SkeletonLineLong {
+  width: 90%;
+}
+
+.SkeletonLineFull {
+  width: 100%;
+}
+
+.SkeletonSpacer {
+  height: 20px;
 }

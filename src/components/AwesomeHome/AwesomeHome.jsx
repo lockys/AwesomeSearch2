@@ -1,4 +1,8 @@
 import React from 'react';
+
+const AVATAR_FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23e2e8f0'/%3E%3Ccircle cx='32' cy='24' r='11' fill='%2394a3b8'/%3E%3Cellipse cx='32' cy='54' rx='19' ry='14' fill='%2394a3b8'/%3E%3C/svg%3E";
+const hideBadgeOnError = (e) => { e.currentTarget.style.display = 'none'; };
+const setAvatarFallback = (e) => { e.currentTarget.src = AVATAR_FALLBACK; };
 import {Link} from 'react-router-dom';
 import classes from './AwesomeHome.module.css';
 
@@ -26,7 +30,7 @@ const Homepage = () => {
                         rel='noreferrer'
                         target='_blank'
                     >
-                        <img src='https://awesome.re/badge-flat2.svg' alt='awesome badge'/>
+                        <img src='https://awesome.re/badge-flat2.svg' alt='awesome badge' onError={hideBadgeOnError}/>
                     </a>
                     <a
                         href='https://github.com/lockys/NewAwesomeSearch'
@@ -36,6 +40,7 @@ const Homepage = () => {
                         <img
                             src='https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square'
                             alt='PR is welcome'
+                            onError={hideBadgeOnError}
                         />
                     </a>
                 </div>
@@ -115,6 +120,7 @@ const Homepage = () => {
                         className={classes.AuthorAvatar}
                         src='https://avatars.githubusercontent.com/u/3911469?v=4'
                         alt='Calvin Jeng'
+                        onError={setAvatarFallback}
                     />
                     <div className={classes.AuthorInfo}>
                         <h3 className={classes.AuthorName}>
@@ -134,6 +140,7 @@ const Homepage = () => {
                         className={classes.AuthorAvatar}
                         src='https://avatars.githubusercontent.com/u/4214069?v=4'
                         alt='Che-Wei Lin'
+                        onError={setAvatarFallback}
                     />
                     <div className={classes.AuthorInfo}>
                         <h3 className={classes.AuthorName}>

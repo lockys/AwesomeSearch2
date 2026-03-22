@@ -8,3 +8,25 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+.img-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 80px;
+  border: 1px dashed var(--border-color);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+  background: var(--bg-secondary);
+  text-align: center;
+  padding: 16px;
+  margin: 8px 0;
+}
+
+body.dark .img-fallback {
+  border-color: var(--dark-border-color);
+  color: var(--dark-text-muted);
+  background: var(--dark-bg-secondary);
+}

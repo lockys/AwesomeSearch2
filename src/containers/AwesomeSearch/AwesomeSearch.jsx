@@ -175,22 +175,23 @@ class AwesomeSearch extends Component {
                     </div>
                 </header>
 
+                <AwesomeRwdMenu
+                    topics={this.state.subjects ? Object.keys(this.state.subjects) : []}
+                    topicOnClickHandler={this.topicOnClickHandler}
+                    isOpen={this.state.showMenu}
+                    onClose={() => this.setState({showMenu: false})}
+                    isDark={this.props.isDark}
+                    onThemeChange={this.props.onThemeChange}
+                />
+
                 {this.state.subjects ? (
                     <div className="grid">
                         <div
-                            className="cell -2of12"
+                            className={`cell -2of12 ${classes.SidebarCell}`}
                             style={{
                                 width: '100%',
                             }}
                         >
-                            <AwesomeRwdMenu
-                                topics={Object.keys(this.state.subjects)}
-                                topicOnClickHandler={this.topicOnClickHandler}
-                                isOpen={this.state.showMenu}
-                                onClose={() => this.setState({showMenu: false})}
-                                isDark={this.props.isDark}
-                                onThemeChange={this.props.onThemeChange}
-                            />
                             <AwesomeListMenu
                                 topics={Object.keys(this.state.subjects)}
                                 topicOnClickHandler={this.topicOnClickHandler}

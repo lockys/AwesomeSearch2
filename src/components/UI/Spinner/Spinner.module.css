@@ -1,0 +1,86 @@
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.Bar {
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--border-color) 50%, var(--bg-tertiary) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+  margin-bottom: 12px;
+}
+
+:global(.dark) .Bar {
+  background: linear-gradient(90deg, var(--dark-bg-secondary) 25%, var(--dark-bg-tertiary) 50%, var(--dark-bg-secondary) 75%);
+  background-size: 600px 100%;
+}
+
+.PageSkeleton {
+  display: flex;
+  gap: 24px;
+  padding: 16px 0;
+  width: 100%;
+}
+
+/* Sidebar */
+.Sidebar {
+  width: 180px;
+  flex-shrink: 0;
+  padding-top: 8px;
+}
+
+.SidebarLabel {
+  height: 10px;
+  width: 70%;
+  margin-bottom: 16px;
+}
+
+.SidebarItem {
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+.SidebarItem:nth-child(2) { width: 85%; }
+.SidebarItem:nth-child(3) { width: 70%; }
+.SidebarItem:nth-child(4) { width: 90%; }
+.SidebarItem:nth-child(5) { width: 60%; }
+.SidebarItem:nth-child(6) { width: 80%; }
+.SidebarItem:nth-child(7) { width: 75%; }
+.SidebarItem:nth-child(8) { width: 65%; }
+.SidebarItem:nth-child(9) { width: 88%; }
+.SidebarItem:nth-child(10) { width: 72%; }
+
+/* Content */
+.Content {
+  flex: 1;
+  min-width: 0;
+}
+
+.CardGroup {
+  margin-bottom: 24px;
+}
+
+.CardTitle {
+  height: 14px;
+  width: 30%;
+  margin-bottom: 12px;
+}
+
+.Card {
+  height: 60px;
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .Sidebar {
+    display: none;
+  }
+
+  .PageSkeleton {
+    padding: 12px 16px;
+  }
+}
