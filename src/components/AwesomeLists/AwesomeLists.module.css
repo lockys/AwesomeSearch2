@@ -5,19 +5,19 @@
 .ListHeader {
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .ListTitle {
   font-size: 24px;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--text-primary);
   margin: 0 0 8px 0;
 }
 
 .ListSubtitle {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -29,22 +29,22 @@
 
 .ListItem {
   padding: 14px 16px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   transition: all 0.2s ease;
 }
 
 .ListItem:hover {
-  background: #fff;
-  border-color: #6366f1;
+  background: var(--bg-primary);
+  border-color: var(--primary);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
   transform: translateY(-2px);
 }
 
 .ListItem a {
   text-decoration: none !important;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 14px;
   display: block;
@@ -52,61 +52,61 @@
 }
 
 .ListItem a:hover {
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .EmptyState {
   text-align: center;
   padding: 60px 20px;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .EmptyStateTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .EmptyStateText {
   font-size: 14px;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 /* Dark mode support */
 :global(.dark) .ListTitle {
-  color: #f1f5f9;
+  color: var(--dark-text-primary);
 }
 
 :global(.dark) .ListSubtitle {
-  color: #94a3b8;
+  color: var(--dark-text-secondary);
 }
 
 :global(.dark) .ListHeader {
-  border-bottom-color: #334155;
+  border-bottom-color: var(--dark-border-color);
 }
 
 :global(.dark) .ListItem {
-  background: #1e293b;
-  border-color: #334155;
+  background: var(--dark-bg-secondary);
+  border-color: var(--dark-border-color);
 }
 
 :global(.dark) .ListItem:hover {
   background: #273449;
-  border-color: #818cf8;
-  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.2);
+  border-color: var(--dark-primary);
+  box-shadow: 0 4px 12px rgba(165, 180, 252, 0.15);
 }
 
 :global(.dark) .ListItem a {
-  color: #e2e8f0;
+  color: var(--dark-text-primary);
 }
 
 :global(.dark) .ListItem a:hover {
-  color: #a5b4fc;
+  color: var(--dark-primary);
 }
 
 :global(.dark) .EmptyStateTitle {
-  color: #f1f5f9;
+  color: var(--dark-text-primary);
 }
 
 @media (max-width: 768px) {
@@ -114,8 +114,17 @@
     padding: 12px;
   }
 
+  .ListHeader {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
   .ListTitle {
     font-size: 20px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .ListGrid {
@@ -125,9 +134,28 @@
 
   .ListItem {
     padding: 12px;
+    border-radius: 8px;
   }
 
   .ListItem a {
     font-size: 13px;
+  }
+
+  .ListItem:hover {
+    transform: none;
+  }
+
+  .ListItem:active {
+    background: var(--primary-subtle);
+    border-color: var(--primary);
+  }
+}
+
+@media (max-width: 768px) {
+  :global(.dark) .ListTitle {
+    background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

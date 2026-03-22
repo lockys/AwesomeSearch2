@@ -7,19 +7,19 @@
   text-align: center;
   padding: 32px 16px;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(244, 114, 182, 0.08) 50%, rgba(99, 102, 241, 0.04) 100%);
   border-radius: 16px;
 }
 
 .HeroTitle {
   font-size: 28px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 12px 0;
 }
 
 .HeroTitle .highlight {
-  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -27,7 +27,7 @@
 
 .HeroSubtitle {
   font-size: 16px;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0 0 20px 0;
   line-height: 1.6;
 }
@@ -55,10 +55,10 @@
 .SectionTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 12px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid #6366f1;
+  border-bottom: 2px solid var(--primary);
   display: inline-block;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .SectionContent a {
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .FeatureList {
@@ -80,7 +80,7 @@
 .FeatureItem {
   padding: 12px 0 12px 28px;
   position: relative;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color);
   color: #475569;
 }
 
@@ -91,7 +91,7 @@
   top: 18px;
   width: 8px;
   height: 8px;
-  background: #6366f1;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
   border-radius: 50%;
 }
 
@@ -100,7 +100,7 @@
 }
 
 .FeatureItem a {
-  color: #6366f1;
+  color: var(--primary);
   text-decoration: none;
 }
 
@@ -112,10 +112,10 @@
   display: flex;
   gap: 16px;
   padding: 16px;
-  background: #f8fafc;
+  background: var(--bg-secondary);
   border-radius: 12px;
   margin-bottom: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
 }
 
 .AuthorAvatar {
@@ -133,12 +133,12 @@
 .AuthorName {
   font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 4px 0;
 }
 
 .AuthorName a {
-  color: #6366f1;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 400;
 }
@@ -149,45 +149,52 @@
 
 .AuthorBio {
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.5;
 }
 
 .Divider {
   border: none;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-color);
   margin: 32px 0;
 }
 
 .Footer {
   text-align: right;
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding-top: 16px;
 }
 
 .Footer .highlight {
-  color: #6366f1;
+  color: var(--primary);
   font-weight: 500;
 }
 
 /* Dark mode support */
 :global(.dark) .HeroSection {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.1) 0%, rgba(249, 168, 212, 0.08) 50%, rgba(165, 180, 252, 0.06) 100%);
 }
 
 :global(.dark) .HeroTitle {
-  color: #f1f5f9;
+  color: var(--dark-text-primary);
+}
+
+:global(.dark) .HeroTitle .highlight {
+  background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 :global(.dark) .HeroSubtitle {
-  color: #94a3b8;
+  color: var(--dark-text-secondary);
 }
 
 :global(.dark) .SectionTitle {
-  color: #f1f5f9;
-  border-bottom-color: #818cf8;
+  color: var(--dark-text-primary);
+  border-bottom-color: var(--dark-primary);
 }
 
 :global(.dark) .SectionContent {
@@ -195,45 +202,45 @@
 }
 
 :global(.dark) .SectionContent a {
-  color: #818cf8;
+  color: var(--dark-primary);
 }
 
 :global(.dark) .FeatureItem {
-  border-bottom-color: #334155;
+  border-bottom-color: var(--dark-border-color);
   color: #cbd5e1;
 }
 
 :global(.dark) .FeatureItem::before {
-  background: #818cf8;
+  background: linear-gradient(135deg, var(--dark-primary), var(--dark-accent));
 }
 
 :global(.dark) .FeatureItem a {
-  color: #818cf8;
+  color: var(--dark-primary);
 }
 
 :global(.dark) .AuthorCard {
-  background: #1e293b;
-  border-color: #334155;
+  background: var(--dark-bg-secondary);
+  border-color: var(--dark-border-color);
 }
 
 :global(.dark) .AuthorName {
-  color: #f1f5f9;
+  color: var(--dark-text-primary);
 }
 
 :global(.dark) .AuthorName a {
-  color: #818cf8;
+  color: var(--dark-primary);
 }
 
 :global(.dark) .AuthorBio {
-  color: #94a3b8;
+  color: var(--dark-text-secondary);
 }
 
 :global(.dark) .Divider {
-  border-top-color: #334155;
+  border-top-color: var(--dark-border-color);
 }
 
 :global(.dark) .Footer .highlight {
-  color: #818cf8;
+  color: var(--dark-primary);
 }
 
 /* Mobile responsive */
@@ -243,8 +250,10 @@
   }
 
   .HeroSection {
-    padding: 24px 12px;
+    padding: 28px 16px;
     margin-bottom: 20px;
+    border-radius: 12px;
+    background: linear-gradient(160deg, rgba(99, 102, 241, 0.08) 0%, rgba(244, 114, 182, 0.1) 40%, rgba(52, 211, 153, 0.06) 100%);
   }
 
   .HeroTitle {
@@ -253,6 +262,11 @@
 
   .HeroSubtitle {
     font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .Section {
+    margin-bottom: 24px;
   }
 
   .SectionTitle {
@@ -273,5 +287,15 @@
   .AuthorAvatar {
     width: 80px;
     height: 80px;
+  }
+
+  .Divider {
+    margin: 24px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  :global(.dark) .HeroSection {
+    background: linear-gradient(160deg, rgba(165, 180, 252, 0.12) 0%, rgba(249, 168, 212, 0.1) 40%, rgba(52, 211, 153, 0.06) 100%);
   }
 }

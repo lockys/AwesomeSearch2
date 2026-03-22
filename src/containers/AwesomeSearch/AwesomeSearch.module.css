@@ -7,7 +7,7 @@
 }
 
 .dark-theme {
-  background-color: #0f172a;
+  background-color: var(--dark-bg-primary);
 }
 
 .normal-theme {
@@ -24,11 +24,11 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #fff;
+  background: var(--bg-primary);
 }
 
 .dark-theme .Header {
-  background: #0f172a;
+  background: var(--dark-bg-primary);
 }
 
 .HeaderActions {
@@ -49,11 +49,11 @@
   border-radius: 8px;
   transition: all 0.2s ease;
   background: transparent;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .BurgerButton:hover {
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .BurgerButton:active {
@@ -71,11 +71,11 @@
   border-radius: 8px;
   transition: all 0.2s ease;
   background: transparent;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .ThemeToggle:hover {
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .ThemeToggle:active {
@@ -85,12 +85,12 @@
 .dark-theme .BurgerButton,
 .dark-theme .ThemeToggle {
   background: transparent;
-  color: #94a3b8;
+  color: var(--dark-text-secondary);
 }
 
 .dark-theme .BurgerButton:hover,
 .dark-theme .ThemeToggle:hover {
-  color: #818cf8;
+  color: var(--dark-primary);
 }
 
 @media (max-width: 768px) {
@@ -100,9 +100,14 @@
   }
 
   .Header {
-    padding: 16px 12px 12px 12px;
+    padding: 12px 12px 10px 12px;
     gap: 8px;
     margin: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .dark-theme .Header {
+    border-bottom-color: var(--dark-border-color);
   }
 
   .TocButton {
@@ -115,6 +120,42 @@
 
   .HeaderActions {
     flex-shrink: 0;
+  }
+
+  .BurgerButton {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    border-radius: 10px;
+    background: var(--primary-subtle);
+    color: var(--primary);
+  }
+
+  .BurgerButton:hover {
+    background: var(--primary-subtle-hover);
+  }
+
+  .dark-theme .BurgerButton {
+    background: rgba(165, 180, 252, 0.1);
+    color: var(--dark-primary);
+  }
+
+  .ThemeToggle {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    border-radius: 10px;
+    background: var(--accent-subtle);
+    color: var(--accent-dark);
+  }
+
+  .ThemeToggle:hover {
+    color: var(--accent-dark);
+  }
+
+  .dark-theme .ThemeToggle {
+    background: rgba(249, 168, 212, 0.1);
+    color: var(--dark-accent);
   }
 }
 

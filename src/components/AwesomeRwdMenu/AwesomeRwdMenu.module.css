@@ -15,7 +15,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.5);
     z-index: 998;
     opacity: 0;
     visibility: hidden;
@@ -37,7 +37,7 @@
     right: -280px;
     width: 280px;
     height: 100vh;
-    background: #ffffff;
+    background: var(--bg-primary);
     z-index: 999;
     padding: 20px 0;
     overflow-y: auto;
@@ -51,23 +51,23 @@
 
   .MenuHeader {
     padding: 16px 20px 20px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
     margin-bottom: 8px;
   }
 
   .MenuTitle {
-    font-size: 12px;
-    font-weight: 600;
-    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-dark);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     margin: 0;
   }
 
   .AwesomeRwdMenu :global(.menu-item) {
     padding: 12px 20px;
     font-size: 15px;
-    color: #1e293b;
+    color: var(--text-primary);
     text-decoration: none !important;
     border-left: 3px solid transparent;
     transition: all 0.2s ease;
@@ -77,36 +77,37 @@
 
   .AwesomeRwdMenu :global(.menu-item):hover,
   .AwesomeRwdMenu :global(.menu-item):focus {
-    background: #f1f5f9;
-    border-left-color: #6366f1;
-    color: #6366f1;
+    background: var(--primary-subtle);
+    border-left-color: var(--primary);
+    color: var(--primary);
   }
 
   .AwesomeRwdMenu :global(.menu-item):active {
-    background: #e2e8f0;
+    background: var(--primary-subtle-hover);
   }
 
   /* Dark mode support */
   :global(.dark) .AwesomeRwdMenu {
-    background: #1e293b;
+    background: var(--dark-bg-secondary);
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.3);
   }
 
   :global(.dark) .AwesomeRwdMenu :global(.menu-item) {
-    color: #e2e8f0;
+    color: var(--dark-text-primary);
   }
 
   :global(.dark) .AwesomeRwdMenu :global(.menu-item):hover,
   :global(.dark) .AwesomeRwdMenu :global(.menu-item):focus {
-    background: #334155;
-    color: #818cf8;
-    border-left-color: #818cf8;
+    background: rgba(165, 180, 252, 0.1);
+    color: var(--dark-primary);
+    border-left-color: var(--dark-primary);
   }
 
   :global(.dark) .MenuHeader {
-    border-bottom-color: #334155;
+    border-bottom-color: var(--dark-border-color);
   }
 
   :global(.dark) .MenuTitle {
-    color: #94a3b8;
+    color: var(--dark-accent);
   }
 }

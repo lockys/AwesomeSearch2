@@ -5,7 +5,7 @@
   overflow-y: auto;
   padding-right: 16px;
   scrollbar-width: thin;
-  scrollbar-color: #ddd transparent;
+  scrollbar-color: var(--border-color) transparent;
 }
 
 .AwesomeListMenu::-webkit-scrollbar {
@@ -17,24 +17,24 @@
 }
 
 .AwesomeListMenu::-webkit-scrollbar-thumb {
-  background: #ddd;
+  background: var(--border-color);
   border-radius: 4px;
 }
 
 .AwesomeListMenu::-webkit-scrollbar-thumb:hover {
-  background: #ccc;
+  background: var(--text-muted);
 }
 
 .MenuHeader {
   padding: 12px 0;
   margin-bottom: 8px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .MenuTitle {
   font-size: 12px;
   font-weight: 600;
-  color: #888;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0;
@@ -43,7 +43,7 @@
 .AwesomeListMenu :global(.menu-item) {
   display: block;
   padding: 10px 12px;
-  color: #444;
+  color: var(--text-secondary);
   text-decoration: none;
   border-radius: 6px;
   font-size: 14px;
@@ -52,38 +52,38 @@
 }
 
 .AwesomeListMenu :global(.menu-item):hover {
-  background: rgba(99, 102, 241, 0.08);
-  color: #6366f1;
+  background: var(--primary-subtle);
+  color: var(--primary);
 }
 
 .AwesomeListMenu :global(.menu-item):active {
-  background: rgba(99, 102, 241, 0.15);
+  background: var(--primary-subtle-hover);
 }
 
 /* Dark mode support */
 :global(.dark) .AwesomeListMenu {
-  scrollbar-color: #444 transparent;
+  scrollbar-color: var(--dark-border-color) transparent;
 }
 
 :global(.dark) .AwesomeListMenu::-webkit-scrollbar-thumb {
-  background: #444;
+  background: var(--dark-border-color);
 }
 
 :global(.dark) .MenuHeader {
-  border-bottom-color: #333;
+  border-bottom-color: var(--dark-border-color);
 }
 
 :global(.dark) .MenuTitle {
-  color: #666;
+  color: var(--dark-text-muted);
 }
 
 :global(.dark) .AwesomeListMenu :global(.menu-item) {
-  color: #ccc;
+  color: var(--dark-text-secondary);
 }
 
 :global(.dark) .AwesomeListMenu :global(.menu-item):hover {
-  background: rgba(129, 140, 248, 0.15);
-  color: #818cf8;
+  background: rgba(165, 180, 252, 0.1);
+  color: var(--dark-primary);
 }
 
 @media (max-width: 768px) {
