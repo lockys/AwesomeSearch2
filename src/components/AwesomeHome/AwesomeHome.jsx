@@ -88,7 +88,7 @@ const Homepage = () => {
                 <h2 className={classes.SectionTitle}>Legacy Version</h2>
                 <p className={classes.SectionContent}>
                     Prefer the old design? Visit{' '}
-                    <a href='https://legacy.awesomelists.top/#/'>legacy.awesomelists.top</a>
+                    <a href='http://legacy.awesomelists.calvinjeng.io/#/'>legacy.awesomelists.calvinjeng.io</a>
                 </p>
             </div>
 
