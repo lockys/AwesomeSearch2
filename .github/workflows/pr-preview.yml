@@ -24,22 +24,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Update homepage for PR preview
-        run: |
-          node -e "
-            const pkg = require('./package.json');
-            pkg.homepage = 'https://awesomelists.top/pr-preview/pr-${{ github.event.number }}';
-            require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
-          "
-
-      - name: Build
-        run: npm run build
+      - name: Build with PR preview base path
+        run: npx rsbuild build
+        env:
+          PUBLIC_URL: /pr-preview/pr-${{ github.event.number }}/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./dist
           destination_dir: pr-preview/pr-${{ github.event.number }}
 
       - name: Comment PR with preview URL

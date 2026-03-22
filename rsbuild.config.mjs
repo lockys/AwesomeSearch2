@@ -10,7 +10,7 @@ export default defineConfig({
     template: './public/index.html',
   },
   output: {
-    assetPrefix: '/',
+    assetPrefix: process.env.PUBLIC_URL || '/',
     copy: [
       { from: './public', globOptions: { ignore: ['**/index.html'] } },
     ],
