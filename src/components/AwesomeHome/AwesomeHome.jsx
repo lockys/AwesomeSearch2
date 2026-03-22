@@ -57,7 +57,7 @@ const Homepage = () => {
                         <a href='https://github.com/sindresorhus/awesome'>
                             sindresorhus/awesome
                         </a>{' '}
-                        in a single page
+                        on a single page
                     </li>
                     <li className={classes.FeatureItem}>
                         Access any list directly via URL like{' '}
@@ -67,7 +67,7 @@ const Homepage = () => {
                         {' '}(bookmark your favorites!)
                     </li>
                     <li className={classes.FeatureItem}>
-                        Navigate smoothly using table of contents when available
+                        Navigate smoothly using the table of contents when available
                     </li>
                 </ul>
             </div>
