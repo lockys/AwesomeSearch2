@@ -32,7 +32,7 @@ class AwesomeSearch extends Component {
     getSubjectEntries = () => {
         axios
             .get(
-                'https://raw.githubusercontent.com/lockys/awesome.json/master/awesome/awesome.json'
+                'https://lockys.github.io/Awesome.json/awesome/awesome.json'
             )
             .then((subjects) => {
                 this.setState({

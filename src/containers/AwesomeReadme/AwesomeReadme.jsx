@@ -40,6 +40,7 @@ class AwesomeReadme extends Component {
     showTOC: false,
     showReadmeInfo: true,
     isScrolled: false,
+    previewSrc: null,
   };
 
   shouldComponentUpdate(_, nextState) {
@@ -50,7 +51,8 @@ class AwesomeReadme extends Component {
       this.state.isLoading !== nextState.isLoading ||
       this.state.headers.length !== nextState.headers.length ||
       this.state.showTOC !== nextState.showTOC ||
-      this.state.isScrolled !== nextState.isScrolled
+      this.state.isScrolled !== nextState.isScrolled ||
+      this.state.previewSrc !== nextState.previewSrc
     );
   }
 
@@ -58,8 +60,13 @@ class AwesomeReadme extends Component {
     this.setState({ isScrolled: window.scrollY > 10 });
   };
 
+  handleKeyDown = (e) => {
+    if (e.key === 'Escape') this.setState({ previewSrc: null });
+  };
+
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('keydown', this.handleKeyDown);
     const user = this.props.match.params.user;
     const repo = this.props.match.params.repo;
     const infoLastMod = JSON.parse(localStorage.getItem('infoLastMod'));
@@ -112,16 +119,30 @@ class AwesomeReadme extends Component {
   componentDidUpdate(_, prevState) {
     if (prevState._html !== this.state._html) {
       this.makeAnchor();
-      this.attachImageFallbacks();
+      this.attachImageHandlers();
     }
   }
 
-  attachImageFallbacks = () => {
+  attachImageHandlers = () => {
     const content = document.querySelector('[data-testid="readme-content"]');
     if (!content) return;
     content.querySelectorAll('img').forEach((img) => {
-      if (img.dataset.fallbackAttached) return;
-      img.dataset.fallbackAttached = 'true';
+      if (img.dataset.handlersAttached) return;
+      img.dataset.handlersAttached = 'true';
+      img.style.cursor = 'zoom-in';
+
+      const anchor = img.closest('a');
+      if (anchor) {
+        anchor.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.setState({ previewSrc: img.src });
+        });
+      } else {
+        img.addEventListener('click', () => {
+          this.setState({ previewSrc: img.src });
+        });
+      }
+
       img.addEventListener('error', () => {
         const fallback = document.createElement('div');
         fallback.className = 'img-fallback';
@@ -266,6 +287,7 @@ class AwesomeReadme extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('keydown', this.handleKeyDown);
   }
 
   scrollToTop = () => {
@@ -451,6 +473,25 @@ class AwesomeReadme extends Component {
         <div className={classes.scrollToTop} onClick={this.scrollToTop} data-testid="scroll-to-top">
           <FontAwesomeIcon icon={faLongArrowAltUp} /> Top
         </div>
+
+        {this.state.previewSrc && (
+          <div
+            className={classes.LightboxOverlay}
+            onClick={() => this.setState({ previewSrc: null })}
+            data-testid="lightbox-overlay"
+          >
+            <div className={classes.LightboxContent} onClick={(e) => e.stopPropagation()}>
+              <img src={this.state.previewSrc} alt="Preview" className={classes.LightboxImage} />
+              <button
+                className={classes.LightboxClose}
+                onClick={() => this.setState({ previewSrc: null })}
+                aria-label="Close preview"
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

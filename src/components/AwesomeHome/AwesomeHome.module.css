@@ -140,6 +140,7 @@
   background: var(--bg-secondary);
   border-radius: 0;
   margin-bottom: 12px;
+  border: 1px dotted var(--border-color);
 }
 
 .AuthorAvatar {
