@@ -49,7 +49,7 @@ a.ViewOnGithubBtn {
   padding: 6px 14px;
   background: var(--text-primary);
   color: #fff !important;
-  border-radius: 20px;
+  border-radius: 0;
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
@@ -68,7 +68,7 @@ a.ViewOnGithubBtn:hover {
   align-items: center;
   gap: 4px;
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: 0;
   font-size: 13px;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -146,7 +146,7 @@ a.ViewOnGithubBtn:hover {
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: 0;
   transition: all 0.15s ease;
 }
 
@@ -213,7 +213,7 @@ a.ViewOnGithubBtn:hover {
   gap: 4px;
   background: var(--primary);
   color: #fff;
-  border-radius: 20px;
+  border-radius: 0;
   border: none;
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
   transition: all 0.2s ease;
@@ -260,7 +260,7 @@ a.ViewOnGithubBtn:hover {
   }
 
   .ReadmeInfo {
-    border-radius: 10px;
+    border-radius: 0;
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
   }

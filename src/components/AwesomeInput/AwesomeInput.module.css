@@ -18,7 +18,7 @@
   padding: 11px 16px;
   font-size: 15px;
   border: 2px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 0;
   outline: none;
   transition: all 0.2s ease;
   background: var(--bg-secondary);
@@ -43,7 +43,7 @@
   max-width: 100%;
   background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 0;
   margin-top: 8px;
   padding: 8px 0;
   box-sizing: border-box;
@@ -85,7 +85,7 @@
     width: 100%;
     padding: 10px 14px;
     font-size: 16px;
-    border-radius: 10px;
+    border-radius: 0;
     background: var(--bg-tertiary);
   }
 
@@ -128,7 +128,7 @@
   height: 36px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-radius: 8px;
+  border-radius: 0;
   flex-shrink: 0;
   background: transparent;
   color: var(--text-secondary);
