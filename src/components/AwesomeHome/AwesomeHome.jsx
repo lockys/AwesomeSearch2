@@ -61,8 +61,8 @@ const Homepage = () => {
                     </li>
                     <li className={classes.FeatureItem}>
                         Access any list directly via URL like{' '}
-                        <a href='https://awesomelists.top/#/sindresorhus/awesome-nodejs'>
-                            awesomelists.top/#/sindresorhus/awesome-nodejs
+                        <a href='https://awesomelists.calvinjeng.io/#/sindresorhus/awesome-nodejs'>
+                            awesomelists.calvinjeng.io/#/sindresorhus/awesome-nodejs
                         </a>
                         {' '}(bookmark your favorites!)
                     </li>
@@ -76,7 +76,7 @@ const Homepage = () => {
                 <h2 className={classes.SectionTitle}>Get Started</h2>
                 <p className={classes.SectionContent}>
                     Check out{' '}
-                    <a href='https://awesomelists.top/#/sindresorhus/awesome-nodejs'>
+                    <a href='https://awesomelists.calvinjeng.io/#/sindresorhus/awesome-nodejs'>
                         Awesome Node.js
                     </a>
                     {' '}to see it in action, or use the search bar above to find any awesome list.
