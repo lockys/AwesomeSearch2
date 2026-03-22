@@ -36,51 +36,7 @@ class AwesomeReadme extends Component {
     const repo = this.props.match.params.repo;
     const infoLastMod = JSON.parse(localStorage.getItem('infoLastMod'));
 
-    axios
-      .get(`https://api.awesomelists.top/readme/${user}/${repo}`)
-      .then((res) => {
-        let _html = this.fixImage({
-          user,
-          repo,
-          res,
-        });
-
-        this.setState({
-          _html: _html,
-          user: user,
-          repo: repo,
-          showReadmeInfo: true,
-        });
-      })
-      .catch((err) => {
-        switch (err.response.status) {
-          case 403:
-            this.setState({
-              _html: `<br/><b># Github API rate limit exceeds...</b>
-                      <ol>
-                        <li>Now, we are using github API whose rate limit is 60 requests/hr per IP to retrieve readme content.</li>
-                        <li>We'll figure out a way to resolve this issue recently :)</li>
-                      </ol> 
-                      <div style="width:100%;height:0;padding-bottom:53%;position:relative;"><iframe src="https://giphy.com/embed/zyclIRxMwlY40" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/fire-richard-ayoade-the-it-crowd-zyclIRxMwlY40">via GIPHY</a></p>
-                      `,
-              showReadmeInfo: false,
-            });
-            break;
-          default:
-            this.setState({
-              _html: `<br/><b># Failed to load readme file with ${err.message}.</b><br/><br/>
-                      # How to resolve?
-                      <ol>
-                        <li> The repo you are looking for does not exist. Please click the home icon on the top left to back to home page.</li>
-                        <li> Sorry, you may access us from old Awesome Search...Please re-search this repo and bookmark it.</li>
-                      </ol> 
-                      <div style="width:100%;height:0;padding-bottom:53%;position:relative;"><iframe src="https://giphy.com/embed/zyclIRxMwlY40" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/fire-richard-ayoade-the-it-crowd-zyclIRxMwlY40">via GIPHY</a></p>
-                      `,
-              showReadmeInfo: false,
-            });
-            break;
-        }
-      });
+    this.fetchReadme(user, repo);
 
     axios
       .get(`https://api.github.com/repos/${user}/${repo}`, {
@@ -136,6 +92,59 @@ class AwesomeReadme extends Component {
       }
     }
   }
+
+  fetchReadme = (user, repo) => {
+    axios
+      .get(`https://api.awesomelists.top/readme/${user}/${repo}`)
+      .then((res) => {
+        this.handleReadmeSuccess(user, repo, res);
+      })
+      .catch(() => {
+        this.fetchReadmeFromGithub(user, repo);
+      });
+  };
+
+  fetchReadmeFromGithub = (user, repo) => {
+    axios
+      .get(`https://api.github.com/repos/${user}/${repo}/readme`, {
+        headers: { Accept: 'application/vnd.github.v3.html' },
+      })
+      .then((res) => {
+        this.handleReadmeSuccess(user, repo, res);
+      })
+      .catch((err) => {
+        const status = err.response && err.response.status;
+        if (status === 403) {
+          this.setState({
+            _html: `<br/><b># Github API rate limit exceeded.</b>
+                    <ol>
+                      <li>The GitHub API rate limit is 60 requests/hr per IP for unauthenticated requests.</li>
+                      <li>Please try again later.</li>
+                    </ol>`,
+            showReadmeInfo: false,
+          });
+        } else {
+          this.setState({
+            _html: `<br/><b># Failed to load readme file.</b><br/><br/>
+                    <ol>
+                      <li>The repo may not exist. Click the home icon to go back.</li>
+                      <li>Please re-search this repo and try again.</li>
+                    </ol>`,
+            showReadmeInfo: false,
+          });
+        }
+      });
+  };
+
+  handleReadmeSuccess = (user, repo, res) => {
+    let _html = this.fixImage({ user, repo, res });
+    this.setState({
+      _html,
+      user,
+      repo,
+      showReadmeInfo: true,
+    });
+  };
 
   fixImage = ({ user, repo, res }) => {
     let githubImageUrl = `https://raw.githubusercontent.com/${user}/${repo}/master`;
