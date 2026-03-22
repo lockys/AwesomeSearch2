@@ -3,8 +3,7 @@
   margin: 0 auto;
   padding: 0 16px 16px 16px;
   position: relative;
-  height: 100vh;
-  overflow-y: auto;
+  min-height: 100vh;
 }
 
 .dark-theme {
