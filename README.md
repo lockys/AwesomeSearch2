@@ -1,7 +1,7 @@
 Awesome Search
 =
 [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)  
-https://awesomelists.top  
+https://awesomelists.calvinjeng.io
 This is an new version of [Awesome Search](https://github.com/lockys/AwesomeSearch)   
 
 Kudos
@@ -19,7 +19,7 @@ That's why "Awesome Search" was born.
 Features
 ==
 ✔ Access and search every awesome repo collected in [sindresorhus/awesome](https://github.com/sindresorhus/awesome) in one page quickly.   
-✔ Access an awesome repo by `https://dev.awesomelists.top/#/sindresorhus/awesome-nodejs`. (you can BOOKMARK it!)  
+✔ Access an awesome repo by `https://awesomelists.calvinjeng.io/#/sindresorhus/awesome-nodejs`. (you can BOOKMARK it!)  
 ✔ Use Github API to retrieve README file of an awesome repo, so it's up-to-date.  
 
 Supported awesome lists
