@@ -50,7 +50,7 @@ describe('AwesomeSearch', () => {
       </MemoryRouter>
     );
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search AwesomeList!')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search AwesomeLists!')).toBeInTheDocument();
     });
   });
 

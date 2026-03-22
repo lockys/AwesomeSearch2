@@ -21,7 +21,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 16px 0 12px 0;
-  margin-top: 12px !important;
+  margin-top: 0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -126,11 +126,11 @@
     height: 36px;
     font-size: 20px;
     border-radius: 0;
-    color: var(--primary);
+    color: darkgrey;
   }
 
   .dark-theme .BurgerButton {
-    color: var(--dark-primary);
+    color: #94a3b8;
   }
 
   .ThemeToggle {

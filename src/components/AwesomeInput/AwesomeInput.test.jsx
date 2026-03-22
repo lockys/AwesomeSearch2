@@ -18,19 +18,19 @@ describe('AwesomeInput', () => {
 
   it('renders search input', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    expect(screen.getByPlaceholderText('Search AwesomeList!')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search AwesomeLists!')).toBeInTheDocument();
   });
 
   it('calls searchOnchange when typing', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Search AwesomeList!');
+    const input = screen.getByPlaceholderText('Search AwesomeLists!');
     fireEvent.change(input, { target: { value: 'react' } });
     expect(defaultProps.searchOnchange).toHaveBeenCalled();
   });
 
   it('calls searchInputOnFocus on focus', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Search AwesomeList!');
+    const input = screen.getByPlaceholderText('Search AwesomeLists!');
     fireEvent.focus(input);
     expect(defaultProps.searchInputOnFocus).toHaveBeenCalled();
   });

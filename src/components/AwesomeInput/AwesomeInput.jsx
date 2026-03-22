@@ -37,7 +37,7 @@ const AwesomeInput = (props) => {
         <input
           id='subject'
           type='text'
-          placeholder='Search AwesomeList!'
+          placeholder='Search AwesomeLists!'
           className={classes.SearchInput}
           onChange={props.searchOnchange}
           value={props.value}

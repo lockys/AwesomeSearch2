@@ -6,25 +6,33 @@
 /* ── Sticky Info Bar ── */
 .ReadmeInfo {
   position: sticky;
-  top: var(--header-height, 45px);
+  top: calc(var(--header-height, 45px) + 16px);
   z-index: 10;
   padding: 12px 20px;
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px dotted var(--border-color);
-  margin: 16px 0 24px 0;
+  margin: 24px 0 24px 0;
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ReadmeInfoScrolled {
-  background: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.75);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+.ReadmeInfoScrolled:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
 :global(.dark) .ReadmeInfoScrolled {
-  background: rgba(15, 23, 42, 1);
+  background: rgba(15, 23, 42, 0.75);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark) .ReadmeInfoScrolled:hover {
+  background: rgba(15, 23, 42, 1);
 }
 
 .ReadmeInfoTop {
@@ -333,12 +341,20 @@ a.ViewOnGithubBtn:hover {
   }
 
   .ReadmeContent {
-    padding: 0 16px;
+    padding: 0 16px 100px 16px;
   }
 
   .ReadmeInfo {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
     padding: 10px 12px;
-    margin-bottom: 12px;
+    margin: 0;
+    z-index: 200;
+    border-top: 1px solid var(--border-color);
+    border-bottom: none;
   }
 
   .ReadmeInfoTop {
@@ -373,7 +389,7 @@ a.ViewOnGithubBtn:hover {
 
   .scrollToTop {
     right: 12px;
-    bottom: 16px;
+    bottom: calc(90px + 16px);
     padding: 7px 12px;
     font-size: 13px;
   }
@@ -490,5 +506,12 @@ a.ViewOnGithubBtn:hover {
 @media (min-width: 769px) {
   :global(.dark) .ReadmeInfo {
     border-color: var(--dark-border-color);
+  }
+}
+
+@media (max-width: 768px) {
+  :global(.dark) .ReadmeInfo {
+    border-top-color: var(--dark-border-color);
+    background: rgba(15, 23, 42, 0.97);
   }
 }
