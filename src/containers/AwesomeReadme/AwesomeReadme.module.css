@@ -3,95 +3,121 @@
   max-width: 768px;
 }
 
+/* ── Sticky Info Bar ── */
+.ReadmeInfo {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.ReadmeInfoTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.RepoName {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.ReadmeInfoActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 a.ViewOnGithubBtn {
   border-bottom: 0;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+  gap: 4px;
+  padding: 6px 14px;
   background: var(--text-primary);
   color: #fff !important;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 20px;
+  font-size: 13px;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 a.ViewOnGithubBtn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.ReadmeInfo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 8px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-sm);
-}
-
-.ReadmeInfoLeft {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.RepoStats {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.StatItem {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  opacity: 0.85;
 }
 
 .TOCButton {
   cursor: pointer;
   color: var(--primary);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
   font-weight: 500;
   transition: all 0.2s ease;
+  background: var(--primary-subtle);
+  white-space: nowrap;
 }
 
 .TOCButton:hover {
-  background: var(--primary-subtle);
+  background: var(--primary-subtle-hover);
 }
 
+.RepoStats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.StatItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── TOC Panel (outside sticky bar) ── */
 .ReadmeCategory {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  max-height: 70vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 300px;
-  max-width: calc(100vw - 40px);
-  overflow-y: auto;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  z-index: 50;
-  padding: 0;
-  box-shadow: var(--shadow-lg);
+  max-width: 85vw;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-color);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .ReadmeCategoryHeader {
@@ -100,31 +126,28 @@ a.ViewOnGithubBtn:hover {
   justify-content: space-between;
   padding: 16px;
   border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  background: var(--bg-primary);
-  border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
 }
 
 .ReadmeCategoryTitle {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
 .ReadmeCategoryCloseButton {
   cursor: pointer;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--text-muted);
-  transition: color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 6px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
 }
 
 .ReadmeCategoryCloseButton:hover {
@@ -133,50 +156,77 @@ a.ViewOnGithubBtn:hover {
 }
 
 .ReadmeCategoryList {
+  flex: 1;
+  overflow-y: auto;
   padding: 8px 0;
 }
 
-.ReadmeCategory > div {
+/* TOC level styles — replaces inline colors */
+.TocLevel1 {
   cursor: pointer;
-  color: var(--text-primary);
   padding: 10px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
   transition: all 0.15s ease;
   border-left: 3px solid transparent;
 }
 
-.ReadmeCategory > div:hover {
+.TocLevel2 {
+  cursor: pointer;
+  padding: 8px 16px 8px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.TocLevel3 {
+  cursor: pointer;
+  padding: 6px 16px 6px 40px;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.TocLevel1:hover,
+.TocLevel2:hover,
+.TocLevel3:hover {
   background: var(--bg-tertiary);
   color: var(--primary);
   border-left-color: var(--primary);
 }
 
+/* ── Scroll to Top ── */
 .scrollToTop {
   position: fixed;
   right: 16px;
   bottom: 24px;
   cursor: pointer;
-  font-size: 18px;
-  padding: 10px 14px;
+  font-size: 14px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  border-radius: 24px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-md);
+  gap: 4px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
   transition: all 0.2s ease;
   z-index: 100;
+  font-weight: 500;
 }
 
 .scrollToTop:hover {
-  color: var(--primary);
-  border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  background: var(--primary-dark);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
 }
 
-/* README content styling */
+/* ── README content ── */
 .ReadmeContent {
   line-height: 1.7;
   font-size: 15px;
@@ -203,111 +253,108 @@ a.ViewOnGithubBtn:hover {
   margin-bottom: 8px;
 }
 
+/* ── Desktop ── */
 @media (min-width: 769px) {
   .AwesomeReadme {
     padding-left: 20px;
   }
+
+  .ReadmeInfo {
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+  }
 }
 
+/* ── Mobile ── */
 @media (max-width: 768px) {
   .AwesomeReadme {
-    padding: 0 12px 12px 12px;
+    padding: 0 0 12px 0;
   }
 
   .ReadmeInfo {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 12px;
-    gap: 10px;
-    border-radius: 0;
-    margin: 0 -12px 16px -12px;
-    width: calc(100% + 24px);
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, rgba(244, 114, 182, 0.03) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: none;
+    padding: 10px 12px;
+    margin-bottom: 12px;
   }
 
-  .ReadmeInfoLeft {
-    width: 100%;
-    justify-content: space-between;
+  .ReadmeInfoTop {
+    margin-bottom: 4px;
   }
 
-  .RepoStats {
-    font-size: 13px;
-    gap: 12px;
+  .RepoName {
+    font-size: 15px;
   }
 
   a.ViewOnGithubBtn {
-    padding: 6px 12px;
-    font-size: 13px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  }
-
-  a.ViewOnGithubBtn:hover {
-    opacity: 0.9;
+    padding: 5px 12px;
+    font-size: 12px;
   }
 
   .TOCButton {
-    padding: 6px 10px;
-    font-size: 13px;
-    background: var(--primary-subtle);
-    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .RepoStats {
+    font-size: 12px;
+    gap: 10px;
   }
 
   .ReadmeCategory {
-    left: 0;
-    right: 0;
-    width: auto;
-    max-width: none;
-    margin: 0 12px;
-    border-radius: 8px;
+    width: 100%;
+    max-width: 100vw;
+    border-left: none;
+    box-shadow: -4px 0 30px rgba(0, 0, 0, 0.15);
   }
 
   .scrollToTop {
     right: 12px;
     bottom: 16px;
-    padding: 8px 12px;
-    font-size: 16px;
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-  }
-
-  .scrollToTop:hover {
-    color: #fff;
-    background: var(--primary-dark);
-    border-color: transparent;
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    padding: 7px 12px;
+    font-size: 13px;
   }
 }
 
-/* Dark mode support */
+/* ── Dark mode ── */
 :global(.dark) .ReadmeInfo {
-  background: rgba(15, 23, 42, 0.95);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: rgba(15, 23, 42, 0.97);
+  border-bottom-color: var(--dark-border-color);
+}
+
+:global(.dark) .RepoName {
+  color: var(--dark-text-primary);
+}
+
+:global(.dark) a.ViewOnGithubBtn {
+  background: var(--dark-text-primary);
+  color: var(--dark-bg-primary) !important;
+}
+
+:global(.dark) .TOCButton {
+  color: var(--dark-primary);
+  background: rgba(165, 180, 252, 0.1);
+}
+
+:global(.dark) .TOCButton:hover {
+  background: rgba(165, 180, 252, 0.18);
 }
 
 :global(.dark) .RepoStats {
-  color: var(--dark-text-secondary);
+  color: var(--dark-text-muted);
 }
 
 :global(.dark) .ReadmeCategory {
   background: var(--dark-bg-primary);
-  border-color: var(--dark-border-color);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border-left-color: var(--dark-border-color);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
 }
 
 :global(.dark) .ReadmeCategoryHeader {
-  background: var(--dark-bg-primary);
   border-bottom-color: var(--dark-border-color);
 }
 
 :global(.dark) .ReadmeCategoryTitle {
-  color: var(--dark-text-primary);
+  color: var(--dark-text-muted);
 }
 
 :global(.dark) .ReadmeCategoryCloseButton {
@@ -319,22 +366,24 @@ a.ViewOnGithubBtn:hover {
   background: rgba(165, 180, 252, 0.1);
 }
 
-:global(.dark) .ReadmeCategory > div {
+:global(.dark) .TocLevel1 {
   color: var(--dark-text-primary);
 }
 
-:global(.dark) .ReadmeCategory > div:hover {
+:global(.dark) .TocLevel2 {
+  color: var(--dark-text-secondary);
+}
+
+:global(.dark) .TocLevel3 {
+  color: var(--dark-text-muted);
+}
+
+:global(.dark) .TocLevel1:hover,
+:global(.dark) .TocLevel2:hover,
+:global(.dark) .TocLevel3:hover {
   background: var(--dark-bg-secondary);
   color: var(--dark-primary);
   border-left-color: var(--dark-primary);
-}
-
-:global(.dark) .TOCButton {
-  color: var(--dark-primary);
-}
-
-:global(.dark) .TOCButton:hover {
-  background: rgba(165, 180, 252, 0.1);
 }
 
 :global(.dark) .ReadmeContent h1,
@@ -348,46 +397,18 @@ a.ViewOnGithubBtn:hover {
 }
 
 :global(.dark) .scrollToTop {
-  background: var(--dark-bg-secondary);
-  color: var(--dark-text-secondary);
-  border-color: var(--dark-border-color);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: var(--dark-primary);
+  color: var(--dark-bg-primary);
+  box-shadow: 0 4px 12px rgba(165, 180, 252, 0.25);
 }
 
 :global(.dark) .scrollToTop:hover {
-  color: var(--dark-primary);
-  border-color: var(--dark-primary);
-  box-shadow: 0 4px 12px rgba(165, 180, 252, 0.15);
+  background: var(--dark-primary-light);
+  box-shadow: 0 6px 16px rgba(165, 180, 252, 0.35);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   :global(.dark) .ReadmeInfo {
-    background: linear-gradient(135deg, rgba(165, 180, 252, 0.06) 0%, rgba(249, 168, 212, 0.04) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom-color: var(--dark-border-color);
-    box-shadow: none;
-  }
-
-  :global(.dark) a.ViewOnGithubBtn {
-    background: linear-gradient(135deg, var(--dark-primary) 0%, #818cf8 100%);
-    color: var(--dark-bg-primary) !important;
-  }
-
-  :global(.dark) .TOCButton {
-    background: rgba(165, 180, 252, 0.1);
-  }
-
-  :global(.dark) .scrollToTop {
-    background: var(--dark-primary);
-    color: var(--dark-bg-primary);
-    border: none;
-    box-shadow: 0 4px 12px rgba(165, 180, 252, 0.3);
-  }
-
-  :global(.dark) .scrollToTop:hover {
-    color: var(--dark-bg-primary);
-    background: var(--dark-primary-light);
-    border-color: transparent;
+    border-color: var(--dark-border-color);
   }
 }

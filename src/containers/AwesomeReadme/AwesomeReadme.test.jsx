@@ -40,7 +40,7 @@ describe('AwesomeReadme', () => {
   it('renders View On Github link', () => {
     axios.get.mockReturnValue(new Promise(() => {}));
     renderReadme();
-    const link = screen.getByText('View On Github');
+    const link = screen.getByText('GitHub');
     expect(link).toBeInTheDocument();
     expect(link.getAttribute('href')).toBe('https://github.com/sindresorhus/awesome-nodejs');
   });
@@ -48,7 +48,7 @@ describe('AwesomeReadme', () => {
   it('renders Content (TOC) button', () => {
     axios.get.mockReturnValue(new Promise(() => {}));
     renderReadme();
-    expect(screen.getByText('Content')).toBeInTheDocument();
+    expect(screen.getByText('Contents')).toBeInTheDocument();
   });
 
   it('displays repo name', () => {

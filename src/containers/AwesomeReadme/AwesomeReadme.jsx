@@ -274,59 +274,68 @@ class AwesomeReadme extends Component {
         <div id='anchor-top'></div>
         {this.state.showReadmeInfo && (
           <div className={classes.ReadmeInfo}>
-            <a
-              className={classes.ViewOnGithubBtn}
-              href={`https://github.com/${this.props.match.params.user}/${this.props.match.params.repo}`}
-              target='_blank'
-              rel='noreferrer'
-            >
-              View On Github
-            </a>
-            <span className={classes.TOCButton} onClick={this.showTocHandler}>
-              Content
-            </span>
-            <span>
-              <strong>{this.props.match.params.repo}</strong>
-            </span>
-            <div>
-              <FontAwesomeIcon icon={faStar} /> stars:{this.state.stars}
-            </div>
-            <div>
-              <FontAwesomeIcon icon={faClock} /> Last update at{' '}
-              <TimeAgo datetime={this.state.updateAt} />
-            </div>
-
-            {this.state.showTOC && (
-              <div className={classes.ReadmeCategory}>
-                <FontAwesomeIcon
-                  onClick={this.showTocHandler}
-                  className={classes.ReadmeCategoryCloseButton}
-                  icon={faTimes}
-                />
-                {this.state.headers.map((header, idx) => {
-                  return (
-                    <div
-                      key={idx}
-                      onClick={() => {
-                        this.headersOnClick(header.id);
-                      }}
-                      style={{
-                        fontSize: this.getFontSize(header.level).size,
-                        color: this.getFontSize(header.level).color,
-                      }}
-                    >
-                      {this.buildBullet('-', header.level)} {header.title}
-                    </div>
-                  );
-                })}
+            <div className={classes.ReadmeInfoTop}>
+              <span className={classes.RepoName}>
+                {this.props.match.params.repo}
+              </span>
+              <div className={classes.ReadmeInfoActions}>
+                <a
+                  className={classes.ViewOnGithubBtn}
+                  href={`https://github.com/${this.props.match.params.user}/${this.props.match.params.repo}`}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  GitHub
+                </a>
+                <span className={classes.TOCButton} onClick={this.showTocHandler}>
+                  Contents
+                </span>
               </div>
-            )}
+            </div>
+            <div className={classes.RepoStats}>
+              <span className={classes.StatItem}>
+                <FontAwesomeIcon icon={faStar} /> {this.state.stars}
+              </span>
+              <span className={classes.StatItem}>
+                <FontAwesomeIcon icon={faClock} />{' '}
+                <TimeAgo datetime={this.state.updateAt} />
+              </span>
+            </div>
+          </div>
+        )}
+
+        {this.state.showTOC && (
+          <div className={classes.ReadmeCategory}>
+            <div className={classes.ReadmeCategoryHeader}>
+              <span className={classes.ReadmeCategoryTitle}>Contents</span>
+              <span
+                onClick={this.showTocHandler}
+                className={classes.ReadmeCategoryCloseButton}
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </span>
+            </div>
+            <div className={classes.ReadmeCategoryList}>
+              {this.state.headers.map((header, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className={classes[`TocLevel${Math.min(header.level, 3)}`] || classes.TocLevel3}
+                    onClick={() => {
+                      this.headersOnClick(header.id);
+                    }}
+                  >
+                    {header.title}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
         <div dangerouslySetInnerHTML={{ __html: this.state._html }}></div>
         <div className={classes.scrollToTop} onClick={this.scrollToTop}>
-          <FontAwesomeIcon icon={faLongArrowAltUp} /> Go To Top
+          <FontAwesomeIcon icon={faLongArrowAltUp} /> Top
         </div>
       </div>
     );
