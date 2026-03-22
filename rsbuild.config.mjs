@@ -3,16 +3,16 @@ import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
   plugins: [pluginReact()],
+  source: {
+    entry: { index: './src/index.jsx' },
+  },
   html: {
-    template: './index.html',
+    template: './public/index.html',
   },
   output: {
     assetPrefix: '/',
     copy: [
-      { from: './public', to: '.', globOptions: { ignore: ['**/index.html'] } },
+      { from: './public', globOptions: { ignore: ['**/index.html'] } },
     ],
-  },
-  server: {
-    port: 3000,
   },
 });

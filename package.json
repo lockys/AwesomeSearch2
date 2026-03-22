@@ -9,8 +9,8 @@
     "@fortawesome/react-fontawesome": "^0.1.14",
     "axios": "^0.21.1",
     "fuse.js": "^6.4.6",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-icons": "^4.4.0",
     "react-router-dom": "^5.2.0",
     "timeago-react": "^3.0.2"
@@ -25,14 +25,14 @@
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.7.3",
-    "@rsbuild/plugin-react": "^1.4.6",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^14.6.1",
+    "@rsbuild/core": "^1.2.0",
+    "@rsbuild/plugin-react": "^1.2.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@vitejs/plugin-react": "^6.0.1",
     "gh-pages": "^6.2.0",
-    "jsdom": "^29.0.1",
-    "vitest": "^4.1.0"
+    "jsdom": "^25.0.1",
+    "vitest": "^3.0.0"
   }
 }

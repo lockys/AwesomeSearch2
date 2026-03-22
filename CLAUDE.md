@@ -1,51 +1,147 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
 
-Awesome Search is a React web application that provides a unified search interface for all "awesome" lists from [sindresorhus/awesome](https://github.com/sindresorhus/awesome). The app fetches data from the GitHub API and allows users to browse and search through curated lists of resources.
+**AwesomeSearch** is a React single-page application that provides a searchable interface for browsing [sindresorhus/awesome](https://github.com/sindresorhus/awesome) GitHub lists. Users can search across thousands of curated awesome lists, view README files with interactive table of contents, and toggle dark mode.
 
-Live site: https://awesomelists.top
+**Live site:** [awesomelists.top](https://awesomelists.top)
+
+## Tech Stack
+
+- **Framework:** React 18 (functional + class components)
+- **Bundler:** Rsbuild
+- **Routing:** React Router DOM 5 (HashRouter for GitHub Pages compatibility)
+- **Search:** Fuse.js (fuzzy search)
+- **HTTP:** Axios
+- **Styling:** CSS Modules + Hack CSS framework (loaded via CDN)
+- **Icons:** React Icons, FontAwesome
+- **Testing:** Vitest + React Testing Library
+- **Deployment:** GitHub Pages via GitHub Actions + `gh-pages` package
+- **Package Manager:** npm
+
+## Project Structure
+
+```
+src/
+├── components/              # Presentational (stateless) components
+│   ├── AwesomeRwdMenu/      # Responsive mobile hamburger menu
+│   ├── AwesomeLists/        # List display + sidebar menu (AwesomeListMenu)
+│   ├── AwesomeHome/         # Homepage content & about section
+│   ├── AwesomeInput/        # Search input bar
+│   └── UI/
+│       ├── Spinner/         # Loading indicator
+│       └── Backdrop/        # Modal backdrop overlay
+├── containers/              # Stateful container components
+│   ├── AwesomeSearch/       # Main app state, data fetching, routing
+│   └── AwesomeReadme/       # README viewer with dynamic TOC
+├── App.jsx                  # Root component, theme (dark mode) management
+├── App.css
+├── index.jsx                # React DOM entry point (createRoot)
+├── index.css
+└── setupTests.js            # Vitest test setup
+public/
+├── index.html               # HTML template
+├── CNAME                    # Custom domain: awesomelists.top
+└── manifest.json            # PWA manifest
+.github/
+└── workflows/
+    └── deploy.yml           # GitHub Actions: build + deploy on push to main
+rsbuild.config.mjs           # Rsbuild configuration
+vitest.config.mjs            # Vitest configuration
+```
 
 ## Development Commands
 
 ```bash
-npm start          # Start Rspack dev server (port 5173, auto-opens browser)
-npm run build      # Build for production to /dist
+npm start          # Start dev server (rsbuild dev)
+npm run build      # Production build (output: dist/)
 npm run preview    # Preview production build locally
-npm run deploy     # Build and deploy to GitHub Pages
+npm test           # Run tests once (vitest run)
+npm run test:watch # Run tests in watch mode (vitest)
+npm run deploy     # Build + deploy to GitHub Pages via gh-pages
 ```
 
-## Architecture
+## Architecture & Patterns
 
-**Build System**: Rspack with SWC (migrated from Vite)
+### Component Architecture
+- **Containers** (`src/containers/`): Class-based components managing state and lifecycle methods. Handle data fetching, routing, and business logic.
+- **Presentational** (`src/components/`): Functional components for pure UI rendering. Receive data via props.
+- **No global state management** — state is local to components. Theme state lives in `App.jsx`.
 
-**Routing**: HashRouter from react-router-dom (enables direct linking like `/#/user/repo`)
+### File Extensions
+- All React component files use `.jsx` extension (required by Vite/Vitest for JSX parsing)
+- All component files must `import React from 'react'` (needed for class components and legacy compatibility)
 
-**State Management**: Local component state (class-based in containers, functional in components)
+### Routing
+- Uses `HashRouter` (not `BrowserRouter`) for GitHub Pages compatibility
+- Routes:
+  - `/` — Homepage with category list menu
+  - `/:user/:repo` — README viewer for a specific repo
 
-**Styling**: CSS Modules + [Hack CSS framework](https://hackcss.egoist.dev/) (loaded via CDN)
+### Data Flow
+1. `AwesomeSearch` fetches `awesome.json` from GitHub on mount
+2. Data is flattened into a searchable array for Fuse.js indexing
+3. Category selection filters and displays items via `AwesomeLists`
+4. Clicking an item navigates to `AwesomeReadme`, which fetches the README via custom backend
+5. Repo metadata (stars, last update) is cached in `localStorage`
 
-**Key Data Flow**:
-1. `AwesomeSearch` (container) fetches awesome.json from `lockys/awesome.json` repo on mount
-2. Data is indexed with Fuse.js for fuzzy search in the search input
-3. When a repo is selected, `AwesomeReadme` fetches the rendered README from `api.awesomelists.top`
-4. GitHub API provides repo metadata (stars, last update) with localStorage caching
+### API Endpoints
+- **Awesome list data:** `https://raw.githubusercontent.com/lockys/awesome.json/master/awesome/awesome.json`
+- **README content:** `https://api.awesomelists.top/readme/{user}/{repo}`
+- **Repo metadata:** `https://api.github.com/repos/{user}/{repo}`
 
-**Component Structure**:
-- `src/containers/` - Stateful container components (AwesomeSearch, AwesomeReadme)
-- `src/components/` - Presentational components (AwesomeInput, AwesomeLists, etc.)
-- `src/components/UI/` - Reusable UI primitives (Spinner, Backdrop)
+### Theme System
+- Dark mode toggle persisted in `localStorage` key `__isDark`
+- App component applies class `hacksolarized-dark` or `hack` to root div
+- Uses Hack CSS framework's solarized-dark theme variant
 
-**Theme Support**: Dark/light mode toggle persisted in localStorage (`__isDark`), uses Hack CSS's solarized-dark theme
+## Code Conventions
 
-## External Dependencies
+- **Component naming:** PascalCase for files and exports (e.g., `AwesomeSearch.jsx`)
+- **File extensions:** `.jsx` for all files containing JSX
+- **CSS:** CSS Modules with `ComponentName.module.css` naming
+- **Variables/functions:** camelCase
+- **Responsive breakpoint:** `@media (max-width: 768px)`
+- **Tests:** Co-located with components as `ComponentName.test.jsx`
 
-- **Data source**: https://raw.githubusercontent.com/lockys/awesome.json/master/awesome/awesome.json
-- **README API**: https://api.awesomelists.top/readme/{user}/{repo}
-- **GitHub API**: https://api.github.com/repos/{user}/{repo} (60 requests/hr rate limit)
+## Testing
+
+Tests use **Vitest** with **React Testing Library** and **jsdom** environment.
+
+- Config: `vitest.config.mjs`
+- Setup file: `src/setupTests.js` (imports `@testing-library/jest-dom`)
+- Mock HTTP with `vi.mock('axios')`
+- Components requiring routing must be wrapped in `<MemoryRouter>`
+- Run: `npm test` (single run) or `npm run test:watch` (watch mode)
+
+## Key localStorage Keys
+
+| Key | Purpose |
+|-----|---------|
+| `__isDark` | Dark mode preference (boolean) |
+| `infoLastMod` | Timestamp of last repo metadata fetch |
+| `repoInfo` | Cached repository metadata JSON |
+
+## CI/CD
+
+- **GitHub Actions** workflow at `.github/workflows/deploy.yml`
+- Triggers on push to `main` branch
+- Steps: install → test → build → deploy to gh-pages branch
+- Uses `peaceiris/actions-gh-pages@v4` with CNAME preservation
+- Custom domain: `awesomelists.top`
 
 ## Deployment
 
-GitHub Actions workflow deploys to GitHub Pages on push to main/master. Build output goes to `./build` directory for deployment (note: local Vite builds to `./dist`).
+- Production build outputs to `dist/` directory
+- Hosted on **GitHub Pages** with custom domain `awesomelists.top`
+- Manual deploy via `npm run deploy` (runs `gh-pages -d dist`)
+- Automated deploy via GitHub Actions on push to main
+- Backend API at `api.awesomelists.top` proxies GitHub README requests to avoid rate limits
+
+## Common Pitfalls
+
+- GitHub API has rate limits — the custom backend at `api.awesomelists.top` helps mitigate this for README fetching
+- Image URLs in READMEs need path fixing for relative references (handled in `AwesomeReadme`)
+- HashRouter URLs use `/#/` prefix (e.g., `/#/sindresorhus/awesome-nodejs`)
+- jsdom doesn't fully support `innerText` — avoid relying on it in tests (the `walk` method in AwesomeReadme uses it for TOC generation)
+- All `.jsx` files must import React explicitly for compatibility with the current setup
