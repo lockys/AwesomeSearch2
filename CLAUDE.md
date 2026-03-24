@@ -15,9 +15,12 @@
 - **HTTP:** Axios
 - **Styling:** CSS Modules + Hack CSS framework (loaded via CDN)
 - **Icons:** React Icons, FontAwesome
-- **Testing:** Vitest + React Testing Library
+- **Unit Testing:** Vitest + React Testing Library
+- **E2E Testing:** Playwright (Chromium)
+- **Linting:** ESLint (react-app preset)
 - **Deployment:** GitHub Pages via GitHub Actions + `gh-pages` package
 - **Package Manager:** npm
+- **Node.js:** 20 (CI), 18 (PR previews)
 
 ## Project Structure
 
@@ -26,8 +29,9 @@ src/
 ├── components/              # Presentational (stateless) components
 │   ├── AwesomeRwdMenu/      # Responsive mobile hamburger menu
 │   ├── AwesomeLists/        # List display + sidebar menu (AwesomeListMenu)
-│   ├── AwesomeHome/         # Homepage content & about section
+│   ├── AwesomeHome/         # Homepage content, about section, GoogleAd
 │   ├── AwesomeInput/        # Search input bar
+│   ├── KeyboardShortcuts/   # Keyboard shortcut reference page
 │   └── UI/
 │       ├── Spinner/         # Loading indicator
 │       └── Backdrop/        # Modal backdrop overlay
@@ -36,29 +40,41 @@ src/
 │   └── AwesomeReadme/       # README viewer with dynamic TOC
 ├── App.jsx                  # Root component, theme (dark mode) management
 ├── App.css
+├── App.test.jsx             # Root component tests
 ├── index.jsx                # React DOM entry point (createRoot)
 ├── index.css
 └── setupTests.js            # Vitest test setup
+e2e/                         # Playwright end-to-end tests
+├── fixtures.mjs             # Mock data and helpers
+├── homepage.spec.mjs        # Homepage loading, spinner, categories
+├── search.spec.mjs          # Search input, results, keyboard navigation
+├── theme.spec.mjs           # Dark mode toggle and persistence
+└── shortcuts.spec.mjs       # Keyboard shortcuts page
 public/
 ├── index.html               # HTML template
 ├── CNAME                    # Custom domain: awesomelists.calvinjeng.io
 └── manifest.json            # PWA manifest
 .github/
 └── workflows/
-    └── deploy.yml           # GitHub Actions: build + deploy on push to main
+    ├── deploy.yml           # GitHub Actions: build + deploy on push to main
+    └── pr-preview.yml       # PR preview deployments with auto-cleanup
 rsbuild.config.mjs           # Rsbuild configuration
 vitest.config.mjs            # Vitest configuration
+playwright.config.mjs        # Playwright configuration
+.eslintrc.json               # ESLint config (react-app preset)
 ```
 
 ## Development Commands
 
 ```bash
-npm start          # Start dev server (rsbuild dev)
-npm run build      # Production build (output: dist/)
-npm run preview    # Preview production build locally
-npm test           # Run tests once (vitest run)
-npm run test:watch # Run tests in watch mode (vitest)
-npm run deploy     # Build + deploy to GitHub Pages via gh-pages
+npm start            # Start dev server (rsbuild dev, port 4173)
+npm run build        # Production build (output: dist/)
+npm run preview      # Preview production build locally
+npm test             # Run unit tests once (vitest run)
+npm run test:watch   # Run unit tests in watch mode (vitest)
+npm run test:e2e     # Run Playwright e2e tests (starts dev server automatically)
+npm run test:e2e:ui  # Run Playwright e2e tests with interactive UI
+npm run deploy       # Build + deploy to GitHub Pages via gh-pages
 ```
 
 ## Architecture & Patterns
@@ -77,6 +93,7 @@ npm run deploy     # Build + deploy to GitHub Pages via gh-pages
 - Routes:
   - `/` — Homepage with category list menu
   - `/:user/:repo` — README viewer for a specific repo
+  - `/shortcuts` — Keyboard shortcuts reference page
 
 ### Data Flow
 1. `AwesomeSearch` fetches `awesome.json` from GitHub on mount
@@ -102,17 +119,34 @@ npm run deploy     # Build + deploy to GitHub Pages via gh-pages
 - **CSS:** CSS Modules with `ComponentName.module.css` naming
 - **Variables/functions:** camelCase
 - **Responsive breakpoint:** `@media (max-width: 768px)`
-- **Tests:** Co-located with components as `ComponentName.test.jsx`
+- **Unit tests:** Co-located with components as `ComponentName.test.jsx`
+- **E2E tests:** In `e2e/` directory as `feature.spec.mjs`
 
 ## Testing
+
+### Unit Tests (Vitest)
 
 Tests use **Vitest** with **React Testing Library** and **jsdom** environment.
 
 - Config: `vitest.config.mjs`
 - Setup file: `src/setupTests.js` (imports `@testing-library/jest-dom`)
+- Globals enabled (`describe`, `it`, `expect` available without imports)
+- CSS Modules use `non-scoped` classNameStrategy in tests
 - Mock HTTP with `vi.mock('axios')`
 - Components requiring routing must be wrapped in `<MemoryRouter>`
+- E2E tests are excluded from Vitest (`**/e2e/**`)
 - Run: `npm test` (single run) or `npm run test:watch` (watch mode)
+
+### E2E Tests (Playwright)
+
+End-to-end tests use **Playwright** with Chromium.
+
+- Config: `playwright.config.mjs`
+- Test directory: `e2e/`
+- Shared fixtures/mocks: `e2e/fixtures.mjs`
+- Base URL: `http://localhost:4173` (auto-starts dev server)
+- 1 retry with trace capture on first retry
+- Run: `npm run test:e2e` or `npm run test:e2e:ui` (interactive)
 
 ## Key localStorage Keys
 
@@ -124,11 +158,20 @@ Tests use **Vitest** with **React Testing Library** and **jsdom** environment.
 
 ## CI/CD
 
-- **GitHub Actions** workflow at `.github/workflows/deploy.yml`
+### Production Deploy (`deploy.yml`)
 - Triggers on push to `main` branch
+- Node.js 20, uses `npm ci`
 - Steps: install → test → build → deploy to gh-pages branch
 - Uses `peaceiris/actions-gh-pages@v4` with CNAME preservation
-- Custom domain: `awesomelists.calvinjeng.io`
+- Concurrency group `pages` with cancel-in-progress
+
+### PR Preview Deploy (`pr-preview.yml`)
+- Triggers on PR open/synchronize/reopen
+- Node.js 18, uses `npm ci`
+- Builds with `PUBLIC_URL` set for path-based deployment
+- Deploys to `pr-preview/pr-{number}` on gh-pages
+- Auto-comments on PR with preview URL (updates existing comment on subsequent pushes)
+- Cleanup job removes preview folder when PR is closed
 
 ## Deployment
 
@@ -136,6 +179,7 @@ Tests use **Vitest** with **React Testing Library** and **jsdom** environment.
 - Hosted on **GitHub Pages** with custom domain `awesomelists.calvinjeng.io`
 - Manual deploy via `npm run deploy` (runs `gh-pages -d dist`)
 - Automated deploy via GitHub Actions on push to main
+- PR previews available at `awesomelists.calvinjeng.io/pr-preview/pr-{number}`
 - Backend API at `api-awesomelists.calvinjeng.io` proxies GitHub README requests to avoid rate limits
 
 ## Common Pitfalls
@@ -145,3 +189,5 @@ Tests use **Vitest** with **React Testing Library** and **jsdom** environment.
 - HashRouter URLs use `/#/` prefix (e.g., `/#/sindresorhus/awesome-nodejs`)
 - jsdom doesn't fully support `innerText` — avoid relying on it in tests (the `walk` method in AwesomeReadme uses it for TOC generation)
 - All `.jsx` files must import React explicitly for compatibility with the current setup
+- Dev server runs on port 4173 (configured in `rsbuild.config.mjs`), same port Playwright expects
+- Vitest excludes `e2e/` directory — don't put Playwright tests elsewhere
