@@ -48,6 +48,12 @@ class AwesomeSearch extends Component {
                         return arr.concat(el);
                     }, []);
 
+                this.fuse = new Fuse(subjectsArray, {
+                    keys: ['name'],
+                    threshold: 0.3,
+                    minMatchCharLength: 2,
+                });
+
                 this.setState({subjectsArray: subjectsArray});
 
                 if (!this.state.subjects) {
@@ -86,13 +92,8 @@ class AwesomeSearch extends Component {
     };
 
     searchInputOnChangeHandler = (event) => {
-        const options = {
-            keys: ['name'],
-        };
-
-        const fuse = new Fuse(this.state.subjectsArray, options);
-        const result = fuse.search(event.target.value);
-
+        if (!this.fuse) return;
+        const result = this.fuse.search(event.target.value);
         this.setState({
             search: event.target.value,
             searchResult: result.slice(0, 20),
@@ -101,11 +102,10 @@ class AwesomeSearch extends Component {
     };
 
     searchInputOnFocusHandler = () => {
-        const { search, subjectsArray } = this.state;
+        const { search } = this.state;
         const updates = { showResult: true };
-        if (search && subjectsArray.length > 0) {
-            const fuse = new Fuse(subjectsArray, { keys: ['name'] });
-            updates.searchResult = fuse.search(search).slice(0, 20);
+        if (this.fuse && search) {
+            updates.searchResult = this.fuse.search(search).slice(0, 20);
         }
         this.setState(updates);
     };
