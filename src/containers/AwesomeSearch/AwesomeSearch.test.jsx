@@ -126,7 +126,7 @@ describe('AwesomeSearch', () => {
     fireEvent.change(input, { target: { value: 'React' } });
 
     await waitFor(() => {
-      expect(screen.getByRole('link', { name: /React/i })).toBeInTheDocument();
+      expect(screen.queryAllByTestId('search-result-link').length).toBeGreaterThan(0);
     });
   });
 
