@@ -95,7 +95,7 @@ describe('AwesomeSearch', () => {
     });
   });
 
-  it('does not show search results when only one character is typed', async () => {
+  it('opens the results panel when a single character is typed', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
@@ -106,11 +106,12 @@ describe('AwesomeSearch', () => {
     // Wait for data to load
     const input = await screen.findByPlaceholderText('Search AwesomeLists!');
 
-    // Type a single character
+    // Type a single character — panel should open (showResult: true)
     fireEvent.change(input, { target: { value: 'R' } });
 
-    // No search result links should be visible
-    expect(screen.queryAllByTestId('search-result-link')).toHaveLength(0);
+    await waitFor(() => {
+      expect(screen.getByTestId('search-results')).toBeInTheDocument();
+    });
   });
 
   it('shows matching results when query closely matches a list name', async () => {
@@ -126,7 +127,9 @@ describe('AwesomeSearch', () => {
     fireEvent.change(input, { target: { value: 'React' } });
 
     await waitFor(() => {
-      expect(screen.queryAllByTestId('search-result-link').length).toBeGreaterThan(0);
+      const links = screen.queryAllByTestId('search-result-link');
+      expect(links.length).toBeGreaterThan(0);
+      expect(links[0]).toHaveTextContent('React');
     });
   });
 
