@@ -78,7 +78,7 @@
     height: 36px;
     font-size: 20px;
     cursor: pointer;
-    color: var(--accent-dark);
+    color: var(--text-secondary);
     flex-shrink: 0;
     transition: color 0.2s ease;
   }
@@ -88,7 +88,7 @@
   }
 
   :global(.dark) .ThemeToggle {
-    color: var(--dark-accent);
+    color: var(--dark-text-secondary);
   }
 
   :global(.dark) .ThemeToggle:hover {
@@ -104,7 +104,7 @@
   .MenuTitle {
     font-size: 11px;
     font-weight: 700;
-    color: var(--accent-dark);
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin: 0;
@@ -154,6 +154,6 @@
   }
 
   :global(.dark) .MenuTitle {
-    color: var(--dark-accent);
+    color: var(--dark-text-muted);
   }
 }
