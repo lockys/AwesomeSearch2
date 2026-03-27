@@ -5,7 +5,7 @@
 .ListHeader {
   margin-bottom: 24px;
   padding: 20px 0 16px;
-  border-bottom: 1px dotted var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -96,8 +96,6 @@
 
 :global(.dark) .ListItem:hover {
   background: #273449;
-  border-color: var(--dark-primary);
-  box-shadow: 0 4px 12px rgba(165, 180, 252, 0.15);
 }
 
 :global(.dark) .ListItem a {
@@ -128,10 +126,6 @@
 
   .ListTitle {
     font-size: 20px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
   .ListGrid {
@@ -158,11 +152,3 @@
   }
 }
 
-@media (max-width: 768px) {
-  :global(.dark) .ListTitle {
-    background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-}

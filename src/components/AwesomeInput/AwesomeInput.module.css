@@ -120,7 +120,7 @@
 
   .SearchResultItem:active {
     background-color: var(--primary-subtle-hover);
-    border-left-color: var(--accent-dark);
+    border-left-color: var(--primary);
   }
 }
 

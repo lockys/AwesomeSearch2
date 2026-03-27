@@ -29,11 +29,8 @@
 }
 
 .HeroSection {
-  text-align: center;
   padding: 32px 16px;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(244, 114, 182, 0.08) 50%, rgba(99, 102, 241, 0.04) 100%);
-  border-radius: 0;
 }
 
 .HeroTitle {
@@ -43,13 +40,6 @@
   margin: 0 0 12px 0;
 }
 
-.HeroTitle .highlight {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .HeroSubtitle {
   font-size: 16px;
   color: var(--text-secondary);
@@ -57,20 +47,14 @@
   line-height: 1.6;
 }
 
+.HeroSubtitle a {
+  color: var(--primary);
+}
+
 .BadgeGroup {
   display: flex;
   gap: 8px;
-  justify-content: center;
   flex-wrap: wrap;
-}
-
-.BadgeGroup a {
-  display: inline-block;
-  transition: transform 0.2s ease;
-}
-
-.BadgeGroup a:hover {
-  transform: translateY(-2px);
 }
 
 .Section {
@@ -78,13 +62,10 @@
 }
 
 .SectionTitle {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
-  margin: 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--primary);
-  display: inline-block;
+  margin: 0 0 8px 0;
 }
 
 .SectionContent {
@@ -96,89 +77,6 @@
   color: var(--primary);
 }
 
-.FeatureList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.FeatureItem {
-  padding: 12px 0 12px 28px;
-  position: relative;
-  border-bottom: 1px solid var(--border-color);
-  color: #475569;
-}
-
-.FeatureItem::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 18px;
-  width: 8px;
-  height: 8px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  border-radius: 50%;
-}
-
-.FeatureItem:last-child {
-  border-bottom: none;
-}
-
-.FeatureItem a {
-  color: var(--primary);
-  text-decoration: none;
-}
-
-.FeatureItem a:hover {
-  text-decoration: underline;
-}
-
-.AuthorCard {
-  display: flex;
-  gap: 16px;
-  padding: 16px;
-  background: var(--bg-secondary);
-  border-radius: 0;
-  margin-bottom: 12px;
-  border: 1px dotted var(--border-color);
-}
-
-.AuthorAvatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.AuthorInfo {
-  flex: 1;
-}
-
-.AuthorName {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0 0 4px 0;
-}
-
-.AuthorName a {
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 400;
-}
-
-.AuthorName a:hover {
-  text-decoration: underline;
-}
-
-.AuthorBio {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 0;
-  line-height: 1.5;
-}
-
 .Divider {
   border: none;
   border-top: 1px solid var(--border-color);
@@ -186,40 +84,31 @@
 }
 
 .Footer {
-  text-align: right;
   font-size: 14px;
   color: var(--text-muted);
   padding-top: 16px;
 }
 
-.Footer .highlight {
+.Footer a {
   color: var(--primary);
   font-weight: 500;
 }
 
-/* Dark mode support */
-:global(.dark) .HeroSection {
-  background: linear-gradient(135deg, rgba(165, 180, 252, 0.1) 0%, rgba(249, 168, 212, 0.08) 50%, rgba(165, 180, 252, 0.06) 100%);
-}
-
+/* Dark mode */
 :global(.dark) .HeroTitle {
   color: var(--dark-text-primary);
-}
-
-:global(.dark) .HeroTitle .highlight {
-  background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 :global(.dark) .HeroSubtitle {
   color: var(--dark-text-secondary);
 }
 
+:global(.dark) .HeroSubtitle a {
+  color: var(--dark-primary);
+}
+
 :global(.dark) .SectionTitle {
   color: var(--dark-text-primary);
-  border-bottom-color: var(--dark-primary);
 }
 
 :global(.dark) .SectionContent {
@@ -230,55 +119,23 @@
   color: var(--dark-primary);
 }
 
-:global(.dark) .FeatureItem {
-  border-bottom-color: var(--dark-border-color);
-  color: #cbd5e1;
-}
-
-:global(.dark) .FeatureItem::before {
-  background: linear-gradient(135deg, var(--dark-primary), var(--dark-accent));
-}
-
-:global(.dark) .FeatureItem a {
-  color: var(--dark-primary);
-}
-
-:global(.dark) .AuthorCard {
-  background: var(--dark-bg-secondary);
-  border-color: var(--dark-border-color);
-}
-
-:global(.dark) .AuthorName {
-  color: var(--dark-text-primary);
-}
-
-:global(.dark) .AuthorName a {
-  color: var(--dark-primary);
-}
-
-:global(.dark) .AuthorBio {
-  color: var(--dark-text-secondary);
-}
-
 :global(.dark) .Divider {
   border-top-color: var(--dark-border-color);
 }
 
-:global(.dark) .Footer .highlight {
+:global(.dark) .Footer a {
   color: var(--dark-primary);
 }
 
-/* Mobile responsive */
+/* Mobile */
 @media (max-width: 768px) {
   .HomePage {
     padding: 12px;
   }
 
   .HeroSection {
-    padding: 28px 16px;
+    padding: 24px 0;
     margin-bottom: 20px;
-    border-radius: 0;
-    background: linear-gradient(160deg, rgba(99, 102, 241, 0.08) 0%, rgba(244, 114, 182, 0.1) 40%, rgba(52, 211, 153, 0.06) 100%);
   }
 
   .HeroTitle {
@@ -295,32 +152,10 @@
   }
 
   .SectionTitle {
-    font-size: 18px;
-  }
-
-  .FeatureItem {
-    padding: 10px 0 10px 24px;
-    font-size: 14px;
-  }
-
-  .AuthorCard {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .AuthorAvatar {
-    width: 80px;
-    height: 80px;
+    font-size: 16px;
   }
 
   .Divider {
     margin: 24px 0;
-  }
-}
-
-@media (max-width: 768px) {
-  :global(.dark) .HeroSection {
-    background: linear-gradient(160deg, rgba(165, 180, 252, 0.12) 0%, rgba(249, 168, 212, 0.1) 40%, rgba(52, 211, 153, 0.06) 100%);
   }
 }
