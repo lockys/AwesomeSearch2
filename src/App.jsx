@@ -4,7 +4,7 @@ import { HashRouter } from 'react-router-dom';
 import './App.css';
 
 function App() {
-  const [isDark, setIsDark] = useState(localStorage.getItem('__isDark') === 'true');
+  const [isDark, setIsDark] = useState(localStorage.getItem('__isDark') !== null ? localStorage.getItem('__isDark') === 'true' : true);
   const theme = isDark ? ' solarized-dark' : '';
 
   useEffect(() => {
