@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import classes from './AwesomeReadme.module.css';
 import TimeAgo from 'timeago-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -406,6 +407,14 @@ class AwesomeReadme extends Component {
                 {this.props.match.params.repo}
               </span>
               <div className={classes.ReadmeInfoActions}>
+                <Link
+                  className={classes.BackButton}
+                  to="/"
+                  aria-label="Back to list"
+                  data-testid="readme-back-button"
+                >
+                  ← Back
+                </Link>
                 <a
                   className={classes.ViewOnGithubBtn}
                   href={`https://github.com/${this.props.match.params.user}/${this.props.match.params.repo}`}

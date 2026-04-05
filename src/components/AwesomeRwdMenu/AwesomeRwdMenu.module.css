@@ -19,7 +19,7 @@
     z-index: 998;
     opacity: 0;
     visibility: hidden;
-    transition: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
   }
@@ -42,7 +42,7 @@
     padding: 20px 0;
     overflow-y: auto;
     box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
-    transition: none;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .AwesomeRwdMenu.open {
