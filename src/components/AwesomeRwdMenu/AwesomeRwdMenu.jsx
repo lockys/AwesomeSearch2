@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,25 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import classes from './AwesomeRwdMenu.module.css';
 
 const AwesomeRwdMenu = ({ topics, topicOnClickHandler, isOpen, onClose, isDark, onThemeChange }) => {
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY.current);
+    if (deltaX > 40 && deltaY < 30) {
+      onClose();
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+
   return (
     <>
       <div
@@ -18,6 +37,8 @@ const AwesomeRwdMenu = ({ topics, topicOnClickHandler, isOpen, onClose, isDark, 
         className={`menu ${classes.AwesomeRwdMenu} ${isOpen ? classes.open : ''}`}
         aria-label="Categories menu"
         data-testid="rwd-menu"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         <div className={classes.MenuTop} data-testid="rwd-menu-top">
           <Link

@@ -76,8 +76,15 @@ class AwesomeSearch extends Component {
         window.addEventListener('resize', this.updateHeaderHeight);
     }
 
+    componentDidUpdate(_, prevState) {
+        if (prevState.showMenu !== this.state.showMenu) {
+            document.body.style.overflow = this.state.showMenu ? 'hidden' : '';
+        }
+    }
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateHeaderHeight);
+        document.body.style.overflow = '';
     }
 
     updateHeaderHeight = () => {

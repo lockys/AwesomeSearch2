@@ -61,6 +61,10 @@
   flex-shrink: 0;
 }
 
+a.BackButton {
+  display: none;
+}
+
 a.ViewOnGithubBtn {
   border-bottom: 0;
   display: inline-flex;
@@ -213,7 +217,10 @@ a.ViewOnGithubBtn:hover {
 
 .TocLevel1:hover,
 .TocLevel2:hover,
-.TocLevel3:hover {
+.TocLevel3:hover,
+.TocLevel1:active,
+.TocLevel2:active,
+.TocLevel3:active {
   background: var(--bg-tertiary);
   color: var(--primary);
   border-left-color: var(--primary);
@@ -250,8 +257,14 @@ a.ViewOnGithubBtn:hover {
 .ReadmeContent {
   line-height: 1.7;
   font-size: 15px;
-  overflow-x: hidden;
   word-break: break-word;
+}
+
+.ReadmeContent pre,
+.ReadmeContent code {
+  overflow-x: auto;
+  word-break: normal;
+  white-space: pre;
 }
 
 .ReadmeContent h1,
@@ -375,6 +388,23 @@ a.ViewOnGithubBtn:hover {
     font-size: 15px;
   }
 
+  a.BackButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary) !important;
+    text-decoration: none;
+    border-bottom: none !important;
+    white-space: nowrap;
+  }
+
+  a.BackButton:active {
+    opacity: 0.7;
+  }
+
   a.ViewOnGithubBtn {
     padding: 5px 12px;
     font-size: 12px;
@@ -403,6 +433,15 @@ a.ViewOnGithubBtn:hover {
     padding: 7px 12px;
     font-size: 13px;
   }
+
+  .LightboxContent {
+    max-width: 95vw;
+  }
+
+  .LightboxClose {
+    top: 8px;
+    right: 8px;
+  }
 }
 
 /* ── Dark mode ── */
@@ -413,6 +452,10 @@ a.ViewOnGithubBtn:hover {
 
 :global(.dark) .RepoName {
   color: var(--dark-text-primary);
+}
+
+:global(.dark) a.BackButton {
+  color: var(--dark-text-secondary) !important;
 }
 
 :global(.dark) a.ViewOnGithubBtn {
@@ -470,7 +513,10 @@ a.ViewOnGithubBtn:hover {
 
 :global(.dark) .TocLevel1:hover,
 :global(.dark) .TocLevel2:hover,
-:global(.dark) .TocLevel3:hover {
+:global(.dark) .TocLevel3:hover,
+:global(.dark) .TocLevel1:active,
+:global(.dark) .TocLevel2:active,
+:global(.dark) .TocLevel3:active {
   background: var(--dark-bg-secondary);
   color: var(--dark-primary);
   border-left-color: var(--dark-primary);
