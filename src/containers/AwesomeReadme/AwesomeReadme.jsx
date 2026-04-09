@@ -80,7 +80,6 @@ class AwesomeReadme extends Component {
           'If-Modified-Since': infoLastMod
             ? infoLastMod[`${user}/${repo}`]
             : null,
-          Authorization: 'fakeString',
         },
       })
       .then((res) => {
@@ -109,10 +108,9 @@ class AwesomeReadme extends Component {
         );
       })
       .catch((err) => {
-        if (err.response.status === 304) {
-          this.setState(
-            JSON.parse(localStorage.getItem('repoInfo'))[`${user}/${repo}`]
-          );
+        if (err.response?.status === 304) {
+          const cached = JSON.parse(localStorage.getItem('repoInfo'))?.[`${user}/${repo}`];
+          if (cached) this.setState(cached);
         }
       });
   }
