@@ -56,4 +56,10 @@ describe('AwesomeReadme', () => {
     renderReadme();
     expect(screen.getByText('awesome-nodejs')).toBeInTheDocument();
   });
+
+  it('shows scroll progress label at the bottom area', () => {
+    axios.get.mockReturnValue(new Promise(() => {}));
+    renderReadme();
+    expect(screen.getByTestId('readme-scroll-progress')).toHaveTextContent('0%');
+  });
 });
