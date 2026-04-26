@@ -4,7 +4,7 @@ import classes from './AwesomeHome.module.css';
 const SYNONYMS = ['awesome', 'curated', 'indexed', 'awesome'];
 const SUFFIX = '.search';
 
-function AnimatedWordmark({ clientX }) {
+function AnimatedWordmark({ clientXRef }) {
   const [displayed, setDisplayed] = useState('');
   const [suffix, setSuffix] = useState('');
   const [cursorOn, setCursorOn] = useState(true);
@@ -71,17 +71,36 @@ function AnimatedWordmark({ clientX }) {
     return () => timeouts.forEach(clearTimeout);
   }, []);
 
-  const getRaise = (charIdx, totalLen) => {
-    if (clientX === null || !containerRef.current) return 0;
-    const rect = containerRef.current.getBoundingClientRect();
-    const relX = clientX - rect.left;
-    if (totalLen === 0) return 0;
-    const charX = (charIdx + 0.5) / totalLen * rect.width;
-    const dist = Math.abs(relX - charX);
-    return Math.max(0, 18 * Math.exp(-(dist * dist) / (2 * 48 * 48)));
-  };
-
-  const totalLen = displayed.length + suffix.length;
+  // RAF loop: directly write transforms — no React re-renders on mouse move
+  useEffect(() => {
+    let rafId;
+    const tick = () => {
+      if (containerRef.current) {
+        const cx = clientXRef.current;
+        const spans = containerRef.current.querySelectorAll('[data-ch]');
+        spans.forEach((span) => {
+          // Skip spans still running their pop animation
+          const anim = span.getAnimations?.();
+          if (anim && anim.length > 0) {
+            rafId = requestAnimationFrame(tick);
+            return;
+          }
+          if (cx === null) {
+            span.style.transform = '';
+          } else {
+            const r = span.getBoundingClientRect();
+            const charCx = r.left + r.width / 2;
+            const dist = Math.abs(cx - charCx);
+            const raise = Math.max(0, 20 * Math.exp(-(dist * dist) / (2 * 55 * 55)));
+            span.style.transform = raise > 0.3 ? `translateY(-${raise.toFixed(1)}px)` : '';
+          }
+        });
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [clientXRef]);
 
   return (
     <span className={classes.Wordmark} ref={containerRef}>
@@ -94,14 +113,13 @@ function AnimatedWordmark({ clientX }) {
       `}</style>
       {displayed.split('').map((ch, i) => {
         const isNew = i === displayed.length - 1;
-        const raise = isNew ? 0 : getRaise(i, totalLen);
         return (
           <span
             key={`w-${i}-${displayed.length}`}
+            data-ch="1"
             style={{
               display: 'inline-block',
-              transform: raise > 0 ? `translateY(-${raise.toFixed(1)}px)` : undefined,
-              transition: raise > 0 ? 'transform 80ms ease-out' : undefined,
+              transition: 'transform 90ms ease-out',
               animation: isNew ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
             }}
           >
@@ -111,15 +129,14 @@ function AnimatedWordmark({ clientX }) {
       })}
       {suffix.split('').map((ch, i) => {
         const isNew = i === suffix.length - 1;
-        const raise = isNew ? 0 : getRaise(displayed.length + i, totalLen);
         return (
           <span
             key={`s-${i}-${suffix.length}`}
+            data-ch="1"
             style={{
               display: 'inline-block',
               color: 'var(--amber)',
-              transform: raise > 0 ? `translateY(-${raise.toFixed(1)}px)` : undefined,
-              transition: raise > 0 ? 'transform 80ms ease-out' : undefined,
+              transition: 'transform 90ms ease-out',
               animation: isNew ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
             }}
           >
@@ -144,7 +161,7 @@ export default function AwesomeHome({
   onOpen,
 }) {
   const [q, setQ] = useState('');
-  const [logoClientX, setLogoClientX] = useState(null);
+  const logoClientXRef = useRef(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -188,11 +205,11 @@ export default function AwesomeHome({
       <div className={classes.Hero}>
         <div
           className={classes.LogoBlock}
-          onMouseMove={(e) => setLogoClientX(e.clientX)}
-          onMouseLeave={() => setLogoClientX(null)}
+          onMouseMove={(e) => { logoClientXRef.current = e.clientX; }}
+          onMouseLeave={() => { logoClientXRef.current = null; }}
         >
           <div className={classes.LogoText}>
-            <AnimatedWordmark clientX={logoClientX} />
+            <AnimatedWordmark clientXRef={logoClientXRef} />
           </div>
         </div>
 
