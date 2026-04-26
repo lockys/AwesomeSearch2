@@ -54,7 +54,14 @@ function Highlight({ text, query }) {
   return <>{out}</>;
 }
 
-const AwesomeInput = ({ query, setQuery, results, onOpen, onClear }) => {
+const AwesomeInput = ({
+  query,
+  setQuery,
+  results,
+  onOpen,
+  onClear,
+  autoFocus = true,
+}) => {
   const [selected, setSelected] = useState(0);
   const inputRef = useRef(null);
   const listRef = useRef(null);
@@ -64,8 +71,9 @@ const AwesomeInput = ({ query, setQuery, results, onOpen, onClear }) => {
   }, [results]);
 
   useEffect(() => {
+    if (!autoFocus) return;
     inputRef.current?.focus();
-  }, []);
+  }, [autoFocus]);
 
   // Scroll selected into view
   useEffect(() => {

@@ -16,6 +16,7 @@ class AwesomeSearch extends Component {
     search: '',
     searchResult: [],
     errorMessage: null,
+    shouldAutoFocusSearchInput: true,
   };
 
   componentDidMount() {
@@ -48,14 +49,22 @@ class AwesomeSearch extends Component {
   handleSearch = (value) => {
     if (!this.fuse) return;
     const results = this.fuse.search(value).slice(0, 20);
-    this.setState({ search: value, searchResult: results });
+    this.setState({
+      search: value,
+      searchResult: results,
+      shouldAutoFocusSearchInput: true,
+    });
   };
 
   handleCategoryFilter = (categoryName) => {
     const results = this.state.subjectsArray
       .filter((item) => item.cate === categoryName)
       .map((item) => ({ item, score: 0, refIndex: 0 }));
-    this.setState({ search: categoryName, searchResult: results });
+    this.setState({
+      search: categoryName,
+      searchResult: results,
+      shouldAutoFocusSearchInput: false,
+    });
   };
 
   handleOpen = (repo) => {
@@ -87,7 +96,13 @@ class AwesomeSearch extends Component {
   };
 
   render() {
-    const { search, searchResult, subjects, subjectsArray } = this.state;
+    const {
+      search,
+      searchResult,
+      subjects,
+      subjectsArray,
+      shouldAutoFocusSearchInput,
+    } = this.state;
     const { location } = this.props;
     const isHome = location.pathname === '/';
     const isSearchActive = isHome && search.trim().length >= 2;
@@ -124,6 +139,7 @@ class AwesomeSearch extends Component {
                       results={searchResult}
                       onOpen={this.handleOpen}
                       onClear={() => this.setState({ search: '' })}
+                      autoFocus={shouldAutoFocusSearchInput}
                     />
                   ) : (
                     <AwesomeHome

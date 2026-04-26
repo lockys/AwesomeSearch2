@@ -124,4 +124,20 @@ describe('AwesomeSearch', () => {
 
     expect(screen.queryAllByTestId('search-result-link')).toHaveLength(0);
   });
+
+  it('does not auto-focus search input after clicking a category', async () => {
+    axios.get.mockResolvedValue({ data: mockSubjects });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(await screen.findByRole('button', { name: /Front-End/i }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('search-results')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('search-input')).not.toHaveFocus();
+  });
 });
