@@ -1,86 +1,349 @@
-import React from 'react';
-
-const hideBadgeOnError = (e) => { e.currentTarget.style.display = 'none'; };
-import {Link} from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
 import classes from './AwesomeHome.module.css';
 
-const Homepage = () => {
-    return (
-        <div className={classes.HomePage} data-testid="home-page">
-            <div className={classes.NoticeBanner}>
-                <strong>Notice:</strong> We are moving to a new domain.{' '}
-                <a href='https://awesomelists.calvinjeng.io' target='_blank' rel='noreferrer'>
-                    awesomelists.calvinjeng.io
-                </a>
-                {' '}will be the new home of Awesome Search.
-            </div>
+const SYNONYMS = ['awesome', 'curated', 'indexed', 'awesome'];
+const SUFFIX = 'search';
 
-            <div className={classes.HeroSection}>
-                <h1 className={classes.HeroTitle}>Awesome Search</h1>
-                <p className={classes.HeroSubtitle}>
-                    Search across all{' '}
-                    <a href='https://github.com/sindresorhus/awesome'>sindresorhus/awesome</a>{' '}
-                    lists in one place.
-                </p>
-                <div className={classes.BadgeGroup}>
-                    <a
-                        href='https://github.com/sindresorhus/awesome'
-                        rel='noreferrer'
-                        target='_blank'
-                    >
-                        <img src='https://awesome.re/badge-flat2.svg' alt='awesome badge' onError={hideBadgeOnError}/>
-                    </a>
-                    <a
-                        href='https://github.com/lockys/NewAwesomeSearch'
-                        rel='noreferrer'
-                        target='_blank'
-                    >
-                        <img
-                            src='https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square'
-                            alt='PR is welcome'
-                            onError={hideBadgeOnError}
-                        />
-                    </a>
-                </div>
-            </div>
+function AnimatedWordmark({ triggerRef }) {
+  const [displayed, setDisplayed] = useState('');
+  const [suffix, setSuffix] = useState('');
+  const [cursorOn, setCursorOn] = useState(true);
+  const containerRef = useRef(null);
+  const prevDispLenRef = useRef(0);
+  const prevSuffixLenRef = useRef(0);
 
-            <div className={classes.Section}>
-                <h2 className={classes.SectionTitle}>About</h2>
-                <p className={classes.SectionContent}>
-                    There are thousands of awesome lists curated by the community. This tool
-                    lets you search and browse them all from a single page. You can also access
-                    any list directly via URL, e.g.{' '}
-                    <a href='https://awesomelists.calvinjeng.io/#/sindresorhus/awesome-nodejs'>
-                        awesome-nodejs
-                    </a>.
-                    {' '}See <Link to="/shortcuts">keyboard shortcuts</Link> for faster navigation.
-                </p>
-            </div>
+  useEffect(() => {
+    const id = setInterval(() => setCursorOn((c) => !c), 530);
+    return () => clearInterval(id);
+  }, []);
 
-            <div className={classes.Section}>
-                <h2 className={classes.SectionTitle}>Credits</h2>
-                <p className={classes.SectionContent}>
-                    <a href='https://github.com/sindresorhus/awesome'>sindresorhus/awesome</a>,{' '}
-                    <a href='https://github.com/sindresorhus/awesome/graphs/contributors'>
-                        all awesome list authors
-                    </a>, and{' '}
-                    <a href='https://github.com/egoist/hack' rel='noreferrer' target='_blank'>
-                        egoist/hack
-                    </a>{' '}(CSS framework)
-                </p>
-            </div>
+  useEffect(() => {
+    const timeouts = [];
+    const q = (fn, ms) => timeouts.push(setTimeout(fn, ms));
 
-            <hr className={classes.Divider}/>
+    const typeWord = (word, onDone) => {
+      let i = 0;
+      const step = () => {
+        i++;
+        setDisplayed(word.slice(0, i));
+        if (i < word.length) q(step, 60 + Math.random() * 40);
+        else q(onDone, 900);
+      };
+      step();
+    };
 
-            <div className={classes.Footer}>
-                Built by{' '}
-                <a href='https://github.com/lockys' target='_blank' rel='noreferrer'>@lockys</a>
-                {' '}and{' '}
-                <a href='https://github.com/John-Lin' target='_blank' rel='noreferrer'>@John-Lin</a>
-                {' '}&middot; 2015&ndash;{new Date().getFullYear()}
-            </div>
+    const eraseWord = (word, onDone) => {
+      let i = word.length;
+      const step = () => {
+        i--;
+        setDisplayed(word.slice(0, i));
+        if (i > 0) q(step, 35);
+        else q(onDone, 180);
+      };
+      step();
+    };
+
+    const typeSuffix = () => {
+      let i = 0;
+      const step = () => {
+        i++;
+        setSuffix(SUFFIX.slice(0, i));
+        if (i < SUFFIX.length) q(step, 70);
+      };
+      q(step, 200);
+    };
+
+    const runSynonym = (idx) => {
+      if (idx >= SYNONYMS.length) {
+        setDisplayed(SYNONYMS[SYNONYMS.length - 1]);
+        typeSuffix();
+        return;
+      }
+      const w = SYNONYMS[idx];
+      typeWord(w, () => {
+        if (idx === SYNONYMS.length - 1) {
+          runSynonym(idx + 1);
+        } else {
+          eraseWord(w, () => runSynonym(idx + 1));
+        }
+      });
+    };
+
+    runSynonym(0);
+    return () => timeouts.forEach(clearTimeout);
+  }, []);
+
+  // Register an on-demand animator — fires only on actual mouse events, never polls
+  useEffect(() => {
+    let rafId = null;
+    triggerRef.current = (clientX) => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (!containerRef.current) return;
+        const spans = containerRef.current.querySelectorAll('[data-ch]');
+        spans.forEach((span) => {
+          const hasPopAnim = span.getAnimations?.().some(a => a.animationName === 'wmpop');
+          if (hasPopAnim) return;
+          if (clientX === null) {
+            span.style.transform = '';
+          } else {
+            const r = span.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const dist = Math.abs(clientX - cx);
+            const raise = Math.max(0, 20 * Math.exp(-(dist * dist) / (2 * 55 * 55)));
+            span.style.transform = raise > 0.3 ? `translateY(-${raise.toFixed(1)}px)` : '';
+          }
+        });
+      });
+    };
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      triggerRef.current = null;
+    };
+  }, [triggerRef]);
+
+  return (
+    <span className={classes.Wordmark} ref={containerRef}>
+      <style>{`
+        @keyframes wmpop {
+          0%   { transform: translateY(-0.18em) scale(0.9); opacity: 0; }
+          60%  { transform: translateY(0.02em) scale(1.04); opacity: 1; }
+          100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+      `}</style>
+      {(() => {
+        const justTypedDispIdx = displayed.length > prevDispLenRef.current ? displayed.length - 1 : -1;
+        const justTypedSuffixIdx = suffix.length > prevSuffixLenRef.current ? suffix.length - 1 : -1;
+        prevDispLenRef.current = displayed.length;
+        prevSuffixLenRef.current = suffix.length;
+        return (
+          <>
+            {displayed.split('').map((ch, i) => (
+              <span
+                key={`w-${i}-${displayed.length}`}
+                data-ch="1"
+                style={{
+                  display: 'inline-block',
+                  transition: 'transform 90ms ease-out',
+                  animation: i === justTypedDispIdx ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
+                }}
+              >
+                {ch}
+              </span>
+            ))}
+            {suffix.split('').map((ch, i) => (
+              <span
+                key={`s-${i}-${suffix.length}`}
+                data-ch="1"
+                style={{
+                  display: 'inline-block',
+                  color: 'var(--amber)',
+                  transition: 'transform 90ms ease-out',
+                  animation: i === justTypedSuffixIdx ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
+                }}
+              >
+                {ch}
+              </span>
+            ))}
+          </>
+        );
+      })()}
+      <span
+        className={classes.WordmarkCursor}
+        style={{ opacity: cursorOn ? 1 : 0 }}
+      />
+    </span>
+  );
+}
+
+export default function AwesomeHome({
+  subjects,
+  categories,
+  subjectsArray,
+  onSearch,
+  onCategoryFilter,
+  onOpen,
+}) {
+  const [q, setQ] = useState('');
+  const logoTriggerRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const submit = (val) => {
+    const trimmed = (val ?? q).trim();
+    if (trimmed.length >= 2) onSearch(trimmed);
+  };
+
+  // Read cached star counts for trending
+  const repoInfo = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('repoInfo')) || {};
+    } catch {
+      return {};
+    }
+  })();
+
+  const enriched = subjectsArray.map((item) => ({
+    ...item,
+    stars: repoInfo[item.repo]?.stars || 0,
+  }));
+
+  const trending = [...enriched]
+    .filter((item) => item.stars > 0)
+    .sort((a, b) => b.stars - a.stars)
+    .slice(0, 6);
+
+  const cats = categories
+    .map((c) => ({
+      name: c,
+      count: subjectsArray.filter((d) => d.cate === c).length,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  return (
+    <div className={classes.HomeView}>
+      {/* Hero */}
+      <div className={classes.Hero}>
+        <div
+          className={classes.LogoBlock}
+          onMouseMove={(e) => logoTriggerRef.current?.(e.clientX)}
+          onMouseLeave={() => logoTriggerRef.current?.(null)}
+        >
+          <div className={classes.LogoText}>
+            <AnimatedWordmark triggerRef={logoTriggerRef} />
+          </div>
         </div>
-    );
-};
 
-export default Homepage;
+        <div className={classes.SearchBox}>
+          <span className={classes.SearchPrompt}>❯</span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={q}
+            onChange={(e) => {
+              const val = e.target.value;
+              setQ(val);
+              if (val.trim().length >= 2) onSearch(val.trim());
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                submit();
+              }
+            }}
+            placeholder="Try: react, python, machine learning, selfhosted…"
+            className={classes.SearchInput}
+            data-testid="search-input"
+            aria-label="Search awesome lists"
+          />
+          <button
+            onClick={() => submit()}
+            disabled={q.trim().length < 2}
+            className={classes.SearchBtn}
+            style={{
+              background:
+                q.trim().length >= 2 ? 'var(--amber)' : 'var(--bg-panel)',
+              color:
+                q.trim().length >= 2 ? 'var(--bg-sunk)' : 'var(--dim)',
+              cursor: q.trim().length >= 2 ? 'pointer' : 'default',
+            }}
+          >
+            Search ↵
+          </button>
+        </div>
+
+        <div className={classes.Chips}>
+          <span className={classes.ChipsLabel}>Try</span>
+          {['react', 'rust', 'docker', 'machine-learning', 'selfhosted', 'flutter'].map((t) => (
+            <button key={t} onClick={() => submit(t)} className={classes.Chip}>
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Trending (only shown if we have cached star data) */}
+      {trending.length > 0 && (
+        <div className={classes.Section}>
+          <div className={classes.SectionHeader}>
+            <h2 className={classes.SectionTitle}>
+              <span className={classes.TitleBar} />
+              Trending
+            </h2>
+            <span className={classes.SectionSub}>by stars</span>
+          </div>
+          <div className={classes.TrendingGrid}>
+            {trending.map((item, i) => (
+              <div
+                key={item.repo}
+                className={classes.TrendingCard}
+                onClick={() => onOpen(item.repo)}
+              >
+                <div className={classes.TrendingCardTop}>
+                  <span className={classes.TrendingNum}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className={classes.TrendingName}>{item.name}</span>
+                  <span className={classes.TrendingStars}>
+                    ★{' '}
+                    {item.stars >= 1000
+                      ? `${(item.stars / 1000).toFixed(1)}k`
+                      : item.stars}
+                  </span>
+                </div>
+                <div className={classes.TrendingRepo}>{item.repo}</div>
+                <div className={classes.TrendingMeta}>
+                  <span className={classes.CatBadge}>{item.cate}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Browse by category */}
+      <div className={classes.Section}>
+        <div className={classes.SectionHeader}>
+          <h2 className={classes.SectionTitle}>
+            <span className={classes.TitleBar} />
+            Browse by category
+          </h2>
+        </div>
+        <div className={classes.CatGrid}>
+          {cats.map((c) => (
+            <button
+              key={c.name}
+              onClick={() => onCategoryFilter ? onCategoryFilter(c.name) : onSearch(c.name.toLowerCase())}
+              className={classes.CatCard}
+            >
+              <span className={classes.CatName}>{c.name}</span>
+              <span className={classes.CatCount}>{c.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* About */}
+      <div className={classes.About}>
+        <p>
+          Built by{' '}
+          <a href="https://github.com/lockys" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            @lockys
+          </a>
+          {' '}&{' '}
+          <a href="https://github.com/john-lin" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            @john-lin
+          </a>
+          {' '}· Powered by{' '}
+          <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            sindresorhus/awesome
+          </a>
+          {' '}· Search by{' '}
+          <a href="https://fusejs.io" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            Fuse.js
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}

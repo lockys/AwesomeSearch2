@@ -1,33 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import classes from './AwesomeReadme.module.css';
 import TimeAgo from 'timeago-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faStar,
-  faClock,
-  faLongArrowAltUp,
-  faTimes,
-} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-
-const SKELETON_ROWS = [
-  ['SkeletonTitle'],
-  ['SkeletonLine', 'SkeletonLineFull'],
-  ['SkeletonLine', 'SkeletonLineLong'],
-  ['SkeletonLine', 'SkeletonLineMed'],
-  ['SkeletonSpacer'],
-  ['SkeletonSubtitle'],
-  ['SkeletonLine', 'SkeletonLineFull'],
-  ['SkeletonLine', 'SkeletonLineLong'],
-  ['SkeletonLine', 'SkeletonLineShort'],
-  ['SkeletonSpacer'],
-  ['SkeletonSubtitle'],
-  ['SkeletonLine', 'SkeletonLineMed'],
-  ['SkeletonLine', 'SkeletonLineFull'],
-  ['SkeletonLine', 'SkeletonLineLong'],
-  ['SkeletonLine', 'SkeletonLineMed'],
-];
 
 class AwesomeReadme extends Component {
   state = {
@@ -36,51 +10,80 @@ class AwesomeReadme extends Component {
     headers: [],
     stars: 0,
     updateAt: null,
-    user: '',
-    repo: '',
-    showTOC: false,
     showReadmeInfo: true,
-    isScrolled: false,
+    activeSection: null,
     previewSrc: null,
+    sidebarWidth: 240,
   };
 
-  shouldComponentUpdate(_, nextState) {
-    return (
-      (this.state.user !== this.props.match.params.user &&
-        this.state.repo !== this.props.match.params.repo) ||
-      this.state._html !== nextState._html ||
-      this.state.isLoading !== nextState.isLoading ||
-      this.state.headers.length !== nextState.headers.length ||
-      this.state.showTOC !== nextState.showTOC ||
-      this.state.isScrolled !== nextState.isScrolled ||
-      this.state.previewSrc !== nextState.previewSrc
-    );
+  contentRef = React.createRef();
+  _dragStartX = null;
+  _dragStartWidth = null;
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyDown);
+    const { user, repo } = this.props.match.params;
+    this.fetchReadme(user, repo);
+    this.fetchRepoInfo(user, repo);
   }
 
-  handleScroll = () => {
-    this.setState({ isScrolled: window.scrollY > 10 });
+  componentDidUpdate(_, prevState) {
+    if (prevState._html !== this.state._html) {
+      this.makeAnchor();
+      this.attachImageHandlers();
+      if (this.state.headers.length > 0) {
+        this.setState({ activeSection: this.state.headers[0].id });
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+    this._stopDrag();
+  }
+
+  _onResizeMouseDown = (e) => {
+    e.preventDefault();
+    this._dragStartX = e.clientX;
+    this._dragStartWidth = this.state.sidebarWidth;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    window.addEventListener('mousemove', this._onResizeMouseMove);
+    window.addEventListener('mouseup', this._onResizeMouseUp);
+  };
+
+  _onResizeMouseMove = (e) => {
+    const delta = e.clientX - this._dragStartX;
+    const next = Math.min(480, Math.max(140, this._dragStartWidth + delta));
+    this.setState({ sidebarWidth: next });
+  };
+
+  _onResizeMouseUp = () => {
+    this._stopDrag();
+  };
+
+  _stopDrag = () => {
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    window.removeEventListener('mousemove', this._onResizeMouseMove);
+    window.removeEventListener('mouseup', this._onResizeMouseUp);
   };
 
   handleKeyDown = (e) => {
-    if (e.key === 'Escape') this.setState({ previewSrc: null });
+    if (e.key === 'Escape') {
+      if (this.state.previewSrc) {
+        this.setState({ previewSrc: null });
+      } else {
+        this.props.onBack?.();
+      }
+    }
   };
 
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-    window.addEventListener('keydown', this.handleKeyDown);
-    const user = this.props.match.params.user;
-    const repo = this.props.match.params.repo;
-    const infoLastMod = JSON.parse(localStorage.getItem('infoLastMod'));
-
-    this.fetchReadme(user, repo);
-
+  fetchRepoInfo = (user, repo) => {
+    const infoLastMod = JSON.parse(localStorage.getItem('infoLastMod')) || {};
     axios
       .get(`https://api.github.com/repos/${user}/${repo}`, {
-        headers: {
-          'If-Modified-Since': infoLastMod
-            ? infoLastMod[`${user}/${repo}`]
-            : null,
-        },
+        headers: { 'If-Modified-Since': infoLastMod[`${user}/${repo}`] || null },
       })
       .then((res) => {
         localStorage.setItem(
@@ -90,12 +93,7 @@ class AwesomeReadme extends Component {
             [`${user}/${repo}`]: res.headers['last-modified'],
           })
         );
-
-        this.setState({
-          stars: res.data.stargazers_count,
-          updateAt: res.data.pushed_at,
-        });
-
+        this.setState({ stars: res.data.stargazers_count, updateAt: res.data.pushed_at });
         localStorage.setItem(
           'repoInfo',
           JSON.stringify({
@@ -113,53 +111,13 @@ class AwesomeReadme extends Component {
           if (cached) this.setState(cached);
         }
       });
-  }
-
-  componentDidUpdate(_, prevState) {
-    if (prevState._html !== this.state._html) {
-      this.makeAnchor();
-      this.attachImageHandlers();
-    }
-  }
-
-  attachImageHandlers = () => {
-    const content = document.querySelector('[data-testid="readme-content"]');
-    if (!content) return;
-    content.querySelectorAll('img').forEach((img) => {
-      if (img.dataset.handlersAttached) return;
-      img.dataset.handlersAttached = 'true';
-      img.style.cursor = 'zoom-in';
-
-      const anchor = img.closest('a');
-      if (anchor) {
-        anchor.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.setState({ previewSrc: img.src });
-        });
-      } else {
-        img.addEventListener('click', () => {
-          this.setState({ previewSrc: img.src });
-        });
-      }
-
-      img.addEventListener('error', () => {
-        const fallback = document.createElement('div');
-        fallback.className = 'img-fallback';
-        fallback.textContent = 'Image unavailable';
-        if (img.parentNode) img.parentNode.replaceChild(fallback, img);
-      });
-    });
   };
 
   fetchReadme = (user, repo) => {
     axios
       .get(`https://api-awesomelists.calvinjeng.io/readme/${user}/${repo}`)
-      .then((res) => {
-        this.handleReadmeSuccess(user, repo, res);
-      })
-      .catch(() => {
-        this.fetchReadmeFromGithub(user, repo);
-      });
+      .then((res) => this.handleReadmeSuccess(user, repo, res))
+      .catch(() => this.fetchReadmeFromGithub(user, repo));
   };
 
   fetchReadmeFromGithub = (user, repo) => {
@@ -167,58 +125,43 @@ class AwesomeReadme extends Component {
       .get(`https://api.github.com/repos/${user}/${repo}/readme`, {
         headers: { Accept: 'application/vnd.github.v3.html' },
       })
-      .then((res) => {
-        this.handleReadmeSuccess(user, repo, res);
-      })
+      .then((res) => this.handleReadmeSuccess(user, repo, res))
       .catch((err) => {
-        const status = err.response && err.response.status;
-        if (status === 403) {
-          this.setState({
-            _html: `<br/><b># Github API rate limit exceeded.</b>
-                    <ol>
-                      <li>The GitHub API rate limit is 60 requests/hr per IP for unauthenticated requests.</li>
-                      <li>Please try again later.</li>
-                    </ol>`,
-            isLoading: false,
-            showReadmeInfo: false,
-          });
-        } else {
-          this.setState({
-            _html: `<br/><b># Failed to load readme file.</b><br/><br/>
-                    <ol>
-                      <li>The repo may not exist. Click the home icon to go back.</li>
-                      <li>Please re-search this repo and try again.</li>
-                    </ol>`,
-            isLoading: false,
-            showReadmeInfo: false,
-          });
-        }
+        const status = err.response?.status;
+        const msg =
+          status === 403
+            ? '<b># GitHub API rate limit exceeded.</b><br/>Please try again later.'
+            : '<b># Failed to load README.</b><br/>The repo may not exist.';
+        this.setState({ _html: msg, isLoading: false, showReadmeInfo: false });
       });
+  };
+
+  handleReadmeSuccess = (user, repo, res) => {
+    const rawHtml = this.fixImage({ user, repo, res });
+    const { headers, html: _html } = this.parseReadme(rawHtml);
+    this.setState({ _html, isLoading: false, showReadmeInfo: true, headers });
   };
 
   parseReadme = (html) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
-    // Extract TOC headers
     const headers = [];
     doc.querySelectorAll('div.markdown-heading').forEach((div) => {
       const hEl = div.querySelector('h1,h2,h3,h4,h5,h6');
       const anchor = div.querySelector('a.anchor');
       if (hEl && anchor) {
-        const id = anchor.getAttribute('id') || anchor.getAttribute('href')?.replace('#', '');
+        const id =
+          anchor.getAttribute('id') ||
+          anchor.getAttribute('href')?.replace('#', '');
         const title = hEl.textContent.trim();
         if (id && title) {
-          headers.push({
-            id,
-            level: parseInt(hEl.tagName.replace('H', '')),
-            title,
-          });
+          headers.push({ id, level: parseInt(hEl.tagName.replace('H', '')), title });
         }
       }
     });
 
-    // Remove inline TOC section (heading + following ul)
+    // Remove inline TOC
     doc.querySelectorAll('div.markdown-heading').forEach((div) => {
       const hEl = div.querySelector('h1,h2,h3,h4,h5,h6');
       if (hEl && /^(table of )?contents?$/i.test(hEl.textContent.trim())) {
@@ -235,266 +178,200 @@ class AwesomeReadme extends Component {
     return { headers, html: doc.body.innerHTML };
   };
 
-  handleReadmeSuccess = (user, repo, res) => {
-    let rawHtml = this.fixImage({ user, repo, res });
-    const { headers, html: _html } = this.parseReadme(rawHtml);
-    this.setState({
-      _html,
-      isLoading: false,
-      user,
-      repo,
-      showReadmeInfo: true,
-      headers,
-    });
-  };
-
   fixImage = ({ user, repo, res }) => {
-    let githubImageUrl = `https://raw.githubusercontent.com/${user}/${repo}/master`;
-    const _html = res.data
-      .replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, (match, capture) => {
-        if (!capture.includes('https')) {
-          githubImageUrl =
-            capture[0] === '/' ? githubImageUrl : githubImageUrl + '/';
-          return match.replace(capture, `${githubImageUrl}${capture}`);
-        } else {
-          return match;
+    let base = `https://raw.githubusercontent.com/${user}/${repo}/master`;
+    return res.data
+      .replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, (match, src) => {
+        if (!src.includes('https')) {
+          const prefix = src[0] === '/' ? base : base + '/';
+          return match.replace(src, `${prefix}${src}`);
         }
+        return match;
       })
       .replace(/user-content-/g, '');
-    return _html;
   };
 
   makeAnchor = () => {
     const links = document.querySelectorAll('a:not(.menu-item)[href^="#"]');
+    for (const link of links) {
+      const id = link.href.replace(`${document.location.origin}/#`, '');
+      link.href = `/#/${this.props.match.params.user}/${this.props.match.params.repo}`;
+      link.addEventListener('click', () => this.scrollToSection(id));
+    }
+  };
 
-    if (links.length > 0) {
-      for (let link of links) {
-        let id = link.href.replace(`${document.location.origin}/#`, '');
-        link.href = `/#/${this.props.match.params.user}/${this.props.match.params.repo}`;
-        link.addEventListener('click', () => {
-          this.headersOnClick(id);
+  attachImageHandlers = () => {
+    const content = document.querySelector('[data-testid="readme-content"]');
+    if (!content) return;
+    content.querySelectorAll('img').forEach((img) => {
+      if (img.dataset.handlersAttached) return;
+      img.dataset.handlersAttached = 'true';
+      img.style.cursor = 'zoom-in';
+      const anchor = img.closest('a');
+      if (anchor) {
+        anchor.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.setState({ previewSrc: img.src });
         });
+      } else {
+        img.addEventListener('click', () => this.setState({ previewSrc: img.src }));
       }
+      img.addEventListener('error', () => {
+        const fallback = document.createElement('div');
+        fallback.className = 'img-fallback';
+        fallback.textContent = 'Image unavailable';
+        img.parentNode?.replaceChild(fallback, img);
+      });
+    });
+  };
+
+  scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      this.setState({ activeSection: id });
     }
   };
 
-  showTocHandler = () => {
-    this.setState({
-      showTOC: !this.state.showTOC,
-    });
-  };
-
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  scrollToTop = () => {
-    document.getElementById('anchor-top').scrollIntoView({ behavior: 'instant' });
-  };
-
-  headersOnClick = (id) => {
-    document.getElementById(id).scrollIntoView({
-      behavior: 'instant',
-      block: 'center',
-    });
-
-    const heading = document.getElementById(id).parentNode;
-    const next = heading.nextElementSibling;
-    const isDark = document.body.classList.contains('dark');
-    const bg = isDark ? '#f1f5f9' : '#000000';
-    const fg = isDark ? '#0f172a' : '#ffffff';
-
-    const header = this.state.headers.find((h) => h.id === id);
-    const title = header ? header.title : '';
-
-    const label = document.createElement('span');
-    label.textContent = title;
-    label.style.cssText = `
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      background: ${bg};
-      color: ${fg};
-      letter-spacing: 0.5px;
-      pointer-events: none;
-    `;
-
-    const applyHighlight = (el) => {
-      if (!el) return;
-      el.style.backgroundColor = bg;
-      el.style.color = fg;
-    };
-
-    const clearHighlight = (el) => {
-      if (!el) return;
-      el.style.backgroundColor = '';
-      el.style.color = '';
-    };
-
-    heading.insertAdjacentElement('beforebegin', label);
-    applyHighlight(heading);
-    applyHighlight(next);
-
-    setTimeout(() => {
-      if (document.getElementById(id)) {
-        label.remove();
-        clearHighlight(heading);
-        clearHighlight(next);
-      }
-    }, 2000);
-
-    this.setState({
-      showTOC: false,
-    });
-  };
-
-  buildBullet = (pattern, level) => {
-    return Array(level).fill(pattern).join('');
-  };
-
-  getFontSize = (level) => {
-    let size = '1.2rem';
-    let color = 'black';
-    switch (level) {
-      case 1:
-        size = '1.2rem';
-        color = 'black';
-        break;
-      case 2:
-        size = '1rem';
-        color = 'grey';
-        break;
-      case 3:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      case 4:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      case 5:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      case 6:
-        size = '0.8rem';
-        color = 'red';
-        break;
-      default:
-        size = '0.8rem';
-        color = 'red';
-        break;
+  handleContentScroll = () => {
+    if (!this.contentRef.current) return;
+    const headers = this.contentRef.current.querySelectorAll('[data-testid="readme-content"] [id]');
+    const containerTop = this.contentRef.current.getBoundingClientRect().top;
+    let cur = this.state.headers[0]?.id;
+    for (const h of headers) {
+      if (h.getBoundingClientRect().top - containerTop < 100) cur = h.id;
     }
-
-    return {
-      size,
-      color,
-    };
+    if (cur && cur !== this.state.activeSection) this.setState({ activeSection: cur });
   };
 
   render() {
+    const { user, repo } = this.props.match.params;
+    const { _html, isLoading, headers, stars, updateAt, activeSection, previewSrc, sidebarWidth } = this.state;
+
+    const fmtStars = stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : `${stars || '—'}`;
+
     return (
-      <div className={classes.AwesomeReadme} data-testid="awesome-readme">
-        <div id='anchor-top'></div>
-        {this.state.showReadmeInfo && (
-          <div className={`${classes.ReadmeInfo} ${this.state.isScrolled ? classes.ReadmeInfoScrolled : ''}`} data-testid="readme-info">
-            <div className={classes.ReadmeInfoTop}>
-              <span className={classes.RepoName}>
-                {this.props.match.params.repo}
-              </span>
-              <div className={classes.ReadmeInfoActions}>
-                <Link
-                  className={classes.BackButton}
-                  to="/"
-                  aria-label="Back to list"
-                  data-testid="readme-back-button"
-                >
-                  ← Back
-                </Link>
-                <a
-                  className={classes.ViewOnGithubBtn}
-                  href={`https://github.com/${this.props.match.params.user}/${this.props.match.params.repo}`}
-                  target='_blank'
-                  rel='noreferrer'
-                  data-testid="view-on-github"
-                >
-                  GitHub
-                </a>
-                <span className={classes.TOCButton} onClick={this.showTocHandler} data-testid="toc-button">
-                  Contents
-                </span>
-              </div>
-            </div>
-            <div className={classes.RepoStats} data-testid="repo-stats">
-              <span className={classes.StatItem}>
-                <FontAwesomeIcon icon={faStar} /> {this.state.stars}
-              </span>
-              <span className={classes.StatItem}>
-                <FontAwesomeIcon icon={faClock} />{' '}
-                <TimeAgo datetime={this.state.updateAt} />
-              </span>
-            </div>
+      <div className={classes.ReadmeShell} data-testid="awesome-readme">
+        {/* TOC sidebar */}
+        <aside className={classes.Sidebar} style={{ width: sidebarWidth, flex: `0 0 ${sidebarWidth}px` }}>
+          <div className={classes.SidebarTop}>
+            <button
+              onClick={this.props.onBack}
+              className={classes.BackBtn}
+              data-testid="readme-back-button"
+              aria-label="Back to search"
+            >
+              ← back to search
+            </button>
           </div>
-        )}
 
-        {this.state.showTOC && (
-          <div className={classes.ReadmeCategory}>
-            <div className={classes.ReadmeCategoryHeader}>
-              <span className={classes.ReadmeCategoryTitle}>Contents</span>
-              <span
-                onClick={this.showTocHandler}
-                className={classes.ReadmeCategoryCloseButton}
+          <div className={classes.OutlineLabel}>Outline</div>
+
+          {headers.length === 0 && isLoading && (
+            <div className={classes.SidebarHint}>Loading…</div>
+          )}
+
+          {headers.map((h) => {
+            const active = h.id === activeSection;
+            return (
+              <div
+                key={h.id}
+                onClick={() => this.scrollToSection(h.id)}
+                className={`${classes.TocItem} ${active ? classes.TocItemActive : ''}`}
+                style={{ paddingLeft: (h.level - 1) * 12 + 16 }}
               >
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
-            </div>
-            <div className={classes.ReadmeCategoryList}>
-              {this.state.headers.map((header, idx) => {
-                return (
-                  <div
-                    key={idx}
-                    className={classes[`TocLevel${Math.min(header.level, 3)}`] || classes.TocLevel3}
-                    onClick={() => {
-                      this.headersOnClick(header.id);
-                    }}
-                  >
-                    {header.title}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+                {h.title}
+              </div>
+            );
+          })}
+        </aside>
 
-        {this.state.isLoading ? (
-          <div className={classes.Skeleton} data-testid="readme-skeleton">
-            {SKELETON_ROWS.map((variants, idx) => (
-              <div key={idx} className={[classes.SkeletonBar, ...variants.map(v => classes[v])].join(' ')} />
-            ))}
-          </div>
-        ) : (
-          <div className={classes.ReadmeContent} dangerouslySetInnerHTML={{ __html: this.state._html }} data-testid="readme-content"></div>
-        )}
-        <div className={classes.scrollToTop} onClick={this.scrollToTop} data-testid="scroll-to-top">
-          <FontAwesomeIcon icon={faLongArrowAltUp} /> Top
+        {/* Resize handle */}
+        <div
+          className={classes.ResizeHandle}
+          onMouseDown={this._onResizeMouseDown}
+          title="Drag to resize"
+        />
+
+        {/* Main content area */}
+        <div
+          ref={this.contentRef}
+          onScroll={this.handleContentScroll}
+          className={classes.ContentArea}
+        >
+          {/* Breadcrumb label */}
+          <div className={classes.RepoLabel}>README.md · {user}/{repo}</div>
+          <h1 className={classes.RepoTitle}>{repo}</h1>
+
+          {/* Stats panel */}
+          {this.state.showReadmeInfo && (
+            <div className={classes.StatsPanel} data-testid="repo-stats">
+              {[
+                ['Stars', fmtStars, true],
+                ['Updated', updateAt ? <TimeAgo datetime={updateAt} /> : '—', false],
+                ['Owner', user, false],
+                [
+                  'GitHub',
+                  <a
+                    href={`https://github.com/${user}/${repo}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    data-testid="view-on-github"
+                  >
+                    View ↗
+                  </a>,
+                  false,
+                ],
+              ].map(([k, v, accent], i) => (
+                <div
+                  key={i}
+                  className={classes.StatCell}
+                  style={{ borderLeft: i === 0 ? 'none' : undefined }}
+                >
+                  <div className={classes.StatKey}>{k}</div>
+                  <div className={`${classes.StatVal} ${accent ? classes.StatValAccent : ''}`}>
+                    {v}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Skeleton */}
+          {isLoading ? (
+            <div className={classes.Skeleton} data-testid="readme-skeleton">
+              {[100, 80, 90, 60, 100, 75, 85, 55].map((w, i) => (
+                <div
+                  key={i}
+                  className={classes.SkeletonLine}
+                  style={{ width: `${w}%`, height: i % 4 === 0 ? 18 : 12, marginTop: i % 4 === 0 ? 20 : 8 }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div
+              className={classes.ReadmeContent}
+              dangerouslySetInnerHTML={{ __html: _html }}
+              data-testid="readme-content"
+            />
+          )}
         </div>
 
-        {this.state.previewSrc && (
+        {/* Lightbox */}
+        {previewSrc && (
           <div
-            className={classes.LightboxOverlay}
+            className={classes.Lightbox}
             onClick={() => this.setState({ previewSrc: null })}
             data-testid="lightbox-overlay"
           >
             <div className={classes.LightboxContent} onClick={(e) => e.stopPropagation()}>
-              <img src={this.state.previewSrc} alt="Preview" className={classes.LightboxImage} />
+              <img src={previewSrc} alt="Preview" className={classes.LightboxImg} />
               <button
                 className={classes.LightboxClose}
                 onClick={() => this.setState({ previewSrc: null })}
                 aria-label="Close preview"
               >
-                <FontAwesomeIcon icon={faTimes} />
+                ×
               </button>
             </div>
           </div>

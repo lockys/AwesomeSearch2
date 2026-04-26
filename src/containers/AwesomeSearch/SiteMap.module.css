@@ -1,0 +1,152 @@
+.Wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.Trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--dim);
+  font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: color 120ms, border-color 120ms, background 120ms;
+  line-height: 1;
+  height: 20px;
+}
+
+.Trigger:hover {
+  color: var(--fg);
+  border-color: var(--amber);
+  background: var(--amber-bg);
+}
+
+.TriggerActive {
+  color: var(--amber);
+  border-color: var(--amber);
+  background: var(--amber-bg);
+}
+
+.TriggerIcon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+/* ── Panel ── */
+.Panel {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  z-index: 200;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px oklch(0 0 0 / 0.5);
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.PanelScroll {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.Section {
+  padding: 10px 14px;
+}
+
+.SectionTitle {
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+
+.Divider {
+  height: 1px;
+  background: var(--line);
+  margin: 0;
+}
+
+.CatGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px 0;
+}
+
+/* ── Tree rows ── */
+.TreeRow {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background 80ms;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.TreeRowClickable {
+  cursor: pointer;
+}
+
+.TreeRowClickable:hover {
+  background: var(--bg-hover);
+}
+
+.TreePrefix {
+  color: var(--line);
+  font-size: 10px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.TreeRoute {
+  color: var(--amber);
+  flex-shrink: 0;
+}
+
+.TreeLabel {
+  color: var(--mid);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.TreeSub {
+  color: var(--dim);
+  font-size: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Panel footer ── */
+.PanelFooter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: var(--bg-sunk);
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.PanelFooterSep {
+  color: var(--line-dim);
+}

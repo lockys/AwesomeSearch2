@@ -1,151 +1,114 @@
-.AwesomeSearch {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 24px 24px 24px;
+.Shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  overflow: hidden;
   position: relative;
-  min-height: 100vh;
 }
 
-.dark-theme {
-  background-color: var(--dark-bg-primary);
-}
-
-.normal-theme {
-  border: none;
-}
-
-/* Header container for search, burger, and theme toggle */
-.Header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 0 12px 0;
-  margin-top: 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.dark-theme .Header {
-  background: var(--dark-bg-secondary);
-  border-bottom-color: var(--dark-border-color);
-}
-
-.HeaderActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.BurgerButton {
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  z-index: 1001;
-  border-radius: 0;
-  transition: all 0.2s ease;
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.BurgerButton:hover {
-  color: var(--primary);
-}
-
-.BurgerButton:active {
-  transform: scale(0.95);
-}
-
-.ThemeToggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: 22px;
-  cursor: pointer;
-  border-radius: 0;
-  transition: all 0.2s ease;
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.ThemeToggle:hover {
-  color: var(--primary);
-}
-
-.ThemeToggle:active {
-  transform: scale(0.95);
-}
-
-.dark-theme .BurgerButton,
-.dark-theme .ThemeToggle {
-  background: transparent;
-  color: var(--dark-text-secondary);
-}
-
-.dark-theme .BurgerButton:hover,
-.dark-theme .ThemeToggle:hover {
-  color: var(--dark-primary);
+/* ── Back button (mobile only) ── */
+.BackBtn {
+  display: none;
 }
 
 @media (max-width: 768px) {
-  .SidebarCell {
-    display: none;
+  .BackBtn {
+    position: fixed;
+    top: 14px;
+    left: 16px;
+    z-index: 300;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: oklch(0.24 0.012 265 / 0.45);
+    border: 1px solid oklch(0.32 0.014 265 / 0.4);
+    border-radius: 6px;
+    color: oklch(0.74 0.012 265 / 0.5);
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 150ms, border-color 150ms, background 150ms;
+    line-height: 1;
+    backdrop-filter: blur(6px);
   }
 
-  .AwesomeSearch {
-    width: 100%;
-    padding: 0;
-  }
-
-  .Header {
-    padding: 12px 12px 10px 12px;
-    gap: 8px;
-    margin: 0;
-  }
-
-  .dark-theme .Header {
-  }
-
-  .TocButton {
-    display: none;
-  }
-
-  .StarButton {
-    display: none;
-  }
-
-  .HeaderActions {
-    flex-shrink: 0;
-  }
-
-  .BurgerButton {
-    width: 36px;
-    height: 36px;
-    font-size: 20px;
-    border-radius: 0;
-    color: darkgrey;
-  }
-
-  .dark-theme .BurgerButton {
-    color: #94a3b8;
-  }
-
-  .ThemeToggle {
-    display: none;
+  .BackBtn:hover {
+    color: var(--amber);
+    border-color: oklch(0.78 0.14 70 / 0.6);
+    background: oklch(0.78 0.14 70 / 0.12);
   }
 }
 
-@media (min-width: 769px) {
-  .BurgerButton {
+/* ── Main ── */
+.Main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ── Footer ── */
+.Footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 22px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-sunk);
+  font-size: 10.5px;
+  color: var(--dim);
+  flex-shrink: 0;
+  white-space: nowrap;
+  /* overflow must stay visible so the SiteMap panel can open above */
+  overflow: visible;
+  position: relative;
+}
+
+.FooterDot { color: var(--amber); flex-shrink: 0; }
+.FooterSep { color: var(--line-dim); }
+
+.FooterRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+:global(.kbd-tag) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--mid);
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  border-radius: 4px;
+  line-height: 1;
+  box-shadow: inset 0 -1px 0 var(--line-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .Footer {
+    padding: 7px 16px;
+    font-size: 10px;
+    gap: 7px;
+  }
+
+  /* Hide keyboard shortcut hints — not useful on touch */
+  .FooterRight {
     display: none;
   }
 }

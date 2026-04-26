@@ -16,19 +16,16 @@ describe('App', () => {
 
   it('renders without crashing', () => {
     render(<App />);
-    expect(document.querySelector('.hack')).toBeTruthy();
+    expect(screen.getByTestId('awesome-search')).toBeInTheDocument();
   });
 
-  it('applies light theme by default', () => {
+  it('renders the footer status bar', () => {
     render(<App />);
-    const hackDiv = document.querySelector('.hack');
-    expect(hackDiv.className).toBe('hack');
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
 
-  it('applies dark theme when localStorage has isDark true', () => {
-    localStorage.setItem('__isDark', 'true');
+  it('shows spinner while data loads', () => {
     render(<App />);
-    const hackDiv = document.querySelector('.hack');
-    expect(hackDiv.className).toContain('solarized-dark');
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 });

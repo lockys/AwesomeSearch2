@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import AwesomeSearch from './containers/AwesomeSearch/AwesomeSearch.jsx';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
 
 function App() {
-  const [isDark, setIsDark] = useState(localStorage.getItem('__isDark') === 'true');
-  const theme = isDark ? ' solarized-dark' : '';
-
-  useEffect(() => {
-    document.body.classList.toggle('dark', isDark);
-  }, [isDark]);
-
   return (
     <HashRouter>
-      <div className={`hack${theme}`} data-testid="app">
-        <AwesomeSearch onThemeChange={setIsDark} isDark={isDark} theme={isDark ? 'dark-theme': 'normal-theme'} />
-      </div>
+      <AwesomeSearch />
     </HashRouter>
   );
 }
+
 export default App;
