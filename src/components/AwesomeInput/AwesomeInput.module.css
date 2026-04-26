@@ -147,6 +147,7 @@
   overflow: auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: start;
   align-content: start;
   border-top: 1px solid var(--line-dim);
   padding: 12px 20px;
