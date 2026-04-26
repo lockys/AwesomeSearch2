@@ -8,14 +8,22 @@
 
 /* ── TOC Sidebar ── */
 .Sidebar {
-  flex: 0 0 230px;
+  flex: 0 0 240px;
   background: var(--bg-sunk);
   border-right: 1px solid var(--line);
-  padding: 22px 18px;
-  overflow: auto;
+  padding: 22px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+}
+
+.SidebarTop {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .BackBtn {
@@ -30,10 +38,11 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   cursor: pointer;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   width: 100%;
   text-align: left;
   transition: all 120ms;
+  box-sizing: border-box;
 }
 
 .BackBtn:hover {
@@ -47,30 +56,29 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--dim);
-  margin-bottom: 12px;
+  padding: 0 16px 8px;
   font-weight: 500;
 }
 
 .SidebarHint {
   color: var(--dim);
   font-size: 11px;
+  padding: 0 16px;
 }
 
 .TocItem {
-  padding: 5px 0 5px 10px;
+  padding: 5px 14px 5px 14px;
   color: var(--mid);
   background: transparent;
   border-left: 2px solid transparent;
-  margin-left: -18px;
-  margin-right: -18px;
   font-weight: 400;
   font-size: 12px;
+  line-height: 1.5;
   cursor: pointer;
   font-family: 'Space Grotesk', system-ui, sans-serif;
-  transition: all 100ms;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  transition: color 100ms, background 100ms, border-color 100ms;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .TocItem:hover {

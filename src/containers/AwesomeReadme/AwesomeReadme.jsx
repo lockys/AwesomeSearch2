@@ -223,14 +223,16 @@ class AwesomeReadme extends Component {
       <div className={classes.ReadmeShell} data-testid="awesome-readme">
         {/* TOC sidebar */}
         <aside className={classes.Sidebar}>
-          <button
-            onClick={this.props.onBack}
-            className={classes.BackBtn}
-            data-testid="readme-back-button"
-            aria-label="Back to search"
-          >
-            ← back to search
-          </button>
+          <div className={classes.SidebarTop}>
+            <button
+              onClick={this.props.onBack}
+              className={classes.BackBtn}
+              data-testid="readme-back-button"
+              aria-label="Back to search"
+            >
+              ← back to search
+            </button>
+          </div>
 
           <div className={classes.OutlineLabel}>Outline</div>
 
@@ -245,7 +247,7 @@ class AwesomeReadme extends Component {
                 key={h.id}
                 onClick={() => this.scrollToSection(h.id)}
                 className={`${classes.TocItem} ${active ? classes.TocItemActive : ''}`}
-                style={{ paddingLeft: (h.level - 1) * 14 + 10 }}
+                style={{ paddingLeft: (h.level - 1) * 12 + 16 }}
               >
                 {h.title}
               </div>
