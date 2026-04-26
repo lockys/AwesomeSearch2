@@ -281,6 +281,24 @@ export default function AwesomeHome({
           ))}
         </div>
       </div>
+
+      {/* About */}
+      <div className={classes.About}>
+        <p>
+          Built by{' '}
+          <a href="https://github.com/lockys" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            @lockys
+          </a>
+          {' '}· Powered by{' '}
+          <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            sindresorhus/awesome
+          </a>
+          {' '}· Search by{' '}
+          <a href="https://fusejs.io" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            Fuse.js
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
