@@ -434,6 +434,10 @@
   color: var(--amber);
 }
 
+@keyframes sweep-border-spin {
+  to { --border-angle: 1turn; }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .Hero { padding: 32px 20px 24px; }

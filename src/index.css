@@ -70,7 +70,3 @@ li::before { content: none !important; }
   inherits: false;
   initial-value: 0turn;
 }
-
-@keyframes sweep-border-spin {
-  to { --border-angle: 1turn; }
-}

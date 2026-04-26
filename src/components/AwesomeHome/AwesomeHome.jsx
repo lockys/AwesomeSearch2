@@ -168,10 +168,6 @@ export default function AwesomeHome({
   const logoTriggerRef = useRef(null);
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
   const submit = (val) => {
     const trimmed = (val ?? q).trim();
     if (trimmed.length >= 2) onSearch(trimmed);

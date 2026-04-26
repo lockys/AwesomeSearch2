@@ -246,6 +246,10 @@
   border-radius: 2px;
 }
 
+@keyframes sweep-border-spin {
+  to { --border-angle: 1turn; }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .InputSection { padding: 56px 16px 16px; }
