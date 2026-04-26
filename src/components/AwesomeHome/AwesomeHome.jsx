@@ -121,6 +121,7 @@ export default function AwesomeHome({
   categories,
   subjectsArray,
   onSearch,
+  onCategoryFilter,
   onOpen,
 }) {
   const [q, setQ] = useState('');
@@ -291,7 +292,7 @@ export default function AwesomeHome({
           {cats.map((c) => (
             <button
               key={c.name}
-              onClick={() => onSearch(c.name.toLowerCase())}
+              onClick={() => onCategoryFilter ? onCategoryFilter(c.name) : onSearch(c.name.toLowerCase())}
               className={classes.CatCard}
             >
               <span className={classes.CatDot} />

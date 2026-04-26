@@ -51,6 +51,13 @@ class AwesomeSearch extends Component {
     this.setState({ search: value, searchResult: results });
   };
 
+  handleCategoryFilter = (categoryName) => {
+    const results = this.state.subjectsArray
+      .filter((item) => item.cate === categoryName)
+      .map((item) => ({ item, score: 0, refIndex: 0 }));
+    this.setState({ search: categoryName, searchResult: results });
+  };
+
   handleOpen = (repo) => {
     this.props.history.push(`/${repo}`);
     this.setState({ search: '' });
@@ -84,7 +91,16 @@ class AwesomeSearch extends Component {
     if (type === '/') {
       this.goHome();
     } else if (type === 'search') {
-      this.handleSearch(value);
+      // value is a lowercased category name; find the original casing
+      const { subjects } = this.state;
+      const original = subjects
+        ? Object.keys(subjects).find((k) => k.toLowerCase() === value)
+        : null;
+      if (original) {
+        this.handleCategoryFilter(original);
+      } else {
+        this.handleSearch(value);
+      }
     } else if (type === 'repo') {
       this.handleOpen(value);
     }
@@ -124,6 +140,7 @@ class AwesomeSearch extends Component {
                       categories={categories}
                       subjectsArray={subjectsArray}
                       onSearch={(q) => this.handleSearch(q)}
+                      onCategoryFilter={this.handleCategoryFilter}
                       onOpen={this.handleOpen}
                     />
                   )
