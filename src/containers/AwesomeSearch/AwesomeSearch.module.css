@@ -41,6 +41,32 @@
   gap: 6px;
 }
 
+/* ── Breadcrumbs ── */
+.Crumbs {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+}
+
+.CrumbSep {
+  color: var(--line-dim);
+}
+
+.CrumbLink {
+  color: var(--dim);
+  cursor: pointer;
+  transition: color 100ms;
+}
+
+.CrumbLink:hover {
+  color: var(--amber);
+}
+
+.CrumbText {
+  color: var(--mid);
+}
+
 :global(.kbd-tag) {
   display: inline-flex;
   align-items: center;
