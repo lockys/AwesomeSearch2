@@ -65,60 +65,62 @@ export default function SiteMap({ categories, subjectsArray, onNavigate }) {
 
       {open && (
         <div className={classes.Panel}>
-          {/* Pages */}
-          <div className={classes.Section}>
-            <div className={classes.SectionTitle}>Pages</div>
-            <SmTreeRow prefix="├─" label="/" sub="home" isRoute onClick={() => { onNavigate('/'); setOpen(false); }} />
-            <SmTreeRow prefix="├─" label="/search" sub="fuzzy search" isRoute />
-            <SmTreeRow prefix="└─" label="/:user/:repo" sub="readme viewer" isRoute />
-          </div>
-
-          <div className={classes.Divider} />
-
-          {/* Categories */}
-          <div className={classes.Section}>
-            <div className={classes.SectionTitle}>Categories</div>
-            <div className={classes.CatGrid}>
-              {catRows.map((c, i) => {
-                const isLast = i === catRows.length - 1;
-                const prefix = isLast ? '└─' : '├─';
-                return (
-                  <SmTreeRow
-                    key={c.name}
-                    prefix={prefix}
-                    label={c.name}
-                    sub={`${c.count}`}
-                    onClick={() => { onNavigate('search', c.name.toLowerCase()); setOpen(false); }}
-                  />
-                );
-              })}
+          <div className={classes.PanelScroll}>
+            {/* Pages */}
+            <div className={classes.Section}>
+              <div className={classes.SectionTitle}>Pages</div>
+              <SmTreeRow prefix="├─" label="/" sub="home" isRoute onClick={() => { onNavigate('/'); setOpen(false); }} />
+              <SmTreeRow prefix="├─" label="/search" sub="fuzzy search" isRoute />
+              <SmTreeRow prefix="└─" label="/:user/:repo" sub="readme viewer" isRoute />
             </div>
-          </div>
 
-          {trending.length > 0 && (
-            <>
-              <div className={classes.Divider} />
-              <div className={classes.Section}>
-                <div className={classes.SectionTitle}>Trending</div>
-                {trending.map((item, i) => {
-                  const isLast = i === trending.length - 1;
+            <div className={classes.Divider} />
+
+            {/* Categories */}
+            <div className={classes.Section}>
+              <div className={classes.SectionTitle}>Categories</div>
+              <div className={classes.CatGrid}>
+                {catRows.map((c, i) => {
+                  const isLast = i === catRows.length - 1;
                   const prefix = isLast ? '└─' : '├─';
-                  const stars = item.stars >= 1000
-                    ? `★ ${(item.stars / 1000).toFixed(1)}k`
-                    : `★ ${item.stars}`;
                   return (
                     <SmTreeRow
-                      key={item.repo}
+                      key={c.name}
                       prefix={prefix}
-                      label={item.name}
-                      sub={stars}
-                      onClick={() => { onNavigate('repo', item.repo); setOpen(false); }}
+                      label={c.name}
+                      sub={`${c.count}`}
+                      onClick={() => { onNavigate('search', c.name.toLowerCase()); setOpen(false); }}
                     />
                   );
                 })}
               </div>
-            </>
-          )}
+            </div>
+
+            {trending.length > 0 && (
+              <>
+                <div className={classes.Divider} />
+                <div className={classes.Section}>
+                  <div className={classes.SectionTitle}>Trending</div>
+                  {trending.map((item, i) => {
+                    const isLast = i === trending.length - 1;
+                    const prefix = isLast ? '└─' : '├─';
+                    const stars = item.stars >= 1000
+                      ? `★ ${(item.stars / 1000).toFixed(1)}k`
+                      : `★ ${item.stars}`;
+                    return (
+                      <SmTreeRow
+                        key={item.repo}
+                        prefix={prefix}
+                        label={item.name}
+                        sub={stars}
+                        onClick={() => { onNavigate('repo', item.repo); setOpen(false); }}
+                      />
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
 
           <div className={classes.PanelFooter}>
             <span>{subjectsArray.length} lists</span>

@@ -58,7 +58,9 @@
   color: var(--dim);
   flex-shrink: 0;
   white-space: nowrap;
-  overflow: hidden;
+  /* overflow must stay visible so the SiteMap panel can open above */
+  overflow: visible;
+  position: relative;
 }
 
 .FooterDot { color: var(--amber); flex-shrink: 0; }

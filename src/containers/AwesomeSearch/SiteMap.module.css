@@ -42,10 +42,13 @@
 .Panel {
   position: absolute;
   bottom: calc(100% + 10px);
-  left: 0;
+  right: 0;
   z-index: 200;
-  min-width: 340px;
-  max-width: 520px;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
   background: var(--bg-panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -53,6 +56,12 @@
   overflow: hidden;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
+}
+
+.PanelScroll {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .Section {
@@ -114,10 +123,9 @@
 
 .TreeLabel {
   color: var(--mid);
-  flex-shrink: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 120px;
+  min-width: 0;
 }
 
 .TreeSub {
