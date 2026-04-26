@@ -47,10 +47,16 @@
   gap: 14px;
   padding: 16px 20px;
   background: var(--bg-sunk);
-  border: 1px solid var(--amber);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 0 0 4px var(--amber-bg), 0 12px 40px oklch(0.78 0.14 70 / 0.06);
+  box-shadow: none;
   margin-bottom: 20px;
+  transition: border-color 150ms;
+}
+
+.SearchBox:focus-within {
+  border-color: var(--line);
+  box-shadow: none;
 }
 
 .SearchPrompt {

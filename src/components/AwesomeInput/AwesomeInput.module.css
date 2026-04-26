@@ -30,9 +30,9 @@
   gap: 12px;
   padding: 14px 16px;
   background: var(--bg-sunk);
-  border: 1px solid var(--amber);
+  border: 1px solid var(--line);
   border-radius: 8px;
-  box-shadow: 0 0 0 3px var(--amber-bg);
+  box-shadow: none;
 }
 
 .InputPrompt {
