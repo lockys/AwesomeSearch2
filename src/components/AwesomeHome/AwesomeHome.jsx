@@ -4,7 +4,7 @@ import classes from './AwesomeHome.module.css';
 const SYNONYMS = ['awesome', 'curated', 'indexed', 'awesome'];
 const SUFFIX = '.search';
 
-function AnimatedWordmark({ clientXRef }) {
+function AnimatedWordmark({ triggerRef }) {
   const [displayed, setDisplayed] = useState('');
   const [suffix, setSuffix] = useState('');
   const [cursorOn, setCursorOn] = useState(true);
@@ -71,36 +71,34 @@ function AnimatedWordmark({ clientXRef }) {
     return () => timeouts.forEach(clearTimeout);
   }, []);
 
-  // RAF loop: directly write transforms — no React re-renders on mouse move
+  // Register an on-demand animator — fires only on actual mouse events, never polls
   useEffect(() => {
-    let rafId;
-    const tick = () => {
-      if (containerRef.current) {
-        const cx = clientXRef.current;
+    let rafId = null;
+    triggerRef.current = (clientX) => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (!containerRef.current) return;
         const spans = containerRef.current.querySelectorAll('[data-ch]');
         spans.forEach((span) => {
-          // Skip spans still running their pop animation
-          const anim = span.getAnimations?.();
-          if (anim && anim.length > 0) {
-            rafId = requestAnimationFrame(tick);
-            return;
-          }
-          if (cx === null) {
+          if (span.getAnimations?.().length > 0) return;
+          if (clientX === null) {
             span.style.transform = '';
           } else {
             const r = span.getBoundingClientRect();
-            const charCx = r.left + r.width / 2;
-            const dist = Math.abs(cx - charCx);
+            const cx = r.left + r.width / 2;
+            const dist = Math.abs(clientX - cx);
             const raise = Math.max(0, 20 * Math.exp(-(dist * dist) / (2 * 55 * 55)));
             span.style.transform = raise > 0.3 ? `translateY(-${raise.toFixed(1)}px)` : '';
           }
         });
-      }
-      rafId = requestAnimationFrame(tick);
+      });
     };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [clientXRef]);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      triggerRef.current = null;
+    };
+  }, [triggerRef]);
 
   return (
     <span className={classes.Wordmark} ref={containerRef}>
@@ -161,7 +159,7 @@ export default function AwesomeHome({
   onOpen,
 }) {
   const [q, setQ] = useState('');
-  const logoClientXRef = useRef(null);
+  const logoTriggerRef = useRef(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -205,11 +203,11 @@ export default function AwesomeHome({
       <div className={classes.Hero}>
         <div
           className={classes.LogoBlock}
-          onMouseMove={(e) => { logoClientXRef.current = e.clientX; }}
-          onMouseLeave={() => { logoClientXRef.current = null; }}
+          onMouseMove={(e) => logoTriggerRef.current?.(e.clientX)}
+          onMouseLeave={() => logoTriggerRef.current?.(null)}
         >
           <div className={classes.LogoText}>
-            <AnimatedWordmark clientXRef={logoClientXRef} />
+            <AnimatedWordmark triggerRef={logoTriggerRef} />
           </div>
         </div>
 
