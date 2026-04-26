@@ -13,9 +13,12 @@ class AwesomeReadme extends Component {
     showReadmeInfo: true,
     activeSection: null,
     previewSrc: null,
+    sidebarWidth: 240,
   };
 
   contentRef = React.createRef();
+  _dragStartX = null;
+  _dragStartWidth = null;
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
@@ -36,7 +39,35 @@ class AwesomeReadme extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
+    this._stopDrag();
   }
+
+  _onResizeMouseDown = (e) => {
+    e.preventDefault();
+    this._dragStartX = e.clientX;
+    this._dragStartWidth = this.state.sidebarWidth;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    window.addEventListener('mousemove', this._onResizeMouseMove);
+    window.addEventListener('mouseup', this._onResizeMouseUp);
+  };
+
+  _onResizeMouseMove = (e) => {
+    const delta = e.clientX - this._dragStartX;
+    const next = Math.min(480, Math.max(140, this._dragStartWidth + delta));
+    this.setState({ sidebarWidth: next });
+  };
+
+  _onResizeMouseUp = () => {
+    this._stopDrag();
+  };
+
+  _stopDrag = () => {
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    window.removeEventListener('mousemove', this._onResizeMouseMove);
+    window.removeEventListener('mouseup', this._onResizeMouseUp);
+  };
 
   handleKeyDown = (e) => {
     if (e.key === 'Escape') {
@@ -215,14 +246,14 @@ class AwesomeReadme extends Component {
 
   render() {
     const { user, repo } = this.props.match.params;
-    const { _html, isLoading, headers, stars, updateAt, activeSection, previewSrc } = this.state;
+    const { _html, isLoading, headers, stars, updateAt, activeSection, previewSrc, sidebarWidth } = this.state;
 
     const fmtStars = stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : `${stars || '—'}`;
 
     return (
       <div className={classes.ReadmeShell} data-testid="awesome-readme">
         {/* TOC sidebar */}
-        <aside className={classes.Sidebar}>
+        <aside className={classes.Sidebar} style={{ width: sidebarWidth, flex: `0 0 ${sidebarWidth}px` }}>
           <div className={classes.SidebarTop}>
             <button
               onClick={this.props.onBack}
@@ -254,6 +285,13 @@ class AwesomeReadme extends Component {
             );
           })}
         </aside>
+
+        {/* Resize handle */}
+        <div
+          className={classes.ResizeHandle}
+          onMouseDown={this._onResizeMouseDown}
+          title="Drag to resize"
+        />
 
         {/* Main content area */}
         <div

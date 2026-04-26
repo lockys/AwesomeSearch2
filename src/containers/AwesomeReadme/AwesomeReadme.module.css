@@ -93,6 +93,27 @@
   font-weight: 600;
 }
 
+/* ── Resize handle ── */
+.ResizeHandle {
+  flex: 0 0 4px;
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+  transition: background 150ms;
+}
+
+.ResizeHandle::after {
+  content: '';
+  position: absolute;
+  inset: 0 -3px;
+}
+
+.ResizeHandle:hover,
+.ResizeHandle:active {
+  background: var(--amber);
+  opacity: 0.5;
+}
+
 /* ── Content area ── */
 .ContentArea {
   flex: 1;
