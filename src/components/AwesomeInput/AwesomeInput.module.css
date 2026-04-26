@@ -164,6 +164,7 @@
   transition: background 80ms, border-color 80ms;
   min-width: 0;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .ResultRow::after {
@@ -179,6 +180,13 @@
   mask-composite: exclude;
   opacity: 0;
   pointer-events: none;
+  z-index: 0;
+}
+
+/* Keep text content above the decorative border layer on mobile WebKit. */
+.ResultRow > * {
+  position: relative;
+  z-index: 1;
 }
 
 .ResultRow:hover,
@@ -207,6 +215,7 @@
   font-family: 'Space Grotesk', system-ui, sans-serif;
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.35;
   letter-spacing: -0.2px;
   color: var(--fg);
   overflow: hidden;
@@ -217,6 +226,7 @@
 .RepoPath {
   color: var(--dim);
   font-size: 11px;
+  line-height: 1.35;
   font-family: 'JetBrains Mono', monospace;
   overflow: hidden;
   text-overflow: ellipsis;
