@@ -220,25 +220,6 @@ export default function AwesomeHome({
         </div>
       </div>
 
-      {/* Stats strip */}
-      <div className={classes.StatsWrap}>
-        <div className={classes.StatsGrid}>
-          {[
-            ['Lists', subjectsArray.length.toLocaleString()],
-            ['Categories', categories.length],
-          ].map(([k, v], i) => (
-            <div
-              key={i}
-              className={classes.StatCell}
-              style={{ borderLeft: i === 0 ? 'none' : undefined }}
-            >
-              <div className={classes.StatLabel}>{k}</div>
-              <div className={classes.StatValue}>{v}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Trending (only shown if we have cached star data) */}
       {trending.length > 0 && (
         <div className={classes.Section}>
