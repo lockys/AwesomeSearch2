@@ -4,10 +4,11 @@ import classes from './AwesomeHome.module.css';
 const SYNONYMS = ['awesome', 'curated', 'indexed', 'awesome'];
 const SUFFIX = '.search';
 
-function AnimatedWordmark() {
+function AnimatedWordmark({ clientX }) {
   const [displayed, setDisplayed] = useState('');
   const [suffix, setSuffix] = useState('');
   const [cursorOn, setCursorOn] = useState(true);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const id = setInterval(() => setCursorOn((c) => !c), 530);
@@ -70,8 +71,20 @@ function AnimatedWordmark() {
     return () => timeouts.forEach(clearTimeout);
   }, []);
 
+  const getRaise = (charIdx, totalLen) => {
+    if (clientX === null || !containerRef.current) return 0;
+    const rect = containerRef.current.getBoundingClientRect();
+    const relX = clientX - rect.left;
+    if (totalLen === 0) return 0;
+    const charX = (charIdx + 0.5) / totalLen * rect.width;
+    const dist = Math.abs(relX - charX);
+    return Math.max(0, 18 * Math.exp(-(dist * dist) / (2 * 48 * 48)));
+  };
+
+  const totalLen = displayed.length + suffix.length;
+
   return (
-    <span className={classes.Wordmark}>
+    <span className={classes.Wordmark} ref={containerRef}>
       <style>{`
         @keyframes wmpop {
           0%   { transform: translateY(-0.18em) scale(0.9); opacity: 0; }
@@ -79,35 +92,41 @@ function AnimatedWordmark() {
           100% { transform: translateY(0) scale(1); opacity: 1; }
         }
       `}</style>
-      {displayed.split('').map((ch, i) => (
-        <span
-          key={`w-${i}-${displayed.length}`}
-          style={{
-            display: 'inline-block',
-            animation:
-              i === displayed.length - 1
-                ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both'
-                : undefined,
-          }}
-        >
-          {ch}
-        </span>
-      ))}
-      {suffix.split('').map((ch, i) => (
-        <span
-          key={`s-${i}-${suffix.length}`}
-          style={{
-            display: 'inline-block',
-            color: 'var(--amber)',
-            animation:
-              i === suffix.length - 1
-                ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both'
-                : undefined,
-          }}
-        >
-          {ch}
-        </span>
-      ))}
+      {displayed.split('').map((ch, i) => {
+        const isNew = i === displayed.length - 1;
+        const raise = isNew ? 0 : getRaise(i, totalLen);
+        return (
+          <span
+            key={`w-${i}-${displayed.length}`}
+            style={{
+              display: 'inline-block',
+              transform: raise > 0 ? `translateY(-${raise.toFixed(1)}px)` : undefined,
+              transition: raise > 0 ? 'transform 80ms ease-out' : undefined,
+              animation: isNew ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
+            }}
+          >
+            {ch}
+          </span>
+        );
+      })}
+      {suffix.split('').map((ch, i) => {
+        const isNew = i === suffix.length - 1;
+        const raise = isNew ? 0 : getRaise(displayed.length + i, totalLen);
+        return (
+          <span
+            key={`s-${i}-${suffix.length}`}
+            style={{
+              display: 'inline-block',
+              color: 'var(--amber)',
+              transform: raise > 0 ? `translateY(-${raise.toFixed(1)}px)` : undefined,
+              transition: raise > 0 ? 'transform 80ms ease-out' : undefined,
+              animation: isNew ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
+            }}
+          >
+            {ch}
+          </span>
+        );
+      })}
       <span
         className={classes.WordmarkCursor}
         style={{ opacity: cursorOn ? 1 : 0 }}
@@ -125,6 +144,7 @@ export default function AwesomeHome({
   onOpen,
 }) {
   const [q, setQ] = useState('');
+  const [logoClientX, setLogoClientX] = useState(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -166,9 +186,13 @@ export default function AwesomeHome({
     <div className={classes.HomeView}>
       {/* Hero */}
       <div className={classes.Hero}>
-        <div className={classes.LogoBlock}>
+        <div
+          className={classes.LogoBlock}
+          onMouseMove={(e) => setLogoClientX(e.clientX)}
+          onMouseLeave={() => setLogoClientX(null)}
+        >
           <div className={classes.LogoText}>
-            <AnimatedWordmark />
+            <AnimatedWordmark clientX={logoClientX} />
           </div>
         </div>
 
@@ -274,7 +298,6 @@ export default function AwesomeHome({
               onClick={() => onCategoryFilter ? onCategoryFilter(c.name) : onSearch(c.name.toLowerCase())}
               className={classes.CatCard}
             >
-              <span className={classes.CatDot} />
               <span className={classes.CatName}>{c.name}</span>
               <span className={classes.CatCount}>{c.count}</span>
             </button>

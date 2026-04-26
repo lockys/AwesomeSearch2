@@ -344,10 +344,16 @@
 
 .LightboxClose:hover { color: var(--fg); border-color: var(--amber); }
 
+/* Hide GitHub heading anchor icons */
+.ReadmeContent .octicon,
+.ReadmeContent .octicon-link {
+  display: none !important;
+}
+
 /* Responsive: hide sidebar on small screens */
 @media (max-width: 768px) {
   .Sidebar { display: none; }
-  .ContentArea { padding: 20px 16px; }
+  .ContentArea { padding: 60px 16px 20px; }
   .StatsPanel { grid-template-columns: repeat(2, 1fr); }
   .RepoTitle { font-size: 24px; }
 }

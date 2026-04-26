@@ -192,16 +192,8 @@ class AwesomeSearch extends Component {
                   <>
                     <Kbd>esc</Kbd>
                     <span>home</span>
-                    <span className={classes.FooterSep}>·</span>
-                    <Kbd>⌘K</Kbd>
-                    <span>focus</span>
                   </>
-                ) : (
-                  <>
-                    <Kbd>⌘K</Kbd>
-                    <span>search</span>
-                  </>
-                )
+                ) : null
               }
             />
             <Route

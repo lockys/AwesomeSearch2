@@ -125,7 +125,6 @@ const AwesomeInput = ({ query, setQuery, results, onOpen, onClear }) => {
               ×
             </button>
           )}
-          <Kbd>⌘K</Kbd>
         </div>
 
         <div className={classes.Hints}>
@@ -152,65 +151,30 @@ const AwesomeInput = ({ query, setQuery, results, onOpen, onClear }) => {
       )}
 
       {hasResults && (
-        <>
-          {/* Column headers */}
-          <div className={classes.ColHeaders} data-testid="search-results">
-            <span className={classes.ColNum}>#</span>
-            <span className={classes.ColRepo}>Repository</span>
-            <span className={classes.ColCat}>Category</span>
-            <span className={classes.ColMatch}>Match</span>
-            <span className={classes.ColStars}>Stars</span>
-          </div>
-
-          <div ref={listRef} className={classes.ResultList}>
-            {results.map((r, idx) => {
-              const isSel = idx === selected;
-              const stars = (() => {
-                try {
-                  const info = JSON.parse(localStorage.getItem('repoInfo')) || {};
-                  const n = info[r.item.repo]?.stars;
-                  if (!n) return null;
-                  return n >= 1000 ? `${(n / 1000).toFixed(1)}k` : `${n}`;
-                } catch { return null; }
-              })();
-
-              return (
-                <div
-                  key={r.item.repo + idx}
-                  data-idx={idx}
-                  onMouseEnter={() => setSelected(idx)}
-                  onClick={() => onOpen(r.item.repo)}
-                  className={`${classes.ResultRow} ${isSel ? classes.ResultRowSel : ''}`}
-                  role="option"
-                  aria-selected={isSel}
-                  data-testid="search-result-item"
-                >
-                  {isSel && <div className={classes.SelAccent} />}
-                  <span className={`${classes.ColNum} ${isSel ? classes.NumSel : ''}`}>
-                    {String(idx + 1).padStart(2, '0')}
-                  </span>
-                  <div className={classes.ColRepo}>
-                    <div className={classes.RepoName} data-testid="search-result-link">
-                      <Highlight text={r.item.name} query={query} />
-                    </div>
-                    <div className={classes.RepoPath}>
-                      <span className={classes.RepoPathText}>{r.item.repo}</span>
-                    </div>
-                  </div>
-                  <span className={classes.ColCat}>
-                    <span className={classes.CatBadge}>{r.item.cate}</span>
-                  </span>
-                  <span className={classes.ColMatch}>
-                    <MatchBar score={r.score} />
-                  </span>
-                  <span className={`${classes.ColStars} ${isSel ? classes.StarsSel : ''}`}>
-                    {stars ? `★ ${stars}` : '—'}
-                  </span>
+        <div ref={listRef} className={classes.ResultList} data-testid="search-results">
+          {results.map((r, idx) => {
+            const isSel = idx === selected;
+            return (
+              <div
+                key={r.item.repo + idx}
+                data-idx={idx}
+                onMouseEnter={() => setSelected(idx)}
+                onClick={() => onOpen(r.item.repo)}
+                className={`${classes.ResultRow} ${isSel ? classes.ResultRowSel : ''}`}
+                role="option"
+                aria-selected={isSel}
+                data-testid="search-result-item"
+              >
+                {isSel && <div className={classes.SelAccent} />}
+                <div className={classes.RepoName} data-testid="search-result-link">
+                  <Highlight text={r.item.name} query={query} />
                 </div>
-              );
-            })}
-          </div>
-        </>
+                <div className={classes.RepoPath}>{r.item.repo}</div>
+                <span className={classes.CatBadge}>{r.item.cate}</span>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );

@@ -10,32 +10,38 @@
   position: relative;
 }
 
-/* ── Back button ── */
+/* ── Back button (mobile only) ── */
 .BackBtn {
-  position: fixed;
-  top: 14px;
-  left: 16px;
-  z-index: 300;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: oklch(0.24 0.012 265 / 0.45);
-  border: 1px solid oklch(0.32 0.014 265 / 0.4);
-  border-radius: 6px;
-  color: oklch(0.74 0.012 265 / 0.5);
-  font-size: 16px;
-  cursor: pointer;
-  transition: color 150ms, border-color 150ms, background 150ms, opacity 150ms;
-  line-height: 1;
-  backdrop-filter: blur(6px);
+  display: none;
 }
 
-.BackBtn:hover {
-  color: var(--amber);
-  border-color: oklch(0.78 0.14 70 / 0.6);
-  background: oklch(0.78 0.14 70 / 0.12);
+@media (max-width: 768px) {
+  .BackBtn {
+    position: fixed;
+    top: 14px;
+    left: 16px;
+    z-index: 300;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: oklch(0.24 0.012 265 / 0.45);
+    border: 1px solid oklch(0.32 0.014 265 / 0.4);
+    border-radius: 6px;
+    color: oklch(0.74 0.012 265 / 0.5);
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 150ms, border-color 150ms, background 150ms;
+    line-height: 1;
+    backdrop-filter: blur(6px);
+  }
+
+  .BackBtn:hover {
+    color: var(--amber);
+    border-color: oklch(0.78 0.14 70 / 0.6);
+    background: oklch(0.78 0.14 70 / 0.12);
+  }
 }
 
 /* ── Main ── */
