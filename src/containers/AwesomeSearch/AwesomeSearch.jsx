@@ -60,73 +60,15 @@ class AwesomeSearch extends Component {
     this.props.history.push('/');
   };
 
-  getBreadcrumbs() {
-    const { location } = this.props;
-    const { search } = this.state;
-    const isHome = location.pathname === '/';
-
-    if (isHome && search.trim().length >= 2) {
-      return [
-        { text: 'home', onClick: this.goHome },
-        { text: 'search', accent: true },
-      ];
-    }
-
-    if (!isHome) {
-      const parts = location.pathname.replace(/^\//, '').split('/');
-      if (parts.length >= 2) {
-        return [
-          { text: 'home', onClick: this.goHome },
-          { text: parts[0] },
-          { text: parts[1], accent: true },
-        ];
-      }
-    }
-
-    return null;
-  }
-
   render() {
     const { search, searchResult, subjects, subjectsArray } = this.state;
     const { location } = this.props;
     const isHome = location.pathname === '/';
     const isSearchActive = isHome && search.trim().length >= 2;
-    const crumbs = this.getBreadcrumbs();
     const categories = subjects ? Object.keys(subjects) : [];
 
     return (
       <div className={classes.Shell} data-testid="awesome-search">
-        {/* Titlebar */}
-        <header className={classes.Titlebar}>
-          <div className={classes.TitlebarDots}>
-            <span className={classes.DotPink} />
-            <span className={classes.DotAmber} />
-            <span className={classes.DotGreen} />
-          </div>
-          <span className={classes.TitlebarLogo} onClick={this.goHome}>
-            awesome.search
-          </span>
-          {crumbs && (
-            <div className={classes.Crumbs}>
-              {crumbs.map((c, i) => (
-                <React.Fragment key={i}>
-                  <span className={classes.CrumbSep}>/</span>
-                  <span
-                    className={`${classes.Crumb} ${c.accent ? classes.CrumbAccent : ''}`}
-                    onClick={c.onClick}
-                    style={{ cursor: c.onClick ? 'pointer' : 'default' }}
-                  >
-                    {c.text}
-                  </span>
-                </React.Fragment>
-              ))}
-            </div>
-          )}
-          <span className={classes.TitlebarRight}>
-            <span className={classes.ConnectedDot}>●</span>connected
-          </span>
-        </header>
-
         {/* Main content */}
         <main className={classes.Main}>
           {!subjects ? (

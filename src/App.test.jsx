@@ -19,9 +19,9 @@ describe('App', () => {
     expect(screen.getByTestId('awesome-search')).toBeInTheDocument();
   });
 
-  it('renders the titlebar', () => {
+  it('renders the footer status bar', () => {
     render(<App />);
-    expect(screen.getByText('awesome.search')).toBeInTheDocument();
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
 
   it('shows spinner while data loads', () => {

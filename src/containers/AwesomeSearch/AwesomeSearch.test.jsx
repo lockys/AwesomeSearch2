@@ -40,7 +40,7 @@ describe('AwesomeSearch', () => {
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
-  it('renders titlebar logo after data loads', async () => {
+  it('renders animated wordmark after data loads', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
@@ -48,7 +48,7 @@ describe('AwesomeSearch', () => {
       </MemoryRouter>
     );
     await waitFor(() => {
-      expect(screen.getByText('awesome.search')).toBeInTheDocument();
+      expect(screen.getByTestId('search-input')).toBeInTheDocument();
     });
   });
 
