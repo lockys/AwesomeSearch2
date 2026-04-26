@@ -3,7 +3,6 @@ import AwesomeHome from '../../components/AwesomeHome/AwesomeHome.jsx';
 import AwesomeInput from '../../components/AwesomeInput/AwesomeInput.jsx';
 import AwesomeReadme from '../AwesomeReadme/AwesomeReadme.jsx';
 import Spinner from '../../components/UI/Spinner/Spinner.jsx';
-import SiteMap from './SiteMap.jsx';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 import { Route, withRouter } from 'react-router-dom';
@@ -68,51 +67,12 @@ class AwesomeSearch extends Component {
     this.props.history.push('/');
   };
 
-  getBreadcrumbs() {
-    const { location } = this.props;
-    const { search } = this.state;
-    const parts = location.pathname.split('/').filter(Boolean);
-
-    const crumbs = [{ text: '~', onClick: this.goHome }];
-
-    if (parts.length === 0) {
-      if (search.trim().length >= 2) {
-        crumbs.push({ text: `search: "${search.trim()}"`, onClick: null });
-      }
-    } else if (parts.length >= 2) {
-      crumbs.push({ text: parts[0], onClick: null });
-      crumbs.push({ text: parts[1], onClick: null });
-    }
-
-    return crumbs;
-  }
-
-  handleSiteMapNavigate = (type, value) => {
-    if (type === '/') {
-      this.goHome();
-    } else if (type === 'search') {
-      // value is a lowercased category name; find the original casing
-      const { subjects } = this.state;
-      const original = subjects
-        ? Object.keys(subjects).find((k) => k.toLowerCase() === value)
-        : null;
-      if (original) {
-        this.handleCategoryFilter(original);
-      } else {
-        this.handleSearch(value);
-      }
-    } else if (type === 'repo') {
-      this.handleOpen(value);
-    }
-  };
-
   render() {
     const { search, searchResult, subjects, subjectsArray } = this.state;
     const { location } = this.props;
     const isHome = location.pathname === '/';
     const isSearchActive = isHome && search.trim().length >= 2;
     const categories = subjects ? Object.keys(subjects) : [];
-    const crumbs = this.getBreadcrumbs();
 
     return (
       <div className={classes.Shell} data-testid="awesome-search">
@@ -160,109 +120,9 @@ class AwesomeSearch extends Component {
           )}
         </main>
 
-        {/* Footer status bar */}
-        <footer className={classes.Footer}>
-          <span className={classes.FooterDot}>●</span>
-
-          {subjects && (
-            <SiteMap
-              categories={categories}
-              subjectsArray={subjectsArray}
-              onNavigate={this.handleSiteMapNavigate}
-            />
-          )}
-
-          {/* Breadcrumbs */}
-          <span className={classes.Crumbs}>
-            {crumbs.map((c, i) => (
-              <React.Fragment key={i}>
-                {i > 0 && <span className={classes.CrumbSep}>/</span>}
-                <span
-                  className={c.onClick ? classes.CrumbLink : classes.CrumbText}
-                  onClick={c.onClick || undefined}
-                >
-                  {c.text}
-                </span>
-              </React.Fragment>
-            ))}
-          </span>
-
-          <span className={classes.FooterSep}>·</span>
-
-          <Route
-            exact
-            path="/"
-            render={() =>
-              isSearchActive ? (
-                <>
-                  <span>{searchResult.length} matches</span>
-                  <span className={classes.FooterSep}>·</span>
-                  <span>threshold 0.3</span>
-                  <span className={classes.FooterSep}>·</span>
-                  <span>min-chars 2</span>
-                </>
-              ) : (
-                <>
-                  <span>{subjectsArray.length} lists indexed</span>
-                  <span className={classes.FooterSep}>·</span>
-                  <span>{categories.length} categories</span>
-                </>
-              )
-            }
-          />
-          <Route
-            path="/:user/:repo"
-            render={() => (
-              <>
-                <span>readme</span>
-                <span className={classes.FooterSep}>·</span>
-                <span>markdown</span>
-              </>
-            )}
-          />
-          <span className={classes.FooterRight}>
-            <Route
-              exact
-              path="/"
-              render={() =>
-                isSearchActive ? (
-                  <>
-                    <Kbd>esc</Kbd>
-                    <span>home</span>
-                    <span className={classes.FooterSep}>·</span>
-                    <Kbd>⌘K</Kbd>
-                    <span>focus</span>
-                  </>
-                ) : (
-                  <>
-                    <Kbd>⌘K</Kbd>
-                    <span>search</span>
-                  </>
-                )
-              }
-            />
-            <Route
-              path="/:user/:repo"
-              render={() => (
-                <>
-                  <Kbd>esc</Kbd>
-                  <span>back</span>
-                </>
-              )}
-            />
-          </span>
-        </footer>
       </div>
     );
   }
-}
-
-function Kbd({ children }) {
-  return (
-    <span className="kbd-tag">
-      {children}
-    </span>
-  );
 }
 
 export default withRouter(AwesomeSearch);
