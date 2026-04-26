@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import classes from './AwesomeHome.module.css';
 
 const SYNONYMS = ['awesome', 'curated', 'indexed', 'awesome'];
-const SUFFIX = '.search';
+const SUFFIX = 'search';
 
 function AnimatedWordmark({ triggerRef }) {
   const [displayed, setDisplayed] = useState('');
