@@ -289,6 +289,10 @@ export default function AwesomeHome({
           <a href="https://github.com/lockys" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
             @lockys
           </a>
+          {' '}&{' '}
+          <a href="https://github.com/john-lin" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
+            @john-lin
+          </a>
           {' '}· Powered by{' '}
           <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
             sindresorhus/awesome
