@@ -121,6 +121,33 @@
   padding: 30px 34px;
 }
 
+.MainPanel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.Footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 34px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-panel);
+}
+
+.ScrollProgress {
+  padding: 4px 10px;
+  width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg-sunk);
+  color: var(--mid);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
 .RepoLabel {
   font-family: 'Space Grotesk', system-ui, sans-serif;
   font-size: 11px;
@@ -375,6 +402,7 @@
 @media (max-width: 768px) {
   .Sidebar { display: none; }
   .ContentArea { padding: 60px 16px 20px; }
+  .Footer { padding: 10px 16px; }
   .StatsPanel { grid-template-columns: repeat(2, 1fr); }
   .RepoTitle { font-size: 24px; }
 }

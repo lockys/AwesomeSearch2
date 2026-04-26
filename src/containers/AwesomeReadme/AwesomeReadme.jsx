@@ -14,6 +14,7 @@ class AwesomeReadme extends Component {
     activeSection: null,
     previewSrc: null,
     sidebarWidth: 240,
+    scrollPercent: 0,
   };
 
   contentRef = React.createRef();
@@ -31,6 +32,7 @@ class AwesomeReadme extends Component {
     if (prevState._html !== this.state._html) {
       this.makeAnchor();
       this.attachImageHandlers();
+      this.updateScrollProgress();
       if (this.state.headers.length > 0) {
         this.setState({ activeSection: this.state.headers[0].id });
       }
@@ -235,6 +237,7 @@ class AwesomeReadme extends Component {
 
   handleContentScroll = () => {
     if (!this.contentRef.current) return;
+    this.updateScrollProgress();
     const headers = this.contentRef.current.querySelectorAll('[data-testid="readme-content"] [id]');
     const containerTop = this.contentRef.current.getBoundingClientRect().top;
     let cur = this.state.headers[0]?.id;
@@ -244,9 +247,23 @@ class AwesomeReadme extends Component {
     if (cur && cur !== this.state.activeSection) this.setState({ activeSection: cur });
   };
 
+  updateScrollProgress = () => {
+    const contentEl = this.contentRef.current;
+    if (!contentEl) return;
+
+    const maxScrollableDistance = contentEl.scrollHeight - contentEl.clientHeight;
+    const nextPercent = maxScrollableDistance <= 0
+      ? 100
+      : Math.min(100, Math.round((contentEl.scrollTop / maxScrollableDistance) * 100));
+
+    if (nextPercent !== this.state.scrollPercent) {
+      this.setState({ scrollPercent: nextPercent });
+    }
+  };
+
   render() {
     const { user, repo } = this.props.match.params;
-    const { _html, isLoading, headers, stars, updateAt, activeSection, previewSrc, sidebarWidth } = this.state;
+    const { _html, isLoading, headers, stars, updateAt, activeSection, previewSrc, sidebarWidth, scrollPercent } = this.state;
 
     const fmtStars = stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : `${stars || '—'}`;
 
@@ -293,68 +310,76 @@ class AwesomeReadme extends Component {
           title="Drag to resize"
         />
 
-        {/* Main content area */}
-        <div
-          ref={this.contentRef}
-          onScroll={this.handleContentScroll}
-          className={classes.ContentArea}
-        >
-          {/* Breadcrumb label */}
-          <div className={classes.RepoLabel}>README.md · {user}/{repo}</div>
-          <h1 className={classes.RepoTitle}>{repo}</h1>
+        <div className={classes.MainPanel}>
+          {/* Main content area */}
+          <div
+            ref={this.contentRef}
+            onScroll={this.handleContentScroll}
+            className={classes.ContentArea}
+          >
+            {/* Breadcrumb label */}
+            <div className={classes.RepoLabel}>README.md · {user}/{repo}</div>
+            <h1 className={classes.RepoTitle}>{repo}</h1>
 
-          {/* Stats panel */}
-          {this.state.showReadmeInfo && (
-            <div className={classes.StatsPanel} data-testid="repo-stats">
-              {[
-                ['Stars', fmtStars, true],
-                ['Updated', updateAt ? <TimeAgo datetime={updateAt} /> : '—', false],
-                ['Owner', user, false],
-                [
-                  'GitHub',
-                  <a
-                    href={`https://github.com/${user}/${repo}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    data-testid="view-on-github"
+            {/* Stats panel */}
+            {this.state.showReadmeInfo && (
+              <div className={classes.StatsPanel} data-testid="repo-stats">
+                {[
+                  ['Stars', fmtStars, true],
+                  ['Updated', updateAt ? <TimeAgo datetime={updateAt} /> : '—', false],
+                  ['Owner', user, false],
+                  [
+                    'GitHub',
+                    <a
+                      href={`https://github.com/${user}/${repo}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-testid="view-on-github"
+                    >
+                      View ↗
+                    </a>,
+                    false,
+                  ],
+                ].map(([k, v, accent], i) => (
+                  <div
+                    key={i}
+                    className={classes.StatCell}
+                    style={{ borderLeft: i === 0 ? 'none' : undefined }}
                   >
-                    View ↗
-                  </a>,
-                  false,
-                ],
-              ].map(([k, v, accent], i) => (
-                <div
-                  key={i}
-                  className={classes.StatCell}
-                  style={{ borderLeft: i === 0 ? 'none' : undefined }}
-                >
-                  <div className={classes.StatKey}>{k}</div>
-                  <div className={`${classes.StatVal} ${accent ? classes.StatValAccent : ''}`}>
-                    {v}
+                    <div className={classes.StatKey}>{k}</div>
+                    <div className={`${classes.StatVal} ${accent ? classes.StatValAccent : ''}`}>
+                      {v}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
 
-          {/* Skeleton */}
-          {isLoading ? (
-            <div className={classes.Skeleton} data-testid="readme-skeleton">
-              {[100, 80, 90, 60, 100, 75, 85, 55].map((w, i) => (
-                <div
-                  key={i}
-                  className={classes.SkeletonLine}
-                  style={{ width: `${w}%`, height: i % 4 === 0 ? 18 : 12, marginTop: i % 4 === 0 ? 20 : 8 }}
-                />
-              ))}
+            {/* Skeleton */}
+            {isLoading ? (
+              <div className={classes.Skeleton} data-testid="readme-skeleton">
+                {[100, 80, 90, 60, 100, 75, 85, 55].map((w, i) => (
+                  <div
+                    key={i}
+                    className={classes.SkeletonLine}
+                    style={{ width: `${w}%`, height: i % 4 === 0 ? 18 : 12, marginTop: i % 4 === 0 ? 20 : 8 }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div
+                className={classes.ReadmeContent}
+                dangerouslySetInnerHTML={{ __html: _html }}
+                data-testid="readme-content"
+              />
+            )}
+          </div>
+
+          <footer className={classes.Footer}>
+            <div className={classes.ScrollProgress} data-testid="readme-scroll-progress">
+              {scrollPercent}%
             </div>
-          ) : (
-            <div
-              className={classes.ReadmeContent}
-              dangerouslySetInnerHTML={{ __html: _html }}
-              data-testid="readme-content"
-            />
-          )}
+          </footer>
         </div>
 
         {/* Lightbox */}
