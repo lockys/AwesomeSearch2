@@ -226,8 +226,6 @@ export default function AwesomeHome({
           {[
             ['Lists', subjectsArray.length.toLocaleString()],
             ['Categories', categories.length],
-            ['Engine', 'Fuse.js'],
-            ['Threshold', '0.3'],
           ].map(([k, v], i) => (
             <div
               key={i}
