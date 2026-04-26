@@ -1,257 +1,252 @@
-import React, {Component} from 'react';
-import AwesomeListMenu from '../../components/AwesomeLists/AwesomeListMenu.jsx';
-import AwesomeRwdMenu from '../../components/AwesomeRwdMenu/AwesomeRwdMenu.jsx';
-import AwesomeLists from '../../components/AwesomeLists/AwesomeLists.jsx';
+import React, { Component } from 'react';
+import AwesomeHome from '../../components/AwesomeHome/AwesomeHome.jsx';
 import AwesomeInput from '../../components/AwesomeInput/AwesomeInput.jsx';
 import AwesomeReadme from '../AwesomeReadme/AwesomeReadme.jsx';
-import KeyboardShortcuts from '../../components/KeyboardShortcuts/KeyboardShortcuts.jsx';
 import Spinner from '../../components/UI/Spinner/Spinner.jsx';
 import axios from 'axios';
 import Fuse from 'fuse.js';
-import {Route, withRouter} from 'react-router-dom';
-import Backdrop from '../../components/UI/Backdrop/Backdrop.jsx';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faBars} from '@fortawesome/free-solid-svg-icons';
+import { Route, withRouter } from 'react-router-dom';
 import classes from './AwesomeSearch.module.css';
-import {MdDarkMode, MdLightMode} from 'react-icons/md';
 
 class AwesomeSearch extends Component {
-    headerRef = React.createRef();
+  state = {
+    subjects: null,
+    subjectsArray: [],
+    search: '',
+    searchResult: [],
+    errorMessage: null,
+  };
 
-    state = {
-        errorMessage: null,
-        subjects: null,
-        selectedSubject: '',
-        subjectsArray: [],
-        search: '',
-        searchResult: [],
-        showResult: false,
-        showMenu: false,
-    };
+  componentDidMount() {
+    this.fetchData();
+  }
 
-    getSubjectEntries = () => {
-        axios
-            .get(
-                'https://lockys.github.io/Awesome.json/awesome/awesome.json'
-            )
-            .then((subjects) => {
-                this.setState({
-                    subjects: subjects.data,
-                    errorMessage: '',
-                });
-
-                let subjectsArray = Object.keys(subjects.data)
-                    .map((subject) => {
-                        return subjects.data[subject];
-                    })
-                    .reduce((arr, el) => {
-                        return arr.concat(el);
-                    }, []);
-
-                this.fuse = new Fuse(subjectsArray, {
-                    keys: ['name'],
-                    threshold: 0.3,
-                    minMatchCharLength: 2,
-                });
-
-                this.setState({subjectsArray: subjectsArray});
-
-                if (!this.state.subjects) {
-                    this.setState({
-                        errorMessage:
-                            'There was an error. Unable to load the Awesome subjects.',
-                    });
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    errorMessage: `There was an error. Unable to load the Awesome subjects: ${error}.`,
-                });
-            });
-    };
-
-    componentDidMount() {
-        this.getSubjectEntries();
-        this.updateHeaderHeight();
-        window.addEventListener('resize', this.updateHeaderHeight);
-    }
-
-    componentDidUpdate(_, prevState) {
-        if (prevState.showMenu !== this.state.showMenu) {
-            document.body.style.overflow = this.state.showMenu ? 'hidden' : '';
-        }
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateHeaderHeight);
-        document.body.style.overflow = '';
-    }
-
-    updateHeaderHeight = () => {
-        if (this.headerRef.current) {
-            const h = this.headerRef.current.getBoundingClientRect().height;
-            document.documentElement.style.setProperty('--header-height', `${h}px`);
-        }
-    };
-
-    topicOnClickHandler = (topic) => {
-        this.setState({selectedSubject: topic, showMenu: false});
-    };
-
-    searchInputOnChangeHandler = (event) => {
-        if (!this.fuse) return;
-        const result = this.fuse.search(event.target.value);
-        this.setState({
-            search: event.target.value,
-            searchResult: result.slice(0, 20),
-            showResult: true,
-        });
-    };
-
-    searchInputOnFocusHandler = () => {
-        const { search } = this.state;
-        const updates = { showResult: true };
-        if (this.fuse && search) {
-            updates.searchResult = this.fuse.search(search).slice(0, 20);
-        }
-        this.setState(updates);
-    };
-
-    searchInputOnCloseHandler = (name) => {
-        this.setState({ showResult: false, ...(typeof name === 'string' ? { search: name } : {}) });
-    };
-
-    setMdHandler = (md) => {
-        this.setState({
-            md: md,
-        });
-    };
-
-    burgerButtonClickHandler = () => {
-        this.setState((prevState) => {
-            return {
-                showMenu: !prevState.showMenu,
-                showResult: false,
-            };
-        });
-    };
-
-    render() {
-        return (
-            <div className={`${classes.AwesomeSearch} ${classes[this.props.theme]}`} data-testid="awesome-search">
-                <header className={classes.Header} ref={this.headerRef}>
-                    <AwesomeInput
-                        searchOnchange={this.searchInputOnChangeHandler}
-                        value={this.state.search}
-                        searchResult={this.state.searchResult}
-                        searchInputOnFocus={this.searchInputOnFocusHandler}
-                        searchInputOnClose={this.searchInputOnCloseHandler}
-                        showResult={this.state.showResult}
-                        homeOnClick={this.topicOnClickHandler}
-                    />
-
-                    <div className={classes.HeaderActions} data-testid="header-actions">
-                        <div
-                            className={classes.ThemeToggle}
-                            role="button"
-                            aria-label={this.props.isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-                        >
-                            {!this.props.isDark ? <MdDarkMode
-                                onClick={() => {
-                                    localStorage.setItem('__isDark', 'true');
-                                    this.props.onThemeChange(true);
-                                }}
-                            /> : <MdLightMode
-                                onClick={() => {
-                                    localStorage.setItem('__isDark', 'false');
-                                    this.props.onThemeChange(false);
-                                }}
-                            />}
-                        </div>
-
-                        <div
-                            className={classes.BurgerButton}
-                            onClick={this.burgerButtonClickHandler}
-                            role="button"
-                            aria-label="Toggle menu"
-                            aria-expanded={this.state.showMenu}
-                            data-testid="burger-button"
-                        >
-                            <FontAwesomeIcon icon={faBars}/>
-                        </div>
-                    </div>
-                </header>
-
-                <AwesomeRwdMenu
-                    topics={this.state.subjects ? Object.keys(this.state.subjects) : []}
-                    topicOnClickHandler={this.topicOnClickHandler}
-                    isOpen={this.state.showMenu}
-                    onClose={() => this.setState({showMenu: false})}
-                    isDark={this.props.isDark}
-                    onThemeChange={this.props.onThemeChange}
-                />
-
-                {this.state.subjects ? (
-                    <div className="grid">
-                        <div
-                            className={`cell -2of12 ${classes.SidebarCell}`}
-                            style={{
-                                width: '100%',
-                            }}
-                        >
-                            <AwesomeListMenu
-                                topics={Object.keys(this.state.subjects)}
-                                topicOnClickHandler={this.topicOnClickHandler}
-                            />
-                        </div>
-                        <div
-                            className="cell -10of12"
-                            style={{
-                                width: '100%',
-                            }}
-                        >
-                            <Route
-                                path="/"
-                                exact
-                                render={() => {
-                                    return (
-                                        <AwesomeLists
-                                            topic={this.state.selectedSubject}
-                                            subjects={this.state.subjects[this.state.selectedSubject]}
-                                        />
-                                    );
-                                }}
-                            />
-                            <Route
-                                path="/shortcuts"
-                                exact
-                                render={() => <KeyboardShortcuts />}
-                            />
-                            <Route
-                                path="/:user/:repo"
-                                render={(props) => {
-                                    return (
-                                        <AwesomeReadme
-                                            key={props.match.params.repo}
-                                            setMdHandler={this.setMdHandler}
-                                            {...props}
-                                        />
-                                    );
-                                }}
-                            />
-                        </div>
-
-                        <Backdrop
-                            show={this.state.showResult}
-                            closeSearchModal={this.searchInputOnCloseHandler}
-                        />
-                    </div>
-                ) : (
-                    <Spinner/>
-                )}
-            </div>
+  fetchData = () => {
+    axios
+      .get('https://lockys.github.io/Awesome.json/awesome/awesome.json')
+      .then((response) => {
+        const subjects = response.data;
+        const subjectsArray = Object.keys(subjects).flatMap((cate) =>
+          subjects[cate].map((item) => ({ ...item, cate }))
         );
+
+        this.fuse = new Fuse(subjectsArray, {
+          keys: ['name'],
+          threshold: 0.3,
+          minMatchCharLength: 2,
+          includeScore: true,
+        });
+
+        this.setState({ subjects, subjectsArray });
+      })
+      .catch((err) => {
+        this.setState({ errorMessage: `Failed to load data: ${err.message}` });
+      });
+  };
+
+  handleSearch = (value) => {
+    if (!this.fuse) return;
+    const results = this.fuse.search(value).slice(0, 20);
+    this.setState({ search: value, searchResult: results });
+  };
+
+  handleOpen = (repo) => {
+    this.props.history.push(`/${repo}`);
+    this.setState({ search: '' });
+  };
+
+  goHome = () => {
+    this.setState({ search: '' });
+    this.props.history.push('/');
+  };
+
+  getBreadcrumbs() {
+    const { location } = this.props;
+    const { search } = this.state;
+    const isHome = location.pathname === '/';
+
+    if (isHome && search.trim().length >= 2) {
+      return [
+        { text: 'home', onClick: this.goHome },
+        { text: 'search', accent: true },
+      ];
     }
+
+    if (!isHome) {
+      const parts = location.pathname.replace(/^\//, '').split('/');
+      if (parts.length >= 2) {
+        return [
+          { text: 'home', onClick: this.goHome },
+          { text: parts[0] },
+          { text: parts[1], accent: true },
+        ];
+      }
+    }
+
+    return null;
+  }
+
+  render() {
+    const { search, searchResult, subjects, subjectsArray } = this.state;
+    const { location } = this.props;
+    const isHome = location.pathname === '/';
+    const isSearchActive = isHome && search.trim().length >= 2;
+    const crumbs = this.getBreadcrumbs();
+    const categories = subjects ? Object.keys(subjects) : [];
+
+    return (
+      <div className={classes.Shell} data-testid="awesome-search">
+        {/* Titlebar */}
+        <header className={classes.Titlebar}>
+          <div className={classes.TitlebarDots}>
+            <span className={classes.DotPink} />
+            <span className={classes.DotAmber} />
+            <span className={classes.DotGreen} />
+          </div>
+          <span className={classes.TitlebarLogo} onClick={this.goHome}>
+            awesome.search
+          </span>
+          {crumbs && (
+            <div className={classes.Crumbs}>
+              {crumbs.map((c, i) => (
+                <React.Fragment key={i}>
+                  <span className={classes.CrumbSep}>/</span>
+                  <span
+                    className={`${classes.Crumb} ${c.accent ? classes.CrumbAccent : ''}`}
+                    onClick={c.onClick}
+                    style={{ cursor: c.onClick ? 'pointer' : 'default' }}
+                  >
+                    {c.text}
+                  </span>
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+          <span className={classes.TitlebarRight}>
+            <span className={classes.ConnectedDot}>●</span>connected
+          </span>
+        </header>
+
+        {/* Main content */}
+        <main className={classes.Main}>
+          {!subjects ? (
+            <Spinner />
+          ) : (
+            <>
+              <Route
+                exact
+                path="/"
+                render={() =>
+                  isSearchActive ? (
+                    <AwesomeInput
+                      query={search}
+                      setQuery={this.handleSearch}
+                      results={searchResult}
+                      onOpen={this.handleOpen}
+                      onClear={() => this.setState({ search: '' })}
+                    />
+                  ) : (
+                    <AwesomeHome
+                      subjects={subjects}
+                      categories={categories}
+                      subjectsArray={subjectsArray}
+                      onSearch={(q) => this.handleSearch(q)}
+                      onOpen={this.handleOpen}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="/:user/:repo"
+                render={(props) => (
+                  <AwesomeReadme
+                    key={`${props.match.params.user}/${props.match.params.repo}`}
+                    {...props}
+                    onBack={this.goHome}
+                  />
+                )}
+              />
+            </>
+          )}
+        </main>
+
+        {/* Footer status bar */}
+        <footer className={classes.Footer}>
+          <span className={classes.FooterDot}>●</span>
+          <Route
+            exact
+            path="/"
+            render={() =>
+              isSearchActive ? (
+                <>
+                  <span>{searchResult.length} matches</span>
+                  <span className={classes.FooterSep}>·</span>
+                  <span>threshold 0.3</span>
+                  <span className={classes.FooterSep}>·</span>
+                  <span>min-chars 2</span>
+                </>
+              ) : (
+                <>
+                  <span>{subjectsArray.length} lists indexed</span>
+                  <span className={classes.FooterSep}>·</span>
+                  <span>{categories.length} categories</span>
+                </>
+              )
+            }
+          />
+          <Route
+            path="/:user/:repo"
+            render={() => (
+              <>
+                <span>readme</span>
+                <span className={classes.FooterSep}>·</span>
+                <span>markdown</span>
+              </>
+            )}
+          />
+          <span className={classes.FooterRight}>
+            <Route
+              exact
+              path="/"
+              render={() =>
+                isSearchActive ? (
+                  <>
+                    <Kbd>esc</Kbd>
+                    <span>home</span>
+                    <span className={classes.FooterSep}>·</span>
+                    <Kbd>⌘K</Kbd>
+                    <span>focus</span>
+                  </>
+                ) : (
+                  <>
+                    <Kbd>⌘K</Kbd>
+                    <span>search</span>
+                  </>
+                )
+              }
+            />
+            <Route
+              path="/:user/:repo"
+              render={() => (
+                <>
+                  <Kbd>esc</Kbd>
+                  <span>back</span>
+                </>
+              )}
+            />
+          </span>
+        </footer>
+      </div>
+    );
+  }
+}
+
+function Kbd({ children }) {
+  return (
+    <span className="kbd-tag">
+      {children}
+    </span>
+  );
 }
 
 export default withRouter(AwesomeSearch);

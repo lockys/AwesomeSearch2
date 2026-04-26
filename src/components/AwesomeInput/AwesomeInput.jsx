@@ -1,77 +1,217 @@
-import React, { useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { withRouter } from 'react-router-dom';
 import classes from './AwesomeInput.module.css';
 
-const AwesomeInput = (props) => {
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+function Kbd({ children }) {
+  return (
+    <span className={classes.Kbd}>{children}</span>
+  );
+}
+
+function MatchBar({ score }) {
+  // Fuse score: 0 = perfect, threshold (0.3) = worst shown
+  const pct = Math.round(Math.max(0, Math.min(1, 1 - (score || 0) / 0.3)) * 100);
+  return (
+    <div className={classes.MatchBarWrap}>
+      <div className={classes.MatchBarTrack}>
+        <div className={classes.MatchBarFill} style={{ width: `${pct}%` }} />
+      </div>
+      <span className={classes.MatchScore}>
+        .{String((score || 0).toFixed(2)).slice(2).padEnd(2, '0')}
+      </span>
+    </div>
+  );
+}
+
+function Highlight({ text, query }) {
+  if (!query || query.length < 2) return <>{text}</>;
+  const lower = text.toLowerCase();
+  const q = query.toLowerCase();
+  const hit = lower.indexOf(q);
+  if (hit !== -1) {
+    return (
+      <>
+        {text.slice(0, hit)}
+        <span className={classes.MatchHit}>{text.slice(hit, hit + q.length)}</span>
+        {text.slice(hit + q.length)}
+      </>
+    );
+  }
+  // Subsequence highlight
+  const out = [];
+  let ti = 0;
+  for (let qi = 0; qi < q.length && ti < text.length; qi++) {
+    while (ti < text.length && text[ti].toLowerCase() !== q[qi]) {
+      out.push(<span key={`p${ti}`}>{text[ti]}</span>);
+      ti++;
+    }
+    if (ti < text.length) {
+      out.push(<span key={`h${ti}`} className={classes.MatchHit}>{text[ti]}</span>);
+      ti++;
+    }
+  }
+  if (ti < text.length) out.push(<span key="rest">{text.slice(ti)}</span>);
+  return <>{out}</>;
+}
+
+const AwesomeInput = ({ query, setQuery, results, onOpen, onClear }) => {
+  const [selected, setSelected] = useState(0);
+  const inputRef = useRef(null);
+  const listRef = useRef(null);
 
   useEffect(() => {
-    setSelectedIndex(-1);
-  }, [props.searchResult]);
+    setSelected(0);
+  }, [results]);
 
-  const navigate = (item) => {
-    props.history.push(`/${item.item.repo}`);
-    props.searchInputOnClose(item.item.name);
-  };
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  // Scroll selected into view
+  useEffect(() => {
+    if (!listRef.current) return;
+    const el = listRef.current.querySelector(`[data-idx="${selected}"]`);
+    if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ block: 'nearest' });
+  }, [selected]);
 
   const handleKeyDown = (e) => {
-    const count = props.searchResult.length;
-    if (e.key === 'Tab' && count > 0) {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
-      navigate(props.searchResult[0]);
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex((i) => Math.min(i + 1, count - 1));
+      setSelected((i) => Math.min(i + 1, results.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+      setSelected((i) => Math.max(i - 1, 0));
+    } else if (e.key === 'Enter' && results.length > 0) {
       e.preventDefault();
-      navigate(props.searchResult[selectedIndex]);
+      onOpen(results[selected].item.repo);
+    } else if (e.key === 'Tab' && results.length > 0) {
+      e.preventDefault();
+      setQuery(results[0].item.name);
+    } else if (e.key === 'Escape') {
+      onClear?.();
     }
   };
 
+  const hasResults = results.length > 0;
+  const noResults = query.trim().length >= 2 && !hasResults;
+
   return (
-    <div className={classes.AwesomeInput} data-testid="awesome-input">
-      <div className={classes.SearchInputWrapper}>
-        <input
-          id='subject'
-          type='text'
-          placeholder='Search AwesomeLists!'
-          className={classes.SearchInput}
-          onChange={props.searchOnchange}
-          value={props.value}
-          onFocus={props.searchInputOnFocus}
-          onKeyDown={handleKeyDown}
-          autoComplete="off"
-          aria-label="Search awesome lists"
-          data-testid="search-input"
-        />
-      </div>
-      {props.showResult ? (
-        <div className={classes.SearchResult} role="listbox" data-testid="search-results">
-          {props.searchResult.length === 0 ? (
-            <div className={classes.SearchResultItem} style={{ color: '#666', cursor: 'default' }}>
-              Type something to search
-            </div>
-          ) : null}
-          {props.searchResult.map((el, idx) => (
-            <div
-              key={el.item.name + idx}
-              className={`${classes.SearchResultItem} ${idx === selectedIndex ? classes.SearchResultItemSelected : ''}`}
-              role="option"
-              aria-selected={idx === selectedIndex}
-              data-testid="search-result-item"
-            >
-              <Link to={`/${el.item.repo}`} onClick={() => props.searchInputOnClose(el.item.name)} data-testid="search-result-link">
-                <span style={{ color: '#888', fontSize: '12px' }}>{el.item.cate}/</span>
-                <br />
-                <span style={{ fontWeight: 500 }}>{el.item.name}</span>
-              </Link>
-            </div>
-          ))}
+    <div className={classes.SearchView}>
+      {/* Input row */}
+      <div className={classes.InputSection}>
+        <div className={classes.SubLabel}>
+          Fuzzy search · {query ? `${results.length} matches` : 'type to search'}
         </div>
-      ) : null}
+        <div className={classes.InputBox}>
+          <span className={classes.InputPrompt}>❯</span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Search awesome lists… (try: react, python, docker)"
+            className={classes.Input}
+            data-testid="search-input"
+            aria-label="Search awesome lists"
+            autoComplete="off"
+          />
+          {query && (
+            <button
+              onClick={onClear}
+              className={classes.ClearBtn}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+          <Kbd>⌘K</Kbd>
+        </div>
+
+        <div className={classes.Hints}>
+          <span><Kbd>↑</Kbd><Kbd>↓</Kbd> move</span>
+          <span><Kbd>↵</Kbd> open</span>
+          <span><Kbd>⇥</Kbd> complete top</span>
+          <span><Kbd>esc</Kbd> clear</span>
+          <span className={classes.HintsRight}>
+            threshold <span className={classes.HintVal}>0.3</span>
+            &nbsp;·&nbsp;min <span className={classes.HintVal}>2</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Results */}
+      {noResults && (
+        <div className={classes.EmptyState}>
+          <div className={classes.EmptyIcon}>∅</div>
+          <div className={classes.EmptyTitle}>
+            No matches for <span className={classes.HintVal}>"{query}"</span>
+          </div>
+          <div className={classes.EmptyHint}>Try fewer or different characters.</div>
+        </div>
+      )}
+
+      {hasResults && (
+        <>
+          {/* Column headers */}
+          <div className={classes.ColHeaders} data-testid="search-results">
+            <span className={classes.ColNum}>#</span>
+            <span className={classes.ColRepo}>Repository</span>
+            <span className={classes.ColCat}>Category</span>
+            <span className={classes.ColMatch}>Match</span>
+            <span className={classes.ColStars}>Stars</span>
+          </div>
+
+          <div ref={listRef} className={classes.ResultList}>
+            {results.map((r, idx) => {
+              const isSel = idx === selected;
+              const stars = (() => {
+                try {
+                  const info = JSON.parse(localStorage.getItem('repoInfo')) || {};
+                  const n = info[r.item.repo]?.stars;
+                  if (!n) return null;
+                  return n >= 1000 ? `${(n / 1000).toFixed(1)}k` : `${n}`;
+                } catch { return null; }
+              })();
+
+              return (
+                <div
+                  key={r.item.repo + idx}
+                  data-idx={idx}
+                  onMouseEnter={() => setSelected(idx)}
+                  onClick={() => onOpen(r.item.repo)}
+                  className={`${classes.ResultRow} ${isSel ? classes.ResultRowSel : ''}`}
+                  role="option"
+                  aria-selected={isSel}
+                  data-testid="search-result-item"
+                >
+                  {isSel && <div className={classes.SelAccent} />}
+                  <span className={`${classes.ColNum} ${isSel ? classes.NumSel : ''}`}>
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <div className={classes.ColRepo}>
+                    <div className={classes.RepoName} data-testid="search-result-link">
+                      <Highlight text={r.item.name} query={query} />
+                    </div>
+                    <div className={classes.RepoPath}>
+                      <span className={classes.RepoPathText}>{r.item.repo}</span>
+                    </div>
+                  </div>
+                  <span className={classes.ColCat}>
+                    <span className={classes.CatBadge}>{r.item.cate}</span>
+                  </span>
+                  <span className={classes.ColMatch}>
+                    <MatchBar score={r.score} />
+                  </span>
+                  <span className={`${classes.ColStars} ${isSel ? classes.StarsSel : ''}`}>
+                    {stars ? `★ ${stars}` : '—'}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 };

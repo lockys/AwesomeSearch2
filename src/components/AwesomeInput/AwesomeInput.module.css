@@ -1,162 +1,286 @@
-.AwesomeInput {
-  position: relative;
-  z-index: 100;
-  flex: 1;
-  min-width: 0;
-  max-width: 400px;
+.SearchView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  color: var(--fg);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 13px;
 }
 
-.SearchInputWrapper {
+/* ── Input section ── */
+.InputSection {
+  padding: 28px 30px 16px;
+  flex-shrink: 0;
+}
+
+.SubLabel {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.InputBox {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-sunk);
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px var(--amber-bg);
 }
 
-.SearchInput {
+.InputPrompt {
+  color: var(--amber);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.Input {
   flex: 1;
-  padding: 11px 16px;
-  font-size: 15px;
-  border: none;
-  border-bottom: 2px solid var(--border-color);
-  border-radius: 0;
-  outline: none;
-  transition: border-color 0.2s ease;
   background: transparent;
-  color: var(--text-primary);
+  border: none;
+  outline: none;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--fg);
+  letter-spacing: -0.3px;
+  padding: 0;
+  min-width: 0;
 }
 
-.SearchInput:focus {
-  border-bottom-color: var(--primary);
+.ClearBtn {
+  background: transparent;
+  border: none;
+  color: var(--dim);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
-.SearchInput::placeholder {
-  color: var(--text-muted);
+.ClearBtn:hover { color: var(--fg); }
+
+/* Keyboard hints */
+.Hints {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--dim);
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.SearchResult {
+.Hints span { display: inline-flex; align-items: center; gap: 5px; }
+
+.HintsRight {
+  margin-left: auto;
+  color: var(--amber-dim) !important;
+  font-size: 10.5px;
+}
+
+.HintVal { color: var(--amber); }
+
+/* ── Kbd ── */
+.Kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  background: var(--bg-sunk);
+  color: var(--mid);
+  font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace;
+  border-radius: 4px;
+  line-height: 1;
+  box-shadow: inset 0 -1px 0 var(--line-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Empty states ── */
+.EmptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+}
+
+.EmptyIcon { font-size: 32px; color: var(--amber-dim); margin-bottom: 12px; }
+.EmptyTitle { font-size: 14px; color: var(--fg); margin-bottom: 4px; }
+.EmptyHint { font-size: 12px; color: var(--dim); }
+
+/* ── Column headers ── */
+.ColHeaders {
+  display: flex;
+  padding: 8px 30px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--dim);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  border-top: 1px solid var(--line-dim);
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+/* ── Result list ── */
+.ResultList {
+  flex: 1;
+  overflow: auto;
+}
+
+/* ── Column widths (shared between header and rows) ── */
+.ColNum {
+  flex: 0 0 32px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--dim);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  padding-top: 2px;
+}
+
+.ColRepo {
+  flex: 1;
+  min-width: 0;
+  padding-right: 12px;
+}
+
+.ColCat   { flex: 0 0 120px; padding-top: 3px; }
+.ColMatch { flex: 0 0 92px; padding-top: 6px; }
+
+.ColStars {
+  flex: 0 0 72px;
+  text-align: right;
+  color: var(--mid);
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  padding-top: 3px;
+  font-size: 11.5px;
+}
+
+/* ── Result row ── */
+.ResultRow {
+  display: flex;
+  align-items: flex-start;
+  padding: 14px 30px;
+  border-top: 1px solid var(--line-dim);
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+  transition: background 80ms;
+}
+
+.ResultRow:hover,
+.ResultRowSel {
+  background: var(--amber-bg);
+}
+
+.SelAccent {
   position: absolute;
   left: 0;
-  top: calc(100% + 15px);
-  width: 360px;
-  max-width: 100%;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 0;
-  padding: 8px 0;
-  box-sizing: border-box;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--amber);
+}
+
+.NumSel   { color: var(--amber) !important; }
+.StarsSel { color: var(--amber) !important; font-weight: 600; }
+
+/* Repo name & path */
+.RepoName {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--fg);
+  margin-bottom: 3px;
+}
+
+.RepoPath {
+  color: var(--dim);
+  font-size: 11.5px;
+  line-height: 1.5;
+  white-space: nowrap;
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  max-height: 400px;
-  overflow-y: auto;
-  z-index: 300;
+  text-overflow: ellipsis;
 }
 
-.SearchResultItem {
-  padding: 12px 16px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-  border-left: 3px solid transparent;
+.RepoPathText { color: var(--mid); }
+
+/* Category badge */
+.CatBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--bg-panel);
+  color: var(--mid);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
 }
 
-.SearchResultItem:hover,
-.SearchResultItemSelected {
-  background-color: var(--bg-tertiary);
-  border-left-color: var(--primary);
+/* Match highlight */
+.MatchHit {
+  color: var(--amber);
+  font-weight: 700;
+  background: var(--amber-bg2);
+  padding: 0 2px;
+  border-radius: 2px;
 }
 
-.SearchResultItem a {
-  text-decoration: none !important;
-  color: var(--text-primary);
-  display: block;
-  border-bottom: none !important;
+/* Match bar */
+.MatchBarWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.SearchResultItem a:hover {
-  background: transparent !important;
-  color: var(--text-primary) !important;
+.MatchBarTrack {
+  width: 54px;
+  height: 4px;
+  background: var(--line-dim);
+  border-radius: 2px;
+  overflow: hidden;
 }
 
+.MatchBarFill {
+  height: 100%;
+  background: var(--amber);
+  transition: width 120ms ease-out;
+}
+
+.MatchScore {
+  color: var(--dim);
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .AwesomeInput {
-    position: static;
-    width: 100%;
-    flex: 1;
-    min-width: 0;
-    max-width: none;
-  }
-
-  .SearchInput {
-    width: 100%;
-    padding: 10px 14px;
-    font-size: 16px;
-    border-radius: 0;
-    background: transparent;
-    margin-left: 8px;
-  }
-
-  .SearchInput:focus {
-    border-bottom-color: var(--primary);
-  }
-
-  .SearchResult {
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    right: 0;
-    width: 100vw;
-    max-width: 100vw;
-    max-height: calc(100vh - var(--header-height));
-    border-radius: 0;
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin-top: 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
-
-  .SearchResultItem {
-    padding: 14px 16px;
-  }
-
-  .SearchResultItem:active {
-    background-color: var(--primary-subtle-hover);
-    border-left-color: var(--primary);
-  }
+  .InputSection { padding: 16px; }
+  .ResultRow { padding: 12px 16px; }
+  .ColHeaders { padding: 8px 16px; }
+  .ColCat   { display: none; }
+  .ColMatch { display: none; }
 }
-
-/* Dark mode support */
-:global(.dark) .SearchInput {
-  border-bottom-color: var(--dark-border-color);
-  color: var(--dark-text-primary);
-}
-
-:global(.dark) .SearchInput::placeholder {
-  color: var(--dark-text-muted);
-}
-
-:global(.dark) .SearchInput:focus {
-  border-bottom-color: var(--dark-primary);
-}
-
-:global(.dark) .SearchResult {
-  background: var(--dark-bg-primary);
-  border-color: var(--dark-border-color);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-}
-
-:global(.dark) .SearchResultItem:hover,
-:global(.dark) .SearchResultItemSelected {
-  background-color: var(--dark-bg-tertiary);
-  border-left-color: var(--dark-primary);
-}
-
-:global(.dark) .SearchResultItem a {
-  color: var(--dark-text-primary);
-}
-
-:global(.dark) .SearchResultItem a:hover {
-  background: transparent !important;
-  color: var(--dark-text-primary) !important;
-}
-
-

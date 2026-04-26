@@ -1,161 +1,353 @@
-.HomePage {
-  padding: 16px 0;
-  width: 100%;
+.HomeView {
+  flex: 1;
+  overflow: auto;
+  color: var(--fg);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
 }
 
-.NoticeBanner {
-  padding: 10px 16px;
-  margin-bottom: 16px;
-  background: rgba(99, 102, 241, 0.08);
-  border-left: 3px solid var(--primary);
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.5;
+/* ── Hero ── */
+.Hero {
+  padding: 60px 40px 36px;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-.NoticeBanner a {
-  color: var(--primary);
+.LogoBlock { margin-bottom: 36px; }
+
+.LogoText {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: -1.5px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.Wordmark {
+  position: relative;
+  white-space: nowrap;
+}
+
+.WordmarkCursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  background: var(--amber);
+  margin-left: 2px;
+  vertical-align: -0.1em;
+  transition: opacity 80ms;
+}
+
+/* Search box */
+.SearchBox {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: var(--bg-sunk);
+  border: 1px solid var(--amber);
+  border-radius: 12px;
+  box-shadow: 0 0 0 4px var(--amber-bg), 0 12px 40px oklch(0.78 0.14 70 / 0.06);
+  margin-bottom: 20px;
+}
+
+.SearchPrompt {
+  color: var(--amber);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.SearchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--fg);
+  letter-spacing: -0.4px;
+  padding: 0;
+  min-width: 0;
+}
+
+.SearchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 120ms;
+  flex-shrink: 0;
+}
+
+/* Quick-search chips */
+.Chips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.ChipsLabel {
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.Chip {
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--mid);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 120ms;
+}
+
+.Chip:hover {
+  border-color: var(--amber);
+  color: var(--fg);
+}
+
+/* ── Stats strip ── */
+.StatsWrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 40px 32px;
+}
+
+.StatsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  overflow: hidden;
+}
+
+.StatCell {
+  padding: 16px 20px;
+  border-left: 1px solid var(--line-dim);
+}
+
+.StatLabel {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 6px;
   font-weight: 500;
 }
 
-:global(.dark) .NoticeBanner {
-  background: rgba(165, 180, 252, 0.1);
-  border-left-color: var(--dark-primary);
-  color: var(--dark-text-secondary);
+.StatValue {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.3px;
 }
 
-:global(.dark) .NoticeBanner a {
-  color: var(--dark-primary);
-}
-
-.HeroSection {
-  padding: 32px 16px;
-  margin-bottom: 24px;
-}
-
-.HeroTitle {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 12px 0;
-}
-
-.HeroSubtitle {
-  font-size: 16px;
-  color: var(--text-secondary);
-  margin: 0 0 20px 0;
-  line-height: 1.6;
-}
-
-.HeroSubtitle a {
-  color: var(--primary);
-}
-
-.BadgeGroup {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
+/* ── Sections ── */
 .Section {
-  margin-bottom: 32px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 40px 32px;
+}
+
+.SectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 
 .SectionTitle {
-  font-size: 18px;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 22px;
   font-weight: 600;
-  color: var(--text-primary);
-  margin: 0 0 8px 0;
+  color: var(--fg);
+  letter-spacing: -0.4px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.SectionContent {
-  color: #475569;
-  line-height: 1.7;
+.TitleBar {
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: var(--amber);
+  border-radius: 2px;
 }
 
-.SectionContent a {
-  color: var(--primary);
+.SectionSub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.5px;
 }
 
-.Divider {
-  border: none;
-  border-top: 1px solid var(--border-color);
-  margin: 32px 0;
+/* ── Trending ── */
+.TrendingGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
-.Footer {
-  font-size: 14px;
-  color: var(--text-muted);
-  padding-top: 16px;
+.TrendingCard {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 120ms;
 }
 
-.Footer a {
-  color: var(--primary);
+.TrendingCard:hover {
+  border-color: var(--amber);
+  background: var(--amber-bg);
+}
+
+.TrendingCardTop {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.TrendingNum {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+  min-width: 22px;
+}
+
+.TrendingName {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--fg);
+  letter-spacing: -0.2px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.TrendingStars {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--amber);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.TrendingRepo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--dim);
+  line-height: 1.5;
+  padding-left: 32px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.TrendingMeta {
+  padding-left: 32px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.CatBadge {
+  display: inline-block;
+  padding: 1px 6px;
+  background: var(--bg-sunk);
+  color: var(--mid);
+  border: 1px solid var(--line-dim);
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+
+/* ── Category grid ── */
+.CatGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.CatCard {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--fg);
+  transition: all 120ms;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.CatCard:hover {
+  border-color: var(--amber);
+  background: var(--amber-bg);
+}
+
+.CatDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.CatName {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
   font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.1px;
+  flex: 1;
 }
 
-/* Dark mode */
-:global(.dark) .HeroTitle {
-  color: var(--dark-text-primary);
+.CatCount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
 }
 
-:global(.dark) .HeroSubtitle {
-  color: var(--dark-text-secondary);
-}
-
-:global(.dark) .HeroSubtitle a {
-  color: var(--dark-primary);
-}
-
-:global(.dark) .SectionTitle {
-  color: var(--dark-text-primary);
-}
-
-:global(.dark) .SectionContent {
-  color: #cbd5e1;
-}
-
-:global(.dark) .SectionContent a {
-  color: var(--dark-primary);
-}
-
-:global(.dark) .Divider {
-  border-top-color: var(--dark-border-color);
-}
-
-:global(.dark) .Footer a {
-  color: var(--dark-primary);
-}
-
-/* Mobile */
+/* Responsive */
 @media (max-width: 768px) {
-  .HomePage {
-    padding: 12px;
-  }
-
-  .HeroSection {
-    padding: 24px 0;
-    margin-bottom: 20px;
-  }
-
-  .HeroTitle {
-    font-size: 22px;
-  }
-
-  .HeroSubtitle {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-
-  .Section {
-    margin-bottom: 24px;
-  }
-
-  .SectionTitle {
-    font-size: 16px;
-  }
-
-  .Divider {
-    margin: 24px 0;
-  }
+  .Hero { padding: 32px 20px 24px; }
+  .LogoText { font-size: 36px; }
+  .StatsWrap { padding: 0 20px 24px; }
+  .StatsGrid { grid-template-columns: repeat(2, 1fr); }
+  .Section { padding: 12px 20px 24px; }
+  .TrendingGrid { grid-template-columns: 1fr; }
+  .CatGrid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }

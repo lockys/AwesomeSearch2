@@ -14,21 +14,15 @@ import axios from 'axios';
 
 const mockSubjects = {
   'Front-End': [
-    { name: 'React', repo: 'sindresorhus/awesome-react', cate: 'Front-End' },
-    { name: 'Vue.js', repo: 'vuejs/awesome-vue', cate: 'Front-End' },
-    { name: 'Angular', repo: 'PatrickJS/awesome-angular', cate: 'Front-End' },
+    { name: 'React', repo: 'sindresorhus/awesome-react' },
+    { name: 'Vue.js', repo: 'vuejs/awesome-vue' },
+    { name: 'Angular', repo: 'PatrickJS/awesome-angular' },
   ],
   'Back-End': [
-    { name: 'Node.js', repo: 'sindresorhus/awesome-nodejs', cate: 'Back-End' },
-    { name: 'Django', repo: 'wsvincent/awesome-django', cate: 'Back-End' },
-    { name: 'Rails', repo: 'gramantin/awesome-rails', cate: 'Back-End' },
+    { name: 'Node.js', repo: 'sindresorhus/awesome-nodejs' },
+    { name: 'Django', repo: 'wsvincent/awesome-django' },
+    { name: 'Rails', repo: 'gramantin/awesome-rails' },
   ],
-};
-
-const defaultProps = {
-  onThemeChange: vi.fn(),
-  isDark: false,
-  theme: 'normal-theme',
 };
 
 describe('AwesomeSearch', () => {
@@ -40,29 +34,29 @@ describe('AwesomeSearch', () => {
     axios.get.mockReturnValue(new Promise(() => {}));
     render(
       <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
+        <AwesomeSearch />
       </MemoryRouter>
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
-  it('renders search input', async () => {
+  it('renders titlebar logo after data loads', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
+        <AwesomeSearch />
       </MemoryRouter>
     );
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search AwesomeLists!')).toBeInTheDocument();
+      expect(screen.getByText('awesome.search')).toBeInTheDocument();
     });
   });
 
-  it('renders menu after data loads', async () => {
+  it('renders category browse grid after data loads', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
+        <AwesomeSearch />
       </MemoryRouter>
     );
     await waitFor(() => {
@@ -71,44 +65,31 @@ describe('AwesomeSearch', () => {
     });
   });
 
-  it('renders theme toggle button', async () => {
+  it('renders search input on home view', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
+        <AwesomeSearch />
       </MemoryRouter>
     );
     await waitFor(() => {
-      expect(screen.getAllByRole('button', { name: /switch to dark mode/i }).length).toBeGreaterThan(0);
+      expect(screen.getByTestId('search-input')).toBeInTheDocument();
     });
   });
 
-  it('renders burger menu button', async () => {
+  it('switches to search results view when typing 2+ characters', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
-      </MemoryRouter>
-    );
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /toggle menu/i })).toBeInTheDocument();
-    });
-  });
-
-  it('does not show search results when only one character is typed', async () => {
-    axios.get.mockResolvedValue({ data: mockSubjects });
-    render(
-      <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
+        <AwesomeSearch />
       </MemoryRouter>
     );
 
-    const input = await screen.findByPlaceholderText('Search AwesomeLists!');
-    fireEvent.change(input, { target: { value: 'R' } });
+    const input = await screen.findByTestId('search-input');
+    fireEvent.change(input, { target: { value: 'Re' } });
 
     await waitFor(() => {
       expect(screen.getByTestId('search-results')).toBeInTheDocument();
-      expect(screen.queryAllByTestId('search-result-link')).toHaveLength(0);
     });
   });
 
@@ -116,12 +97,11 @@ describe('AwesomeSearch', () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
+        <AwesomeSearch />
       </MemoryRouter>
     );
 
-    const input = await screen.findByPlaceholderText('Search AwesomeLists!');
-
+    const input = await screen.findByTestId('search-input');
     fireEvent.change(input, { target: { value: 'React' } });
 
     await waitFor(() => {
@@ -131,19 +111,17 @@ describe('AwesomeSearch', () => {
     });
   });
 
-  it('does not show results for a query with no close matches', async () => {
+  it('shows empty state for query with no close matches', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
       <MemoryRouter>
-        <AwesomeSearch {...defaultProps} />
+        <AwesomeSearch />
       </MemoryRouter>
     );
 
-    const input = await screen.findByPlaceholderText('Search AwesomeLists!');
-
+    const input = await screen.findByTestId('search-input');
     fireEvent.change(input, { target: { value: 'zzz' } });
 
-    // No search result links should appear at all
     expect(screen.queryAllByTestId('search-result-link')).toHaveLength(0);
   });
 });

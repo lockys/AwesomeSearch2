@@ -18,7 +18,7 @@ const renderReadme = (user = 'sindresorhus', repo = 'awesome-nodejs') => {
       <Route
         path="/:user/:repo"
         render={(props) => (
-          <AwesomeReadme setMdHandler={vi.fn()} {...props} />
+          <AwesomeReadme {...props} onBack={vi.fn()} />
         )}
       />
     </MemoryRouter>
@@ -37,18 +37,18 @@ describe('AwesomeReadme', () => {
     expect(screen.getByTestId('readme-skeleton')).toBeInTheDocument();
   });
 
-  it('renders View On Github link', () => {
+  it('renders View on GitHub link', () => {
     axios.get.mockReturnValue(new Promise(() => {}));
     renderReadme();
-    const link = screen.getByText('GitHub');
+    const link = screen.getByTestId('view-on-github');
     expect(link).toBeInTheDocument();
     expect(link.getAttribute('href')).toBe('https://github.com/sindresorhus/awesome-nodejs');
   });
 
-  it('renders Content (TOC) button', () => {
+  it('renders TOC outline sidebar', () => {
     axios.get.mockReturnValue(new Promise(() => {}));
     renderReadme();
-    expect(screen.getByText('Contents')).toBeInTheDocument();
+    expect(screen.getByText('Outline')).toBeInTheDocument();
   });
 
   it('displays repo name', () => {

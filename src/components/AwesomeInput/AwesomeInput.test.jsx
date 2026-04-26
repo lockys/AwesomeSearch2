@@ -6,47 +6,56 @@ import AwesomeInput from './AwesomeInput.jsx';
 
 const renderWithRouter = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>);
 
-describe('AwesomeInput', () => {
+describe('AwesomeInput (SearchView)', () => {
   const defaultProps = {
-    searchOnchange: vi.fn(),
-    value: '',
-    searchResult: [],
-    searchInputOnFocus: vi.fn(),
-    showResult: false,
-    homeOnClick: vi.fn(),
+    query: '',
+    setQuery: vi.fn(),
+    results: [],
+    onOpen: vi.fn(),
+    onClear: vi.fn(),
   };
 
   it('renders search input', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    expect(screen.getByPlaceholderText('Search AwesomeLists!')).toBeInTheDocument();
+    expect(screen.getByTestId('search-input')).toBeInTheDocument();
   });
 
-  it('calls searchOnchange when typing', () => {
+  it('calls setQuery when typing', () => {
     renderWithRouter(<AwesomeInput {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Search AwesomeLists!');
+    const input = screen.getByTestId('search-input');
     fireEvent.change(input, { target: { value: 'react' } });
-    expect(defaultProps.searchOnchange).toHaveBeenCalled();
+    expect(defaultProps.setQuery).toHaveBeenCalledWith('react');
   });
 
-  it('calls searchInputOnFocus on focus', () => {
-    renderWithRouter(<AwesomeInput {...defaultProps} />);
-    const input = screen.getByPlaceholderText('Search AwesomeLists!');
-    fireEvent.focus(input);
-    expect(defaultProps.searchInputOnFocus).toHaveBeenCalled();
+  it('shows empty state when query has no results', () => {
+    renderWithRouter(
+      <AwesomeInput {...defaultProps} query="zzz" results={[]} />
+    );
+    expect(screen.getByText(/No matches for/)).toBeInTheDocument();
   });
 
-  it('shows placeholder when showResult is true but no results', () => {
-    renderWithRouter(<AwesomeInput {...defaultProps} showResult={true} />);
-    expect(screen.getByText('Type something to search')).toBeInTheDocument();
-  });
-
-  it('renders search results when provided', () => {
-    const searchResult = [
-      { item: { name: 'React', repo: 'sindresorhus/awesome-react', cate: 'Front-End' } },
-      { item: { name: 'Node.js', repo: 'sindresorhus/awesome-nodejs', cate: 'Back-End' } },
+  it('renders search result items when results are provided', () => {
+    const results = [
+      { item: { name: 'React', repo: 'sindresorhus/awesome-react', cate: 'Front-End' }, score: 0.05 },
+      { item: { name: 'Node.js', repo: 'sindresorhus/awesome-nodejs', cate: 'Back-End' }, score: 0.1 },
     ];
-    renderWithRouter(<AwesomeInput {...defaultProps} showResult={true} searchResult={searchResult} />);
-    expect(screen.getByText('React')).toBeInTheDocument();
-    expect(screen.getByText('Node.js')).toBeInTheDocument();
+    renderWithRouter(
+      <AwesomeInput {...defaultProps} query="react" results={results} />
+    );
+    const links = screen.getAllByTestId('search-result-link');
+    expect(links.length).toBe(2);
+    expect(links[0]).toHaveTextContent('React');
+    expect(links[1]).toHaveTextContent('Node.js');
+  });
+
+  it('calls onOpen when a result row is clicked', () => {
+    const results = [
+      { item: { name: 'React', repo: 'sindresorhus/awesome-react', cate: 'Front-End' }, score: 0.05 },
+    ];
+    renderWithRouter(
+      <AwesomeInput {...defaultProps} query="react" results={results} />
+    );
+    fireEvent.click(screen.getByTestId('search-result-item'));
+    expect(defaultProps.onOpen).toHaveBeenCalledWith('sindresorhus/awesome-react');
   });
 });
