@@ -121,6 +121,22 @@
   padding: 30px 34px;
 }
 
+.ScrollProgress {
+  position: sticky;
+  bottom: 0;
+  margin-top: 20px;
+  padding: 8px 12px;
+  margin-left: auto;
+  width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--bg-panel) 92%, transparent);
+  color: var(--mid);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
 .RepoLabel {
   font-family: 'Space Grotesk', system-ui, sans-serif;
   font-size: 11px;
