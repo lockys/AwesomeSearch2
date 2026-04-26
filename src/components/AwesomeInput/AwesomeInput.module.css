@@ -33,6 +33,12 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: none;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.InputBox:focus-within {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px oklch(0.78 0.14 70 / 0.15), 0 0 18px oklch(0.78 0.14 70 / 0.12);
 }
 
 .InputPrompt {
@@ -157,12 +163,33 @@
   cursor: pointer;
   transition: background 80ms, border-color 80ms;
   min-width: 0;
+  overflow: hidden;
+}
+
+.ResultRow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle), transparent 60%, var(--amber) 80%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .ResultRow:hover,
 .ResultRowSel {
   background: var(--amber-bg);
   border-color: oklch(0.78 0.14 70 / 0.3);
+}
+
+.ResultRow:hover::after {
+  opacity: 1;
+  animation: sweep-border-spin 2s linear infinite;
 }
 
 .SelAccent {

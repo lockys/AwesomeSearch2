@@ -9,6 +9,8 @@ function AnimatedWordmark({ triggerRef }) {
   const [suffix, setSuffix] = useState('');
   const [cursorOn, setCursorOn] = useState(true);
   const containerRef = useRef(null);
+  const prevDispLenRef = useRef(0);
+  const prevSuffixLenRef = useRef(0);
 
   useEffect(() => {
     const id = setInterval(() => setCursorOn((c) => !c), 530);
@@ -109,39 +111,43 @@ function AnimatedWordmark({ triggerRef }) {
           100% { transform: translateY(0) scale(1); opacity: 1; }
         }
       `}</style>
-      {displayed.split('').map((ch, i) => {
-        const isNew = i === displayed.length - 1;
+      {(() => {
+        const justTypedDispIdx = displayed.length > prevDispLenRef.current ? displayed.length - 1 : -1;
+        const justTypedSuffixIdx = suffix.length > prevSuffixLenRef.current ? suffix.length - 1 : -1;
+        prevDispLenRef.current = displayed.length;
+        prevSuffixLenRef.current = suffix.length;
         return (
-          <span
-            key={`w-${i}-${displayed.length}`}
-            data-ch="1"
-            style={{
-              display: 'inline-block',
-              transition: 'transform 90ms ease-out',
-              animation: isNew ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
-            }}
-          >
-            {ch}
-          </span>
+          <>
+            {displayed.split('').map((ch, i) => (
+              <span
+                key={`w-${i}-${displayed.length}`}
+                data-ch="1"
+                style={{
+                  display: 'inline-block',
+                  transition: 'transform 90ms ease-out',
+                  animation: i === justTypedDispIdx ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
+                }}
+              >
+                {ch}
+              </span>
+            ))}
+            {suffix.split('').map((ch, i) => (
+              <span
+                key={`s-${i}-${suffix.length}`}
+                data-ch="1"
+                style={{
+                  display: 'inline-block',
+                  color: 'var(--amber)',
+                  transition: 'transform 90ms ease-out',
+                  animation: i === justTypedSuffixIdx ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
+                }}
+              >
+                {ch}
+              </span>
+            ))}
+          </>
         );
-      })}
-      {suffix.split('').map((ch, i) => {
-        const isNew = i === suffix.length - 1;
-        return (
-          <span
-            key={`s-${i}-${suffix.length}`}
-            data-ch="1"
-            style={{
-              display: 'inline-block',
-              color: 'var(--amber)',
-              transition: 'transform 90ms ease-out',
-              animation: isNew ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
-            }}
-          >
-            {ch}
-          </span>
-        );
-      })}
+      })()}
       <span
         className={classes.WordmarkCursor}
         style={{ opacity: cursorOn ? 1 : 0 }}

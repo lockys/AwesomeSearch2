@@ -51,12 +51,12 @@
   border-radius: 12px;
   box-shadow: none;
   margin-bottom: 20px;
-  transition: border-color 150ms;
+  transition: border-color 150ms, box-shadow 150ms;
 }
 
 .SearchBox:focus-within {
-  border-color: var(--line);
-  box-shadow: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px oklch(0.78 0.14 70 / 0.15), 0 0 18px oklch(0.78 0.14 70 / 0.12);
 }
 
 .SearchPrompt {
@@ -126,11 +126,33 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 120ms;
+  position: relative;
+  overflow: hidden;
+}
+
+.Chip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle), transparent 60%, var(--amber) 80%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .Chip:hover {
   border-color: var(--amber);
   color: var(--fg);
+}
+
+.Chip:hover::after {
+  opacity: 1;
+  animation: sweep-border-spin 1.8s linear infinite;
 }
 
 /* ── Stats strip ── */
@@ -228,11 +250,33 @@
   padding: 14px 16px;
   cursor: pointer;
   transition: all 120ms;
+  position: relative;
+  overflow: hidden;
+}
+
+.TrendingCard::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle), transparent 60%, var(--amber) 80%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .TrendingCard:hover {
   border-color: var(--amber);
   background: var(--amber-bg);
+}
+
+.TrendingCard:hover::after {
+  opacity: 1;
+  animation: sweep-border-spin 2s linear infinite;
 }
 
 .TrendingCardTop {
@@ -322,11 +366,33 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.CatCard::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle), transparent 60%, var(--amber) 80%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .CatCard:hover {
   border-color: var(--amber);
   background: var(--amber-bg);
+}
+
+.CatCard:hover::after {
+  opacity: 1;
+  animation: sweep-border-spin 2s linear infinite;
 }
 
 
