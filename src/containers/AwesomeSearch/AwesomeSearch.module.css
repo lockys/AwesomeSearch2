@@ -7,6 +7,34 @@
   color: var(--fg);
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   overflow: hidden;
+  position: relative;
+}
+
+/* ── Back button ── */
+.BackBtn {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--mid);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 120ms, border-color 120ms, background 120ms;
+  line-height: 1;
+}
+
+.BackBtn:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+  background: var(--amber-bg);
 }
 
 /* ── Main ── */

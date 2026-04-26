@@ -93,8 +93,20 @@ class AwesomeSearch extends Component {
     const isSearchActive = isHome && search.trim().length >= 2;
     const categories = subjects ? Object.keys(subjects) : [];
 
+    const showBack = isSearchActive || !isHome;
+
     return (
       <div className={classes.Shell} data-testid="awesome-search">
+        {showBack && (
+          <button
+            className={classes.BackBtn}
+            onClick={this.goHome}
+            aria-label="Back to home"
+          >
+            ←
+          </button>
+        )}
+
         {/* Main content */}
         <main className={classes.Main}>
           {!subjects ? (
