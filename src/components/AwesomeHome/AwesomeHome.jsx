@@ -83,7 +83,8 @@ function AnimatedWordmark({ triggerRef }) {
         if (!containerRef.current) return;
         const spans = containerRef.current.querySelectorAll('[data-ch]');
         spans.forEach((span) => {
-          if (span.getAnimations?.().length > 0) return;
+          const hasPopAnim = span.getAnimations?.().some(a => a.animationName === 'wmpop');
+          if (hasPopAnim) return;
           if (clientX === null) {
             span.style.transform = '';
           } else {
