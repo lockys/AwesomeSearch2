@@ -58,4 +58,9 @@ describe('AwesomeInput (SearchView)', () => {
     fireEvent.click(screen.getByTestId('search-result-item'));
     expect(defaultProps.onOpen).toHaveBeenCalledWith('sindresorhus/awesome-react');
   });
+
+  it('does not auto-focus input when autoFocus is false', () => {
+    renderWithRouter(<AwesomeInput {...defaultProps} autoFocus={false} />);
+    expect(screen.getByTestId('search-input')).not.toHaveFocus();
+  });
 });
