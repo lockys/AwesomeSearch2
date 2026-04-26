@@ -3,6 +3,7 @@ import AwesomeHome from '../../components/AwesomeHome/AwesomeHome.jsx';
 import AwesomeInput from '../../components/AwesomeInput/AwesomeInput.jsx';
 import AwesomeReadme from '../AwesomeReadme/AwesomeReadme.jsx';
 import Spinner from '../../components/UI/Spinner/Spinner.jsx';
+import SiteMap from './SiteMap.jsx';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 import { Route, withRouter } from 'react-router-dom';
@@ -65,6 +66,24 @@ class AwesomeSearch extends Component {
   goHome = () => {
     this.setState({ search: '' });
     this.props.history.push('/');
+  };
+
+  handleSiteMapNavigate = (type, value) => {
+    if (type === '/') {
+      this.goHome();
+    } else if (type === 'search') {
+      const { subjects } = this.state;
+      const original = subjects
+        ? Object.keys(subjects).find((k) => k.toLowerCase() === value)
+        : null;
+      if (original) {
+        this.handleCategoryFilter(original);
+      } else {
+        this.handleSearch(value);
+      }
+    } else if (type === 'repo') {
+      this.handleOpen(value);
+    }
   };
 
   render() {
@@ -182,6 +201,13 @@ class AwesomeSearch extends Component {
                 </>
               )}
             />
+            {subjects && (
+              <SiteMap
+                categories={categories}
+                subjectsArray={subjectsArray}
+                onNavigate={this.handleSiteMapNavigate}
+              />
+            )}
           </span>
         </footer>
       </div>
