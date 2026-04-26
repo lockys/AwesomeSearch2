@@ -14,6 +14,7 @@ class AwesomeReadme extends Component {
     activeSection: null,
     previewSrc: null,
     sidebarWidth: 240,
+    scrollPercent: 0,
   };
 
   contentRef = React.createRef();
@@ -31,6 +32,7 @@ class AwesomeReadme extends Component {
     if (prevState._html !== this.state._html) {
       this.makeAnchor();
       this.attachImageHandlers();
+      this.updateScrollProgress();
       if (this.state.headers.length > 0) {
         this.setState({ activeSection: this.state.headers[0].id });
       }
@@ -235,6 +237,7 @@ class AwesomeReadme extends Component {
 
   handleContentScroll = () => {
     if (!this.contentRef.current) return;
+    this.updateScrollProgress();
     const headers = this.contentRef.current.querySelectorAll('[data-testid="readme-content"] [id]');
     const containerTop = this.contentRef.current.getBoundingClientRect().top;
     let cur = this.state.headers[0]?.id;
@@ -244,9 +247,23 @@ class AwesomeReadme extends Component {
     if (cur && cur !== this.state.activeSection) this.setState({ activeSection: cur });
   };
 
+  updateScrollProgress = () => {
+    const contentEl = this.contentRef.current;
+    if (!contentEl) return;
+
+    const maxScrollableDistance = contentEl.scrollHeight - contentEl.clientHeight;
+    const nextPercent = maxScrollableDistance <= 0
+      ? 100
+      : Math.min(100, Math.round((contentEl.scrollTop / maxScrollableDistance) * 100));
+
+    if (nextPercent !== this.state.scrollPercent) {
+      this.setState({ scrollPercent: nextPercent });
+    }
+  };
+
   render() {
     const { user, repo } = this.props.match.params;
-    const { _html, isLoading, headers, stars, updateAt, activeSection, previewSrc, sidebarWidth } = this.state;
+    const { _html, isLoading, headers, stars, updateAt, activeSection, previewSrc, sidebarWidth, scrollPercent } = this.state;
 
     const fmtStars = stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : `${stars || '—'}`;
 
@@ -355,6 +372,10 @@ class AwesomeReadme extends Component {
               data-testid="readme-content"
             />
           )}
+
+          <div className={classes.ScrollProgress} data-testid="readme-scroll-progress">
+            Scrolled: {scrollPercent}%
+          </div>
         </div>
 
         {/* Lightbox */}
