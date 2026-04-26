@@ -55,9 +55,12 @@
   font-family: 'Space Grotesk', system-ui, sans-serif;
   font-size: 22px;
   font-weight: 500;
+  /* Keep glyph ascenders/descenders visible on mobile WebKit/Chrome. */
+  line-height: 1.25;
   color: var(--fg);
   letter-spacing: -0.3px;
-  padding: 0;
+  padding: 2px 0;
+  min-height: calc(1em * 1.25);
   min-width: 0;
 }
 
