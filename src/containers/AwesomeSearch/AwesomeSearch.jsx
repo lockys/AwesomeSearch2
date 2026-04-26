@@ -17,6 +17,7 @@ class AwesomeSearch extends Component {
     searchResult: [],
     errorMessage: null,
     shouldAutoFocusSearchInput: true,
+    readmeScrollPercent: null,
   };
 
   componentDidMount() {
@@ -73,8 +74,12 @@ class AwesomeSearch extends Component {
   };
 
   goHome = () => {
-    this.setState({ search: '' });
+    this.setState({ search: '', readmeScrollPercent: null });
     this.props.history.push('/');
+  };
+
+  handleReadmeScrollPercent = (value) => {
+    this.setState({ readmeScrollPercent: value });
   };
 
   handleSiteMapNavigate = (type, value) => {
@@ -102,6 +107,7 @@ class AwesomeSearch extends Component {
       subjects,
       subjectsArray,
       shouldAutoFocusSearchInput,
+      readmeScrollPercent,
     } = this.state;
     const { location } = this.props;
     const isHome = location.pathname === '/';
@@ -160,6 +166,7 @@ class AwesomeSearch extends Component {
                     key={`${props.match.params.user}/${props.match.params.repo}`}
                     {...props}
                     onBack={this.goHome}
+                    onScrollPercentChange={this.handleReadmeScrollPercent}
                   />
                 )}
               />
@@ -196,6 +203,12 @@ class AwesomeSearch extends Component {
                 <span>readme</span>
                 <span className={classes.FooterSep}>·</span>
                 <span>markdown</span>
+                {typeof readmeScrollPercent === 'number' && (
+                  <>
+                    <span className={classes.FooterSep}>·</span>
+                    <span data-testid="readme-scroll-progress">{readmeScrollPercent}%</span>
+                  </>
+                )}
               </>
             )}
           />
