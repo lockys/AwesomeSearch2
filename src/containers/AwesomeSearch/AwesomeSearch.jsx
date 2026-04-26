@@ -120,9 +120,77 @@ class AwesomeSearch extends Component {
           )}
         </main>
 
+        {/* Footer status bar */}
+        <footer className={classes.Footer} role="contentinfo">
+          <span className={classes.FooterDot}>●</span>
+          <Route
+            exact
+            path="/"
+            render={() =>
+              isSearchActive ? (
+                <>
+                  <span>{searchResult.length} matches</span>
+                  <span className={classes.FooterSep}>·</span>
+                  <span>min-chars 2</span>
+                </>
+              ) : (
+                <>
+                  <span>{subjectsArray.length} lists indexed</span>
+                  <span className={classes.FooterSep}>·</span>
+                  <span>{categories.length} categories</span>
+                </>
+              )
+            }
+          />
+          <Route
+            path="/:user/:repo"
+            render={() => (
+              <>
+                <span>readme</span>
+                <span className={classes.FooterSep}>·</span>
+                <span>markdown</span>
+              </>
+            )}
+          />
+          <span className={classes.FooterRight}>
+            <Route
+              exact
+              path="/"
+              render={() =>
+                isSearchActive ? (
+                  <>
+                    <Kbd>esc</Kbd>
+                    <span>home</span>
+                    <span className={classes.FooterSep}>·</span>
+                    <Kbd>⌘K</Kbd>
+                    <span>focus</span>
+                  </>
+                ) : (
+                  <>
+                    <Kbd>⌘K</Kbd>
+                    <span>search</span>
+                  </>
+                )
+              }
+            />
+            <Route
+              path="/:user/:repo"
+              render={() => (
+                <>
+                  <Kbd>esc</Kbd>
+                  <span>back</span>
+                </>
+              )}
+            />
+          </span>
+        </footer>
       </div>
     );
   }
+}
+
+function Kbd({ children }) {
+  return <span className="kbd-tag">{children}</span>;
 }
 
 export default withRouter(AwesomeSearch);

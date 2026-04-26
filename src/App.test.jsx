@@ -19,6 +19,11 @@ describe('App', () => {
     expect(screen.getByTestId('awesome-search')).toBeInTheDocument();
   });
 
+  it('renders the footer status bar', () => {
+    render(<App />);
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+  });
+
   it('shows spinner while data loads', () => {
     render(<App />);
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
