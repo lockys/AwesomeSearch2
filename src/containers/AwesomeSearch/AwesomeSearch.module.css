@@ -21,21 +21,21 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--bg-panel);
-  border: 1px solid var(--line);
+  background: oklch(0.24 0.012 265 / 0.45);
+  border: 1px solid oklch(0.32 0.014 265 / 0.4);
   border-radius: 6px;
-  color: var(--mid);
+  color: oklch(0.74 0.012 265 / 0.5);
   font-size: 16px;
   cursor: pointer;
-  transition: color 120ms, border-color 120ms, background 120ms;
+  transition: color 150ms, border-color 150ms, background 150ms, opacity 150ms;
   line-height: 1;
-  box-shadow: 0 2px 8px oklch(0 0 0 / 0.4);
+  backdrop-filter: blur(6px);
 }
 
 .BackBtn:hover {
   color: var(--amber);
-  border-color: var(--amber);
-  background: var(--amber-bg);
+  border-color: oklch(0.78 0.14 70 / 0.6);
+  background: oklch(0.78 0.14 70 / 0.12);
 }
 
 /* ── Main ── */
