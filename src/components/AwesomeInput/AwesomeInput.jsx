@@ -149,7 +149,6 @@ const AwesomeInput = ({
           <span><Kbd>↑</Kbd><Kbd>↓</Kbd> move</span>
           <span><Kbd>↵</Kbd> open</span>
           <span><Kbd>⇥</Kbd> complete top</span>
-          <span><Kbd>esc</Kbd> clear</span>
           <span className={classes.HintsRight}>
             threshold <span className={classes.HintVal}>0.3</span>
             &nbsp;·&nbsp;min <span className={classes.HintVal}>2</span>
