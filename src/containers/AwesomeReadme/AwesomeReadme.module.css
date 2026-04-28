@@ -366,9 +366,8 @@
 .LightboxClose:hover { color: var(--fg); border-color: var(--amber); }
 
 /* Hide GitHub heading anchor icons */
-.ReadmeContent .octicon,
 .ReadmeContent .octicon-link {
-  display: none !important;
+  visibility: hidden;
 }
 
 /* Responsive: hide sidebar on small screens */
