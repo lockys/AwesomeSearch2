@@ -69,7 +69,11 @@ const AwesomeInput = ({
   const listRef = useRef(null);
 
   const handleResultsScroll = useCallback((e) => {
-    setScrolled(e.currentTarget.scrollTop > 40);
+    const el = e.currentTarget;
+    setScrolled(el.scrollTop > 40);
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) {
+      navigator.vibrate?.(50);
+    }
   }, []);
 
   useEffect(() => {
