@@ -12,6 +12,11 @@
 .InputSection {
   padding: 28px 30px 16px;
   flex-shrink: 0;
+  transition: padding 220ms ease;
+}
+
+.InputSectionScrolled {
+  padding: 10px 30px 10px;
 }
 
 .SubLabel {
@@ -22,6 +27,16 @@
   color: var(--amber);
   text-transform: uppercase;
   margin-bottom: 8px;
+  overflow: hidden;
+  max-height: 30px;
+  opacity: 1;
+  transition: max-height 220ms ease, margin-bottom 220ms ease, opacity 180ms ease;
+}
+
+.InputSectionScrolled .SubLabel {
+  max-height: 0;
+  margin-bottom: 0;
+  opacity: 0;
 }
 
 .InputBox {
@@ -94,6 +109,16 @@
   align-items: center;
   flex-wrap: wrap;
   font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+  max-height: 60px;
+  opacity: 1;
+  transition: max-height 220ms ease, margin-top 220ms ease, opacity 180ms ease;
+}
+
+.InputSectionScrolled .Hints {
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
 }
 
 .Hints span { display: inline-flex; align-items: center; gap: 5px; }
@@ -268,6 +293,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .InputSection { padding: 56px 16px 16px; }
+  .InputSectionScrolled { padding: 12px 16px 8px; }
   .ResultList {
     grid-template-columns: 1fr;
     padding: 8px 12px;
