@@ -217,7 +217,6 @@ export default function AwesomeHome({
         <div className={classes.Section}>
           <div className={classes.SectionHeader}>
             <h2 className={classes.SectionTitle}>
-              <span className={classes.TitleBar} />
               Trending
             </h2>
             <span className={classes.SectionSub}>by stars</span>
@@ -255,7 +254,6 @@ export default function AwesomeHome({
       <div className={classes.Section}>
         <div className={classes.SectionHeader}>
           <h2 className={classes.SectionTitle}>
-            <span className={classes.TitleBar} />
             Browse by category
           </h2>
         </div>

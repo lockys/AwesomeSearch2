@@ -212,13 +212,6 @@
   gap: 10px;
 }
 
-.TitleBar {
-  display: inline-block;
-  width: 4px;
-  height: 18px;
-  background: var(--amber);
-  border-radius: 2px;
-}
 
 .SectionSub {
   font-family: 'JetBrains Mono', monospace;
