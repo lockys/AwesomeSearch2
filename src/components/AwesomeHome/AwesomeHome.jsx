@@ -198,7 +198,7 @@ export default function AwesomeHome({
       name: c,
       count: subjectsArray.filter((d) => d.cate === c).length,
     }))
-    .sort((a, b) => b.count - a.count);
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className={classes.HomeView}>

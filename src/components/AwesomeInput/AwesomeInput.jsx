@@ -58,6 +58,7 @@ const AwesomeInput = ({
   query,
   setQuery,
   results,
+  isCategoryFilter = false,
   onOpen,
   onClear,
   autoFocus = true,
@@ -68,7 +69,11 @@ const AwesomeInput = ({
   const listRef = useRef(null);
 
   const handleResultsScroll = useCallback((e) => {
-    setScrolled(e.currentTarget.scrollTop > 40);
+    const el = e.currentTarget;
+    setScrolled(el.scrollTop > 40);
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) {
+      navigator.vibrate?.(50);
+    }
   }, []);
 
   useEffect(() => {
@@ -180,7 +185,7 @@ const AwesomeInput = ({
               >
                 {isSel && <div className={classes.SelAccent} />}
                 <div className={classes.RepoName} data-testid="search-result-link">
-                  <Highlight text={r.item.name} query={query} />
+                  <Highlight text={r.item.name} query={isCategoryFilter ? '' : query} />
                 </div>
                 <div className={classes.RepoPath}>{r.item.repo}</div>
                 <span className={classes.CatBadge}>{r.item.cate}</span>

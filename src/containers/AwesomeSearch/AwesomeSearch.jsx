@@ -15,6 +15,7 @@ class AwesomeSearch extends Component {
     subjectsArray: [],
     search: '',
     searchResult: [],
+    isCategoryFilter: false,
     errorMessage: null,
     shouldAutoFocusSearchInput: true,
     readmeScrollPercent: null,
@@ -53,6 +54,7 @@ class AwesomeSearch extends Component {
     this.setState({
       search: value,
       searchResult: results,
+      isCategoryFilter: false,
       shouldAutoFocusSearchInput: true,
     });
   };
@@ -64,17 +66,18 @@ class AwesomeSearch extends Component {
     this.setState({
       search: categoryName,
       searchResult: results,
+      isCategoryFilter: true,
       shouldAutoFocusSearchInput: false,
     });
   };
 
   handleOpen = (repo) => {
     this.props.history.push(`/${repo}`);
-    this.setState({ search: '' });
+    this.setState({ search: '', isCategoryFilter: false });
   };
 
   goHome = () => {
-    this.setState({ search: '', readmeScrollPercent: null });
+    this.setState({ search: '', isCategoryFilter: false, readmeScrollPercent: null });
     this.props.history.push('/');
   };
 
@@ -104,6 +107,7 @@ class AwesomeSearch extends Component {
     const {
       search,
       searchResult,
+      isCategoryFilter,
       subjects,
       subjectsArray,
       shouldAutoFocusSearchInput,
@@ -143,6 +147,7 @@ class AwesomeSearch extends Component {
                       query={search}
                       setQuery={this.handleSearch}
                       results={searchResult}
+                      isCategoryFilter={isCategoryFilter}
                       onOpen={this.handleOpen}
                       onClear={() => this.setState({ search: '' })}
                       autoFocus={shouldAutoFocusSearchInput}

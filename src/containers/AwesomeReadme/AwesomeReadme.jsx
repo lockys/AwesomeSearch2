@@ -258,6 +258,9 @@ class AwesomeReadme extends Component {
       : Math.min(100, Math.round((contentEl.scrollTop / maxScrollableDistance) * 100));
 
     if (nextPercent !== this.state.scrollPercent) {
+      if (nextPercent === 100 && this.state.scrollPercent < 100) {
+        navigator.vibrate?.(50);
+      }
       this.setState({ scrollPercent: nextPercent });
       this.props.onScrollPercentChange?.(nextPercent);
     }
