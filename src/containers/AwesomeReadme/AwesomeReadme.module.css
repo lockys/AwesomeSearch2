@@ -27,28 +27,24 @@
 }
 
 .BackBtn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   background: transparent;
-  border: 1px solid var(--line);
-  color: var(--mid);
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  cursor: pointer;
-  margin-bottom: 16px;
+  border: none;
+  color: var(--dim);
+  padding: 0 0 14px;
+  margin-bottom: 14px;
   width: 100%;
   text-align: left;
-  transition: all 120ms;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  transition: color 150ms;
   box-sizing: border-box;
 }
 
 .BackBtn:hover {
-  border-color: var(--amber);
-  color: var(--fg);
+  color: var(--amber);
 }
+
 
 .OutlineLabel {
   font-family: 'Space Grotesk', system-ui, sans-serif;
@@ -366,9 +362,8 @@
 .LightboxClose:hover { color: var(--fg); border-color: var(--amber); }
 
 /* Hide GitHub heading anchor icons */
-.ReadmeContent .octicon,
 .ReadmeContent .octicon-link {
-  display: none !important;
+  visibility: hidden;
 }
 
 /* Responsive: hide sidebar on small screens */

@@ -53,7 +53,7 @@
 
 .InputBox:focus-within {
   border-color: var(--amber);
-  box-shadow: 0 0 0 3px oklch(0.78 0.14 70 / 0.15), 0 0 18px oklch(0.78 0.14 70 / 0.12);
+  box-shadow: 0 0 0 3px oklch(0.68 0.15 22 / 0.15), 0 0 18px oklch(0.68 0.15 22 / 0.12);
 }
 
 .InputPrompt {
@@ -166,12 +166,12 @@
 .EmptyTitle { font-size: 14px; color: var(--fg); margin-bottom: 4px; }
 .EmptyHint { font-size: 12px; color: var(--dim); }
 
-/* ── Result list — 2-col grid on desktop ── */
+/* ── Result list — 4-col grid on desktop ── */
 .ResultList {
   flex: 1;
   overflow: auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   align-items: start;
   align-content: start;
   border-top: 1px solid var(--line-dim);
@@ -222,7 +222,7 @@
 .ResultRow:hover,
 .ResultRowSel {
   background: var(--amber-bg);
-  border-color: oklch(0.78 0.14 70 / 0.3);
+  border-color: oklch(0.68 0.15 22 / 0.3);
 }
 
 .ResultRow:hover::after {
@@ -291,6 +291,10 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .ResultList { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 768px) {
   .InputSection { padding: 56px 16px 16px; }
   .InputSectionScrolled { padding: 12px 16px 8px; }

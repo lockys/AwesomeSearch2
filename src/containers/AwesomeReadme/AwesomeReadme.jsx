@@ -283,7 +283,7 @@ class AwesomeReadme extends Component {
               data-testid="readme-back-button"
               aria-label="Back to search"
             >
-              ← back to search
+              ← search
             </button>
           </div>
 
