@@ -1,79 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
 import classes from './AwesomeHome.module.css';
 
-const SYNONYMS = ['awesome', 'curated', 'indexed', 'awesome'];
-const SUFFIX = 'search';
+const FULL_TEXT = 'awesomesearch';
+const MAIN_LEN = 7; // 'awesome' | 'search'
+const SCRAMBLE_CHARS = 'abcdefghijklmnopqrstuvwxyz';
 
 function AnimatedWordmark({ triggerRef }) {
-  const [displayed, setDisplayed] = useState('');
-  const [suffix, setSuffix] = useState('');
-  const [cursorOn, setCursorOn] = useState(true);
   const containerRef = useRef(null);
-  const prevDispLenRef = useRef(0);
-  const prevSuffixLenRef = useRef(0);
+  const lockedRef = useRef(new Set());
+
+  const [lockedSet, setLockedSet] = useState(new Set());
+  const [chars, setChars] = useState(() =>
+    Array.from(FULL_TEXT, () => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)])
+  );
 
   useEffect(() => {
-    const id = setInterval(() => setCursorOn((c) => !c), 530);
-    return () => clearInterval(id);
+    const START = 180;
+    const GAP = 80;
+
+    const lockTimeouts = Array.from(FULL_TEXT, (_, i) =>
+      setTimeout(() => {
+        lockedRef.current = new Set([...lockedRef.current, i]);
+        setLockedSet(new Set(lockedRef.current));
+      }, START + i * GAP)
+    );
+
+    const scrambleId = setInterval(() => {
+      setChars(
+        Array.from(FULL_TEXT, (ch, i) =>
+          lockedRef.current.has(i)
+            ? ch
+            : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+        )
+      );
+    }, 55);
+
+    const stopId = setTimeout(
+      () => clearInterval(scrambleId),
+      START + FULL_TEXT.length * GAP + 300
+    );
+
+    return () => {
+      lockTimeouts.forEach(clearTimeout);
+      clearTimeout(stopId);
+      clearInterval(scrambleId);
+    };
   }, []);
 
-  useEffect(() => {
-    const timeouts = [];
-    const q = (fn, ms) => timeouts.push(setTimeout(fn, ms));
-
-    const typeWord = (word, onDone) => {
-      let i = 0;
-      const step = () => {
-        i++;
-        setDisplayed(word.slice(0, i));
-        if (i < word.length) q(step, 60 + Math.random() * 40);
-        else q(onDone, 900);
-      };
-      step();
-    };
-
-    const eraseWord = (word, onDone) => {
-      let i = word.length;
-      const step = () => {
-        i--;
-        setDisplayed(word.slice(0, i));
-        if (i > 0) q(step, 35);
-        else q(onDone, 180);
-      };
-      step();
-    };
-
-    const typeSuffix = () => {
-      let i = 0;
-      const step = () => {
-        i++;
-        setSuffix(SUFFIX.slice(0, i));
-        if (i < SUFFIX.length) q(step, 70);
-      };
-      q(step, 200);
-    };
-
-    const runSynonym = (idx) => {
-      if (idx >= SYNONYMS.length) {
-        setDisplayed(SYNONYMS[SYNONYMS.length - 1]);
-        typeSuffix();
-        return;
-      }
-      const w = SYNONYMS[idx];
-      typeWord(w, () => {
-        if (idx === SYNONYMS.length - 1) {
-          runSynonym(idx + 1);
-        } else {
-          eraseWord(w, () => runSynonym(idx + 1));
-        }
-      });
-    };
-
-    runSynonym(0);
-    return () => timeouts.forEach(clearTimeout);
-  }, []);
-
-  // Register an on-demand animator — fires only on actual mouse events, never polls
   useEffect(() => {
     let rafId = null;
     triggerRef.current = (clientX) => {
@@ -83,8 +56,6 @@ function AnimatedWordmark({ triggerRef }) {
         if (!containerRef.current) return;
         const spans = containerRef.current.querySelectorAll('[data-ch]');
         spans.forEach((span) => {
-          const hasPopAnim = span.getAnimations?.().some(a => a.animationName === 'wmpop');
-          if (hasPopAnim) return;
           if (clientX === null) {
             span.style.transform = '';
           } else {
@@ -106,53 +77,32 @@ function AnimatedWordmark({ triggerRef }) {
   return (
     <span className={classes.Wordmark} ref={containerRef}>
       <style>{`
-        @keyframes wmpop {
-          0%   { transform: translateY(-0.18em) scale(0.9); opacity: 0; }
-          60%  { transform: translateY(0.02em) scale(1.04); opacity: 1; }
-          100% { transform: translateY(0) scale(1); opacity: 1; }
+        @keyframes charlock {
+          0%   { filter: brightness(4); transform: scale(1.25) translateY(-3px); }
+          45%  { filter: brightness(1.3); transform: scale(1.05) translateY(1px); }
+          100% { filter: brightness(1); transform: scale(1) translateY(0); }
         }
       `}</style>
-      {(() => {
-        const justTypedDispIdx = displayed.length > prevDispLenRef.current ? displayed.length - 1 : -1;
-        const justTypedSuffixIdx = suffix.length > prevSuffixLenRef.current ? suffix.length - 1 : -1;
-        prevDispLenRef.current = displayed.length;
-        prevSuffixLenRef.current = suffix.length;
+      {Array.from(FULL_TEXT, (_, i) => {
+        const isLocked = lockedSet.has(i);
+        const isSuffix = i >= MAIN_LEN;
+        const ch = isLocked ? FULL_TEXT[i] : chars[i];
         return (
-          <>
-            {displayed.split('').map((ch, i) => (
-              <span
-                key={`w-${i}-${displayed.length}`}
-                data-ch="1"
-                style={{
-                  display: 'inline-block',
-                  transition: 'transform 90ms ease-out',
-                  animation: i === justTypedDispIdx ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
-                }}
-              >
-                {ch}
-              </span>
-            ))}
-            {suffix.split('').map((ch, i) => (
-              <span
-                key={`s-${i}-${suffix.length}`}
-                data-ch="1"
-                style={{
-                  display: 'inline-block',
-                  color: 'var(--amber)',
-                  transition: 'transform 90ms ease-out',
-                  animation: i === justTypedSuffixIdx ? 'wmpop 380ms cubic-bezier(0.34,1.56,0.64,1) both' : undefined,
-                }}
-              >
-                {ch}
-              </span>
-            ))}
-          </>
+          <span
+            key={i}
+            data-ch="1"
+            style={{
+              display: 'inline-block',
+              transition: 'transform 90ms ease-out, opacity 120ms ease-out',
+              color: isSuffix ? 'var(--amber)' : undefined,
+              opacity: isLocked ? 1 : 0.3,
+              animation: isLocked ? 'charlock 380ms cubic-bezier(0.22,1,0.36,1) both' : undefined,
+            }}
+          >
+            {ch}
+          </span>
         );
-      })()}
-      <span
-        className={classes.WordmarkCursor}
-        style={{ opacity: cursorOn ? 1 : 0 }}
-      />
+      })}
     </span>
   );
 }

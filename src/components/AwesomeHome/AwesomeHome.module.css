@@ -30,15 +30,6 @@
   white-space: nowrap;
 }
 
-.WordmarkCursor {
-  display: inline-block;
-  width: 2px;
-  height: 0.85em;
-  background: var(--amber);
-  margin-left: 2px;
-  vertical-align: -0.1em;
-  transition: opacity 80ms;
-}
 
 /* Search box */
 .SearchBox {
