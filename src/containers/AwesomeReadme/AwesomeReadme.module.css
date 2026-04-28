@@ -27,49 +27,21 @@
 }
 
 .BackBtn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--line-dim);
   color: var(--dim);
   padding: 0 0 14px;
   margin-bottom: 14px;
   width: 100%;
   text-align: left;
   cursor: pointer;
-  transition: color 150ms, border-color 150ms;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  transition: color 150ms;
   box-sizing: border-box;
 }
 
 .BackBtn:hover {
-  color: var(--fg);
-  border-bottom-color: var(--amber);
-}
-
-.BackArrow {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.BackBtn:hover .BackArrow {
-  transform: translateX(-3px);
-}
-
-.BackSub {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--dim);
-  line-height: 1;
-  transition: color 150ms;
-}
-
-.BackBtn:hover .BackSub {
   color: var(--amber);
 }
 
