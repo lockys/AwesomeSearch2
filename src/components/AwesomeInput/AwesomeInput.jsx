@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import classes from './AwesomeInput.module.css';
 
@@ -63,8 +63,13 @@ const AwesomeInput = ({
   autoFocus = true,
 }) => {
   const [selected, setSelected] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+
+  const handleResultsScroll = useCallback((e) => {
+    setScrolled(e.currentTarget.scrollTop > 40);
+  }, []);
 
   useEffect(() => {
     setSelected(0);
@@ -106,7 +111,7 @@ const AwesomeInput = ({
   return (
     <div className={classes.SearchView}>
       {/* Input row */}
-      <div className={classes.InputSection}>
+      <div className={`${classes.InputSection} ${scrolled ? classes.InputSectionScrolled : ''}`}>
         <div className={classes.SubLabel}>
           Fuzzy search · {query ? `${results.length} matches` : 'type to search'}
         </div>
@@ -159,7 +164,7 @@ const AwesomeInput = ({
       )}
 
       {hasResults && (
-        <div ref={listRef} className={classes.ResultList} data-testid="search-results">
+        <div ref={listRef} className={classes.ResultList} onScroll={handleResultsScroll} data-testid="search-results">
           {results.map((r, idx) => {
             const isSel = idx === selected;
             return (
