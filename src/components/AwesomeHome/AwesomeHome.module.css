@@ -47,7 +47,7 @@
 
 .SearchBox:focus-within {
   border-color: var(--amber);
-  box-shadow: 0 0 0 3px oklch(0.78 0.14 70 / 0.15), 0 0 18px oklch(0.78 0.14 70 / 0.12);
+  box-shadow: 0 0 0 3px oklch(0.68 0.15 22 / 0.15), 0 0 18px oklch(0.68 0.15 22 / 0.12);
 }
 
 .SearchPrompt {

@@ -39,8 +39,8 @@
 
   .BackBtn:hover {
     color: var(--amber);
-    border-color: oklch(0.78 0.14 70 / 0.6);
-    background: oklch(0.78 0.14 70 / 0.12);
+    border-color: oklch(0.68 0.15 22 / 0.6);
+    background: oklch(0.68 0.15 22 / 0.12);
   }
 }
 
