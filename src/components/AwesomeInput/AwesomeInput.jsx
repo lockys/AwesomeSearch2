@@ -58,6 +58,7 @@ const AwesomeInput = ({
   query,
   setQuery,
   results,
+  isCategoryFilter = false,
   onOpen,
   onClear,
   autoFocus = true,
@@ -180,7 +181,7 @@ const AwesomeInput = ({
               >
                 {isSel && <div className={classes.SelAccent} />}
                 <div className={classes.RepoName} data-testid="search-result-link">
-                  <Highlight text={r.item.name} query={query} />
+                  <Highlight text={r.item.name} query={isCategoryFilter ? '' : query} />
                 </div>
                 <div className={classes.RepoPath}>{r.item.repo}</div>
                 <span className={classes.CatBadge}>{r.item.cate}</span>
