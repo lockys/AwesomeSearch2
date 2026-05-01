@@ -65,6 +65,20 @@ describe('AwesomeSearch', () => {
     });
   });
 
+  it('shows indexed list and category counts in the home footer', async () => {
+    axios.get.mockResolvedValue({ data: mockSubjects });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('6 lists indexed')).toBeInTheDocument();
+      expect(screen.getByText('2 categories')).toBeInTheDocument();
+    });
+  });
+
   it('renders search input on home view', async () => {
     axios.get.mockResolvedValue({ data: mockSubjects });
     render(
@@ -90,6 +104,30 @@ describe('AwesomeSearch', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('search-results')).toBeInTheDocument();
+    });
+  });
+
+  it('returns to the home view when back is clicked from search results', async () => {
+    axios.get.mockResolvedValue({ data: mockSubjects });
+    render(
+      <MemoryRouter>
+        <AwesomeSearch />
+      </MemoryRouter>
+    );
+
+    const input = await screen.findByTestId('search-input');
+    fireEvent.change(input, { target: { value: 'React' } });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('search-results')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back to home' }));
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('search-results')).not.toBeInTheDocument();
+      expect(screen.getByText('6 lists indexed')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Back to home' })).not.toBeInTheDocument();
     });
   });
 
@@ -141,3 +179,4 @@ describe('AwesomeSearch', () => {
     expect(screen.getByTestId('search-input')).not.toHaveFocus();
   });
 });
+
