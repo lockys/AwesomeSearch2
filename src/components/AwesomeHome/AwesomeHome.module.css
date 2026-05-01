@@ -397,6 +397,7 @@
 
 /* ── About ── */
 .About {
+  position: relative;
   padding: 20px 40px 32px;
   max-width: 960px;
   margin: 0 auto;
