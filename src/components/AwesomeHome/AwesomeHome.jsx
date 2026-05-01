@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import classes from './AwesomeHome.module.css';
+import AwesomePet from '../AwesomePet/AwesomePet';
 
 const FULL_TEXT = 'awesomesearch';
 const MAIN_LEN = 7; // 'awesome' | 'search'
@@ -273,6 +274,7 @@ export default function AwesomeHome({
 
       {/* About */}
       <div className={classes.About}>
+        <AwesomePet />
         <p>
           Built by{' '}
           <a href="https://github.com/lockys" target="_blank" rel="noopener noreferrer" className={classes.AboutLink}>
